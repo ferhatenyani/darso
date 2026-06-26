@@ -1,0 +1,250 @@
+{
+  "app": {
+    "common": {
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "week": "هذا الأسبوع",
+      "earlier": "أقدم",
+      "tomorrow": "غدًا",
+      "online": "متصل",
+      "offline": "غير متصل",
+      "lastActive": "آخر ظهور {label}",
+      "noContent": "لا يوجد شيء لعرضه حاليًا.",
+      "open": "فتح",
+      "back": "رجوع",
+      "send": "إرسال",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد",
+      "save": "حفظ",
+      "loading": "جارٍ التحميل…",
+      "all": "الكل",
+      "more": "المزيد",
+      "hours": "{n, plural, zero {بدون ساعة} one {ساعة واحدة} two {ساعتان} few {# ساعات} many {# ساعة} other {# ساعة}}",
+      "minutes": "{n, plural, zero {بدون دقيقة} one {دقيقة واحدة} two {دقيقتان} few {# دقائق} many {# دقيقة} other {# دقيقة}}",
+      "min": "د",
+      "fileSize": "{kb} ك.ب"
+    },
+    "calendar": {
+      "title": "التقويم",
+      "subtitle": "دروسك، الأوقات المتاحة، والإجازات — في مكان واحد.",
+      "eyebrow": "الأجندة",
+      "tabs": {
+        "week": "الأسبوع",
+        "month": "الشهر",
+        "list": "قائمة"
+      },
+      "today": "اليوم",
+      "previousWeek": "الأسبوع السابق",
+      "nextWeek": "الأسبوع التالي",
+      "previousMonth": "الشهر السابق",
+      "nextMonth": "الشهر التالي",
+      "status": {
+        "booked": "محجوز",
+        "available": "متاح",
+        "blocked": "غير متاح",
+        "pending": "قيد التأكيد"
+      },
+      "mode": {
+        "online": "عبر الإنترنت",
+        "in-person": "حضوريًا"
+      },
+      "format": {
+        "1to1": "درس فردي",
+        "cohort": "فوج",
+        "event": "ورشة"
+      },
+      "legend": "المفتاح",
+      "withTeacher": "مع {name}",
+      "sessionsLeft": "{n, plural, zero {لا حصص متبقية} one {حصة واحدة متبقية} two {حصتان متبقيتان} few {# حصص متبقية} many {# حصة متبقية} other {# حصة متبقية}}",
+      "block": {
+        "title": "حجز فترة غير متاحة",
+        "subtitle": "حدّد نافذة لا تكون فيها متاحًا.",
+        "start": "البداية",
+        "end": "النهاية",
+        "reason": "السبب (اختياري)",
+        "reasonPlaceholder": "تنقّل، امتحان، صلاة…",
+        "recurring": "تكرار أسبوعي",
+        "submit": "تأكيد الفترة",
+        "openSheet": "حجز فترة غير متاحة"
+      },
+      "month": {
+        "events": "{n, plural, zero {لا أحداث} one {حدث واحد} two {حدثان} few {# أحداث} many {# حدثًا} other {# حدث}}",
+        "popoverTitle": "{day}",
+        "noEvents": "لا حصص في هذا اليوم."
+      },
+      "list": {
+        "empty": "لا شيء قادم هذا الأسبوع. استغلّ الفرصة للاستكشاف.",
+        "exploreCta": "استكشاف المنصّة"
+      },
+      "week": {
+        "headerNote": "الأسبوع {weekNumber} · إفريقيا/الجزائر",
+        "hourAxisLabel": "الساعة",
+        "weekdaysShort": ["إث", "ثل", "أر", "خم", "جم", "سب", "أح"]
+      },
+      "popover": {
+        "join": "الانضمام إلى الدرس",
+        "details": "التفاصيل"
+      }
+    },
+    "messages": {
+      "title": "الرسائل",
+      "subtitle": "محادثات فردية وأفواج — تابعي بين الحصص.",
+      "tabs": {
+        "all": "الكل",
+        "oneToOne": "فردي",
+        "cohorts": "أفواج"
+      },
+      "search": "ابحثي في الرسائل",
+      "newMessage": "رسالة جديدة",
+      "empty": {
+        "title": "اختاري محادثة",
+        "body": "اختاري محادثة من القائمة، أو ابدئي محادثة جديدة من ملفّ أستاذ.",
+        "cta": "استكشاف الأساتذة"
+      },
+      "emptyFiltered": {
+        "title": "لا محادثات",
+        "body": "لا تتطابق أي محادثة مع بحثك."
+      },
+      "thread": {
+        "info": "تفاصيل",
+        "joinCall": "الانضمام إلى المكالمة",
+        "mute": "كتم الإشعارات",
+        "unmute": "إلغاء الكتم",
+        "viewCourse": "عرض الدرس المرتبط",
+        "participants": "{n, plural, zero {بدون مشاركين} one {مشارك واحد} two {مشاركان} few {# مشاركين} many {# مشاركًا} other {# مشارك}}",
+        "membersTitle": "الأعضاء",
+        "linkedTitle": "الدرس المرتبط",
+        "settingsTitle": "التفضيلات"
+      },
+      "composer": {
+        "placeholder": "اكتبي رسالة…",
+        "attach": "إرفاق ملفّ",
+        "emoji": "إيموجي",
+        "send": "إرسال"
+      },
+      "dateSep": {
+        "today": "اليوم",
+        "yesterday": "أمس"
+      },
+      "status": {
+        "sent": "أرسلت",
+        "delivered": "وصلت",
+        "read": "قُرئت"
+      },
+      "kind": {
+        "1to1": "فردي",
+        "cohort": "فوج",
+        "event": "ورشة"
+      }
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "subtitle": "تابعي دروسك ورسائلك ودفعاتك — دون ضجيج.",
+      "markAllRead": "تعيين الكل كمقروء",
+      "tabs": {
+        "all": "الكل",
+        "bookings": "دروس",
+        "messages": "رسائل",
+        "reviews": "تقييمات",
+        "billing": "فوترة"
+      },
+      "sections": {
+        "today": "اليوم",
+        "week": "هذا الأسبوع",
+        "earlier": "أقدم"
+      },
+      "empty": {
+        "title": "أنت محدّثة",
+        "body": "لا إشعارات لهذا التصنيف."
+      },
+      "row": {
+        "markRead": "تعيين كمقروء",
+        "muteType": "كتم هذا النوع",
+        "options": "خيارات"
+      },
+      "type": {
+        "booking": "حجز",
+        "message": "رسالة",
+        "review": "تقييم",
+        "system": "النظام",
+        "billing": "فوترة",
+        "dispute": "ملفّ"
+      },
+      "ago": {
+        "now": "الآن",
+        "minutes": "منذ {n} د",
+        "hours": "منذ {n} س",
+        "days": "منذ {n} ي"
+      }
+    },
+    "disputes": {
+      "title": "تسوية النزاعات",
+      "subtitle": "إطار هادئ لتوضيح الخلافات — وساطة تديرها درسو.",
+      "tabs": {
+        "open": "مفتوحة",
+        "resolved": "محلولة",
+        "all": "الكل"
+      },
+      "list": {
+        "openedAt": "افتتح {date}",
+        "lastActivity": "آخر نشاط {time}",
+        "against": "مع {name}",
+        "empty": {
+          "title": "لا ملفّات",
+          "body": "لا يوجد لديك أي نزاع جارٍ. مؤشّر جيد."
+        }
+      },
+      "state": {
+        "open": "مفتوح",
+        "awaiting-response": "بانتظار الردّ",
+        "in-mediation": "قيد الوساطة",
+        "resolved": "محلول",
+        "refunded": "تمّ الاسترداد",
+        "rejected": "مرفوض"
+      },
+      "detail": {
+        "id": "ملفّ",
+        "amount": "المبلغ المعنيّ",
+        "openedBy": "افتُتح من قِبَل",
+        "claimTitle": "الادّعاء",
+        "evidence": "المرفقات",
+        "noEvidence": "لا توجد مرفقات.",
+        "timeline": "السجلّ",
+        "actions": "الإجراءات",
+        "messages": "المراسلات",
+        "parties": "الأطراف",
+        "you": "أنت",
+        "mediator": "وساطة درسو"
+      },
+      "actor": {
+        "student": "طالب",
+        "teacher": "أستاذ",
+        "mediator": "وسيط درسو",
+        "system": "نظام"
+      },
+      "actions": {
+        "respond": {
+          "title": "إرسال ردّ",
+          "placeholder": "اشرحي روايتك للوقائع…",
+          "submit": "إرسال الردّ"
+        },
+        "mediation": {
+          "title": "اقتراح وساطة",
+          "submit": "طلب وسيط",
+          "dialogTitle": "طلب وسيط درسو",
+          "dialogBody": "سينضمّ وسيط محايد إلى الملفّ خلال 24 ساعة. تبقى المحادثة خاصّة."
+        },
+        "resolve": {
+          "title": "تعيين كمحلول",
+          "refundLabel": "نسبة الاسترداد المقترحة",
+          "submit": "تأكيد التسوية"
+        },
+        "withdraw": "سحب الملفّ"
+      },
+      "composer": {
+        "placeholder": "ردّ على هذا الملفّ…",
+        "send": "إرسال"
+      }
+    }
+  }
+}

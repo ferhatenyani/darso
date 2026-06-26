@@ -1,26 +1,317 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "tw-animate-css";
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+
+  --color-grid-line: var(--grid-line);
+
+  --font-sans: var(--font-inter), var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-inter), system-ui, sans-serif;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+
+  --shadow-e1: 0 1px 2px 0 rgba(14, 23, 38, 0.04), 0 1px 1px 0 rgba(14, 23, 38, 0.03);
+  --shadow-e2: 0 4px 14px -2px rgba(14, 23, 38, 0.06), 0 2px 6px -1px rgba(14, 23, 38, 0.04);
+  --shadow-e3: 0 18px 44px -14px rgba(14, 23, 38, 0.14), 0 8px 18px -6px rgba(14, 23, 38, 0.08);
+  --shadow-focus: 0 0 0 3px var(--ring-soft), 0 0 0 1.5px var(--ring);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #FFFFFF;
+  --foreground: #0E1726;
+  --surface: #F4F7FC;
+  --surface-2: #EAF0F9;
+  --card: #FFFFFF;
+  --card-foreground: #0E1726;
+  --popover: #FFFFFF;
+  --popover-foreground: #0E1726;
+
+  --primary: #1C3A5E;
+  --primary-dark: #102338;
+  --primary-foreground: #FFFFFF;
+  --accent: #2F6BFF;
+  --accent-soft: #DCE7FF;
+  --accent-foreground: #FFFFFF;
+
+  --muted: #F0F4FB;
+  --muted-foreground: #51607A;
+
+  --success: #2E9E78;
+  --success-foreground: #FFFFFF;
+  --warning: #DDA13A;
+  --warning-foreground: #2C1B05;
+  --danger: #DD514D;
+  --danger-foreground: #FFFFFF;
+  --info: #3E8FD0;
+  --info-foreground: #FFFFFF;
+
+  --border: #DCE3EE;
+  --border-strong: #BBC6D8;
+  --input: #DCE3EE;
+  --ring: #2F6BFF;
+  --ring-soft: rgba(47, 107, 255, 0.22);
+
+  --ink: #0E1726;
+  --ink-2: #38465D;
+  --ink-3: #6B7689;
+
+  --grid-line: rgba(14, 23, 38, 0.07);
+
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #C5D0E2;
+  --scrollbar-thumb-hover: #94A4BD;
+
+  color-scheme: light;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv11", "ss01", "ss03", "cv02";
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-width: thin;
+  }
+
+  html[dir="rtl"] {
+    font-feature-settings: normal;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+  }
+
+  html[lang^="ar"] body,
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+    line-height: 1.75;
+  }
+
+  /* Strip browser default focus rings; we apply our own via :focus-visible */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-sm);
+  }
+  /* Remove iOS / Chrome blue tap highlight */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* WebKit scrollbars — match the design system */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 8px;
+    border: 2px solid var(--background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Strip native select / input chrome */
+  select,
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input::-ms-clear,
+  input::-ms-reveal {
+    display: none;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+  input[type="file"] {
+    color: transparent;
+  }
+  input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+    width: 0;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 25%, var(--surface));
+    color: var(--foreground);
+  }
+
+  html[lang^="ar"] .num-latn {
+    font-feature-settings: "lnum";
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .container-narrow {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 80rem;
+  }
+  @media (min-width: 768px) {
+    .container-narrow {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .container-narrow {
+      padding-inline: 2.5rem;
+    }
+  }
+  .rtl-flip {
+    transform: scaleX(1);
+  }
+  html[dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .bg-grid-sm {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .bg-dots {
+    background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .scroll-thin {
+    scrollbar-width: thin;
+  }
+  .scroll-none {
+    scrollbar-width: none;
+  }
+  .scroll-none::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(221, 81, 77, 0.55); }
+    50% { box-shadow: 0 0 0 6px rgba(221, 81, 77, 0); }
+  }
+  .live-dot {
+    animation: live-pulse 1.6s ease-out infinite;
+  }
+  @keyframes marquee-x {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee-x 28s linear infinite;
+  }
+  html[dir="rtl"] .animate-marquee {
+    animation-direction: reverse;
+  }
+  /* Editorial accents */
+  .ink-rule {
+    display: inline-block;
+    height: 0.45em;
+    width: 2.2em;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-inline-end: 0.4em;
+    border-radius: 2px;
+  }
+  .underline-wavy {
+    text-decoration: underline wavy var(--accent);
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1.5px;
+  }
+  /* No-AI corner-cut for cards */
+  .clip-corner {
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+  }
 }

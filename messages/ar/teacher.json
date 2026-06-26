@@ -1,0 +1,429 @@
+{
+  "teacher": {
+  "shell": {
+    "viewAsStudent": "وضع التلميذ",
+    "logout": "تسجيل الخروج",
+    "search": "ابحث في لوحة التحكّم",
+    "more": "المزيد",
+    "nav": {
+      "groupOverview": "نظرة عامة",
+      "groupLibrary": "المكتبة",
+      "groupInbox": "الوارد",
+      "groupPerformance": "الأداء",
+      "groupAgency": "الوكالة",
+      "home": "اللوحة",
+      "profile": "الملف",
+      "courses": "الدروس",
+      "events": "الأحداث",
+      "onDemand": "عند الطلب",
+      "requests": "الطلبات",
+      "applications": "ترشّح",
+      "messages": "الرسائل",
+      "reviews": "الآراء",
+      "subscription": "الاشتراك",
+      "agency": "استوديو نوميديا"
+    },
+    "topRated": "الأفضل تقييمًا",
+    "responseLabel": "يردّ خلال",
+    "responseHours": "{hours, plural, =0 {أقل من ساعة} zero {أقل من ساعة} one {ساعة واحدة} two {ساعتين} few {# ساعات} many {# ساعة} other {# ساعة}}",
+    "openSidebar": "فتح القائمة",
+    "closeSidebar": "إغلاق القائمة"
+  },
+  "home": {
+    "indexLabel": "قسم",
+    "greetingMorning": "مساء الخير",
+    "greetingDay": "صباح الخير",
+    "todayDate": "{day} {month} · عرض اليوم",
+    "pulse": "لديك {live} دروس مباشرة، و{upcoming} قادمة، و{pending} طلبات قيد الانتظار.",
+    "today": {
+      "indexNum": "01",
+      "title": "اليوم",
+      "subtitle": "برنامج يومك",
+      "live": "مباشر",
+      "startsIn": "خلال {min} د",
+      "minutesAgo": "منذ {min} د",
+      "duration": "{min} د",
+      "capacity": "{taken}/{total} مقاعد",
+      "start": "ابدأ",
+      "prepare": "تحضير",
+      "empty": "لا يوجد درس مقرّر. فرصة لإضافة موعد."
+    },
+    "inbox": {
+      "indexNum": "02",
+      "title": "طلبات جديدة",
+      "subtitle": "تفاعل بسرعة — الطلبة يقارنون.",
+      "viewAll": "عرض الكلّ",
+      "accept": "قبول",
+      "reject": "رفض",
+      "empty": "لا توجد طلبات قيد الانتظار. خذ نَفَسًا."
+    },
+    "revenue": {
+      "indexNum": "03",
+      "title": "الشهر الحالي",
+      "subtitle": "بهذا الإيقاع، ستتجاوز {threshold}.",
+      "tier": "{tier} · النسبة {rate}٪",
+      "deltaUp": "+{value} مقارنة بالشهر الماضي",
+      "deltaDown": "−{value} مقارنة بالشهر الماضي",
+      "toNext": "يتبقّى {amount} للوصول إلى {tier}",
+      "weeks": "آخر 12 أسبوعًا"
+    },
+    "reviews": {
+      "indexNum": "04",
+      "title": "أحدث الآراء",
+      "subtitle": "آخر ثلاث تعليقات من طلابك.",
+      "reply": "ردّ",
+      "replied": "تم الردّ",
+      "viewAll": "كل الآراء"
+    },
+    "checklist": {
+      "indexNum": "05",
+      "title": "مهام هذا الأسبوع",
+      "subtitle": "خمسة أعمال لتسبق الإيقاع.",
+      "go": "ابدأ"
+    }
+  },
+  "profile": {
+    "title": "ملفك العام",
+    "subtitle": "ما يراه الطلبة قبل التواصل معك.",
+    "preview": "معاينة عامة",
+    "save": "حفظ",
+    "tabs": {
+      "profile": "الملف",
+      "verification": "التحقّق",
+      "pricing": "الأسعار والتوفّر",
+      "languages": "اللغات والمواد",
+      "topRated": "الأفضل تقييمًا"
+    },
+    "fields": {
+      "displayName": "الاسم المعروض",
+      "headline": "العبارة الجامعة",
+      "headlineHint": "120 حرفًا كحد أقصى — قصيرة، ملموسة، بلا شعارات.",
+      "bio": "عنّي",
+      "bioHint": "اعرض مسارك، طريقتك، نوع الطالب الذي يزدهر معك.",
+      "city": "الولاية",
+      "mode": "نمط التدريس",
+      "modeOnline": "عن بُعد",
+      "modeInPerson": "حضوري",
+      "modeBoth": "كلاهما",
+      "avatar": "صورة الملف",
+      "avatarHint": "PNG أو JPG، مربعة، يُنصح بـ 800×800 بكسل.",
+      "cover": "صورة الغلاف",
+      "coverHint": "تظهر في أعلى صفحتك العامة."
+    },
+    "verification": {
+      "id": "وثيقة الهوية",
+      "idDone": "تم التحقّق",
+      "idStart": "ابدأ التحقّق",
+      "diploma": "شهادة أو دبلوم",
+      "diplomaHint": "PDF أو صورة. مرئية فقط لفريق درسو.",
+      "contact": "رقم الهاتف",
+      "contactDone": "تم التأكيد عبر SMS"
+    },
+    "pricing": {
+      "hourly": "السعر بالساعة (د.ج)",
+      "hourlyHint": "يمكنك تعديل السعر لكل جلسة لاحقًا.",
+      "discount": "حزمة 10 جلسات بخصم",
+      "discountValue": "الخصم (٪)",
+      "availability": "التوفّر",
+      "weekdays": "أيام الأسبوع",
+      "weekends": "نهاية الأسبوع",
+      "evenings": "في المساء",
+      "instantBook": "حجز فوري",
+      "instantBookHint": "يسمح للطلبة بالحجز دون طلب مسبق."
+    },
+    "languages": {
+      "title": "اللغات",
+      "subjectsTitle": "المواد المدرّسة",
+      "audience": "الفئة المستهدفة",
+      "kids": "الأطفال",
+      "teens": "المراهقون",
+      "adults": "الكبار",
+      "pros": "المحترفون"
+    },
+    "topRated": {
+      "title": "فئة الأفضل تقييمًا",
+      "subtitle": "ثلاثة معايير للحصول على الشارة.",
+      "remaining": "{count, plural, =0 {تمّ التحقّق من كل المعايير} zero {تمّ التحقّق من كل المعايير} one {معيار واحد بقي} two {معياران بقيا} few {# معايير باقية} many {# معيارًا باقيًا} other {# معايير باقية}}",
+      "tip": "ردّ بسرعة على الطلبات الجديدة لرفع المعيار الأخير."
+    }
+  },
+  "courses": {
+    "title": "دروسك",
+    "subtitle": "أنشئ، حدّث، وأرشِف ما تدرّسه.",
+    "create": "أنشئ درسًا",
+    "filters": {
+      "all": "الكلّ",
+      "published": "منشور",
+      "draft": "مسوّدة",
+      "archived": "مؤرشف"
+    },
+    "thead": {
+      "title": "الدرس",
+      "format": "الصيغة",
+      "capacity": "المقاعد",
+      "next": "الحصة القادمة",
+      "revenue": "إيرادات الشهر",
+      "actions": "إجراءات"
+    },
+    "format": {
+      "cohort": "فوج",
+      "oneToOne": "1:1",
+      "event": "حدث",
+      "ondemand": "عند الطلب"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "duplicate": "تكرار",
+      "archive": "أرشفة",
+      "unarchive": "إلغاء الأرشفة",
+      "publish": "نشر"
+    },
+    "empty": {
+      "title": "لا يوجد درس في هذه الفئة",
+      "subtitle": "أنشئ درسك الأول لاستقبال أوّل طلب."
+    },
+    "noNext": "لا حصة مجدولة"
+  },
+  "newCourse": {
+    "title": "درس جديد",
+    "subtitle": "خمس خطوات لإطلاق درسك.",
+    "saveDraft": "حفظ كمسوّدة",
+    "step": "الخطوة {current} من {total}",
+    "steps": {
+      "basics": "الأساسيات",
+      "details": "التفاصيل",
+      "format": "الصيغة والجدولة",
+      "pricing": "الأسعار",
+      "publish": "النشر"
+    },
+    "basics": {
+      "titleLabel": "عنوان الدرس",
+      "titleHint": "قصير ودقيق. بلا مبالغات.",
+      "summary": "ملخّص في جملة",
+      "category": "الفئة",
+      "audience": "الفئة المستهدفة",
+      "language": "اللغة الرئيسية"
+    },
+    "details": {
+      "description": "وصف مفصّل",
+      "descriptionHint": "المنهج، المتطلبات، ما الذي سنبنيه معًا.",
+      "syllabus": "البرنامج",
+      "syllabusItem": "الأسبوع {n}",
+      "addWeek": "أضف أسبوعًا",
+      "outcomes": "في نهاية هذا الدرس، سيعرف الطالب…",
+      "addOutcome": "أضف مهارة"
+    },
+    "format": {
+      "title": "الصيغة",
+      "oneToOne": "درس فردي",
+      "oneToOneHint": "جلسات خاصة عند الطلب",
+      "cohort": "فوج جماعي",
+      "cohortHint": "عدة طلبة بجدول محدّد",
+      "event": "حدث مباشر",
+      "eventHint": "موعد واحد، حصة واحدة",
+      "ondemand": "عند الطلب",
+      "ondemandHint": "فيديوهات مسجّلة مسبقًا",
+      "schedule": "معاينة الجدول",
+      "capacity": "الحد الأقصى للفوج"
+    },
+    "pricing": {
+      "price": "السعر",
+      "priceHint": "سعر الجلسة في 1:1، سعر الفوج في الأفواج.",
+      "discount": "تفعيل عرض الإطلاق",
+      "discountValue": "الخصم (٪)"
+    },
+    "publish": {
+      "title": "كل شيء جاهز؟",
+      "checklist": "قبل النشر، تأكّد من العنوان، الوصف، والسعر.",
+      "publish": "انشر الدرس",
+      "publishLater": "احتفظ كمسوّدة"
+    }
+  },
+  "editCourse": {
+    "title": "تعديل الدرس",
+    "subtitle": "كل أقسام الإنشاء في شاشة واحدة.",
+    "viewPublic": "اعرض الصفحة العامة"
+  },
+  "events": {
+    "title": "الأحداث المباشرة",
+    "subtitle": "جلسات فردية، ورش عمل، ماراطونات.",
+    "create": "أنشئ حدثًا",
+    "thead": {
+      "date": "التاريخ",
+      "title": "الحدث",
+      "places": "المقاعد",
+      "price": "السعر",
+      "actions": "إجراءات"
+    },
+    "empty": "لا حدث مبرمج."
+  },
+  "requests": {
+    "title": "طلبات الطلبة",
+    "subtitle": "ردّ بسرعة: أول ردّ يربح الجلسة في 70٪ من الحالات.",
+    "tabs": {
+      "pending": "قيد الانتظار",
+      "accepted": "المقبولة",
+      "rejected": "المرفوضة"
+    },
+    "accept": "قبول",
+    "reject": "رفض",
+    "viewProfile": "عرض الملف",
+    "confirm": {
+      "acceptTitle": "هل تقبل هذا الطلب؟",
+      "acceptBody": "سيتلقى الطالب رسالة وسيتمكّن من الحجز فورًا.",
+      "acceptCta": "تأكيد",
+      "rejectTitle": "هل ترفض هذا الطلب؟",
+      "rejectBody": "سيتم إعلام الطالب ويمكنك ترك ملاحظة قصيرة (اختياري).",
+      "rejectCta": "رفض",
+      "cancel": "إلغاء",
+      "note": "ملاحظة للطالب (اختياري)"
+    },
+    "empty": {
+      "pending": "تمت معالجة كل الطلبات. خذ نَفَسًا.",
+      "accepted": "لا طلبات مقبولة حاليًا.",
+      "rejected": "لا طلبات مرفوضة حاليًا."
+    }
+  },
+  "reviews": {
+    "title": "الآراء المستلمة",
+    "subtitle": "اقرأ كل تعليق، وردّ عند الحاجة.",
+    "filter": "فلتر حسب النقطة",
+    "filters": {
+      "all": "الكلّ",
+      "fiveStars": "5 نجوم",
+      "fourStars": "4 نجوم",
+      "threeAndUnder": "≤ 3 نجوم"
+    },
+    "reply": "ردّ",
+    "cancel": "إلغاء",
+    "send": "أرسل الردّ",
+    "yourReply": "ردّك",
+    "yourReplyPlaceholder": "ابقَ موجزًا ودقيقًا. تجنّب التبريرات الطويلة.",
+    "empty": "لا توجد آراء مطابقة لهذا الفلتر."
+  },
+  "subscription": {
+    "title": "اشتراكك يتطوّر مع مداخيلك.",
+    "subtitle": "لا اشتراك ثابت، ولا غرامة عند التباطؤ.",
+    "currentTier": "الفئة الحالية",
+    "thisMonth": "هذا الشهر",
+    "rate": "النسبة",
+    "toNext": "للوصول إلى الفئة الموالية",
+    "simulator": {
+      "title": "المحاكي",
+      "subtitle": "حرّك المؤشّر لرؤية النسبة المطبّقة على مدخول مستهدف.",
+      "ifEarn": "إذا ربحت",
+      "rateBecomes": "تصبح نسبتي",
+      "tierName": "الفئة",
+      "perMonth": "/ شهر"
+    },
+    "compare": {
+      "title": "قارن الفئات",
+      "features": {
+        "publicProfile": "ملف عام وصفحة درس",
+        "instantBook": "حجز فوري",
+        "joinPriority": "أولوية في الطلبات",
+        "agencyTools": "أدوات الوكالة (أعضاء، تقاسم الإيرادات)",
+        "manager": "مدير حساب مخصّص"
+      },
+      "select": "اختر هذه الفئة"
+    },
+    "invoices": {
+      "title": "الفواتير",
+      "subtitle": "آخر ستة أشهر.",
+      "thead": {
+        "id": "الرقم",
+        "date": "التاريخ",
+        "description": "الوصف",
+        "amount": "المبلغ",
+        "status": "الحالة"
+      },
+      "paid": "مدفوعة",
+      "pending": "قيد الانتظار",
+      "download": "تحميل"
+    },
+    "payment": {
+      "title": "وسيلة الدفع",
+      "subtitle": "اقتطاع تلقائي يوم 1 من كل شهر.",
+      "card": "بطاقة CIB · •• 4218",
+      "change": "تعديل"
+    },
+    "cancel": {
+      "trigger": "ألغِ اشتراكي",
+      "title": "هل تريد إلغاء اشتراكك؟",
+      "body": "ستحتفظ بملفك العام، لكن سيتم أرشفة دروسك ولن تستقبل طلبات جديدة.",
+      "keep": "احتفظ بالاشتراك",
+      "confirm": "تأكيد الإلغاء",
+      "retention": "يمكنك أيضًا تعليق حسابك 3 أشهر بدون رسوم."
+    }
+  },
+  "agency": {
+    "title": "استوديو نوميديا",
+    "subtitle": "الاستوديو الذي تقوده — أعضاء، إيرادات، صورة عامة.",
+    "members": "{count, plural, =0 {لا يوجد أعضاء} zero {لا يوجد أعضاء} one {عضو واحد} two {عضوان} few {# أعضاء} many {# عضوًا} other {# عضو}}",
+    "founded": "أُسِّسَ منذ {months} شهرًا",
+    "totalMonth": "إيرادات الفريق هذا الشهر",
+    "profile": {
+      "title": "ملف الوكالة",
+      "logo": "الشعار",
+      "logoHint": "مربع، يُفضّل خلفية شفافة.",
+      "name": "اسم الوكالة",
+      "bio": "عنّا"
+    },
+    "membersTable": {
+      "title": "الأعضاء",
+      "subtitle": "اعرض الإيرادات وحصّة كل أستاذ.",
+      "invite": "ادعُ أستاذًا",
+      "thead": {
+        "member": "العضو",
+        "subject": "المادة",
+        "revenue": "إيرادات الشهر",
+        "split": "الحصّة",
+        "actions": "إجراءات"
+      },
+      "actions": {
+        "viewProfile": "عرض الملف",
+        "editSplit": "تعديل الحصّة",
+        "remove": "إخراج من الاستوديو"
+      }
+    },
+    "invite": {
+      "title": "ادعُ أستاذًا",
+      "subtitle": "سيتلقى دعوة عبر البريد الإلكتروني.",
+      "email": "البريد الإلكتروني",
+      "name": "الاسم (اختياري)",
+      "subject": "المادة",
+      "splitDefault": "الحصّة الافتراضية (٪)",
+      "send": "أرسل الدعوة",
+      "cancel": "إلغاء"
+    },
+    "inbox": {
+      "title": "الوارد المشترك",
+      "subtitle": "المحادثات المشتركة للاستوديو.",
+      "openInMessages": "افتح في الرسائل",
+      "unread": "غير مقروءة",
+      "participants": "{count} مشاركون"
+    },
+    "split": {
+      "title": "توزيع الإيرادات",
+      "subtitle": "يجب أن يكون المجموع 100٪.",
+      "total": "المجموع الموزّع",
+      "save": "حفظ التوزيع"
+    }
+  },
+  "common": {
+    "back": "عودة",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "loading": "جارٍ التحميل…",
+    "perMonth": "/ شهر",
+    "status": {
+      "draft": "مسوّدة",
+      "published": "منشور",
+      "archived": "مؤرشف"
+    }
+  }
+  }
+}

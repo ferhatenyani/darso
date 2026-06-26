@@ -1,0 +1,429 @@
+{
+  "teacher": {
+  "shell": {
+    "viewAsStudent": "Mode élève",
+    "logout": "Déconnexion",
+    "search": "Rechercher dans le tableau de bord",
+    "more": "Plus",
+    "nav": {
+      "groupOverview": "Vue d'ensemble",
+      "groupLibrary": "Bibliothèque",
+      "groupInbox": "Boîte de réception",
+      "groupPerformance": "Performance",
+      "groupAgency": "Agence",
+      "home": "Tableau de bord",
+      "profile": "Profil",
+      "courses": "Cours",
+      "events": "Événements",
+      "onDemand": "À la demande",
+      "requests": "Demandes",
+      "applications": "Postuler",
+      "messages": "Messages",
+      "reviews": "Avis",
+      "subscription": "Abonnement",
+      "agency": "Studio Numidia"
+    },
+    "topRated": "Top Rated",
+    "responseLabel": "Répond en",
+    "responseHours": "{hours, plural, =0 {moins d'1 h} one {# h} other {# h}}",
+    "openSidebar": "Ouvrir la navigation",
+    "closeSidebar": "Fermer la navigation"
+  },
+  "home": {
+    "indexLabel": "Section",
+    "greetingMorning": "Bonsoir",
+    "greetingDay": "Bonjour",
+    "todayDate": "{day} {month} · vue du jour",
+    "pulse": "Tu as {live} cours en direct, {upcoming} à venir, et {pending} demandes en attente.",
+    "today": {
+      "indexNum": "01",
+      "title": "Aujourd'hui",
+      "subtitle": "Ton programme du jour",
+      "live": "EN DIRECT",
+      "startsIn": "dans {min} min",
+      "minutesAgo": "il y a {min} min",
+      "duration": "{min} min",
+      "capacity": "{taken}/{total} places",
+      "start": "Démarrer",
+      "prepare": "Préparer",
+      "empty": "Aucun cours prévu. Une bonne occasion pour ajouter un créneau."
+    },
+    "inbox": {
+      "indexNum": "02",
+      "title": "Demandes fraîches",
+      "subtitle": "Réagis vite — les élèves comparent.",
+      "viewAll": "Tout voir",
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "empty": "Aucune demande en attente. Profite du calme."
+    },
+    "revenue": {
+      "indexNum": "03",
+      "title": "Mois en cours",
+      "subtitle": "Au rythme actuel, tu dépasses {threshold}.",
+      "tier": "{tier} · taux {rate}%",
+      "deltaUp": "+{value} vs mois passé",
+      "deltaDown": "−{value} vs mois passé",
+      "toNext": "Encore {amount} pour atteindre {tier}",
+      "weeks": "12 dernières semaines"
+    },
+    "reviews": {
+      "indexNum": "04",
+      "title": "Avis récents",
+      "subtitle": "Trois derniers commentaires de tes élèves.",
+      "reply": "Répondre",
+      "replied": "Réponse envoyée",
+      "viewAll": "Tous les avis"
+    },
+    "checklist": {
+      "indexNum": "05",
+      "title": "À faire cette semaine",
+      "subtitle": "Cinq actions pour gagner de l'avance.",
+      "go": "Faire"
+    }
+  },
+  "profile": {
+    "title": "Ton profil public",
+    "subtitle": "Ce que les élèves voient avant de te contacter.",
+    "preview": "Aperçu public",
+    "save": "Enregistrer",
+    "tabs": {
+      "profile": "Profil",
+      "verification": "Vérification",
+      "pricing": "Tarifs & disponibilités",
+      "languages": "Langues & matières",
+      "topRated": "Top Rated"
+    },
+    "fields": {
+      "displayName": "Nom affiché",
+      "headline": "Phrase d'accroche",
+      "headlineHint": "120 caractères max — courte, concrète, sans buzzwords.",
+      "bio": "À propos",
+      "bioHint": "Présente ton parcours, ta méthode, le type d'élève qui s'épanouit avec toi.",
+      "city": "Wilaya",
+      "mode": "Mode d'enseignement",
+      "modeOnline": "En ligne",
+      "modeInPerson": "En présentiel",
+      "modeBoth": "Les deux",
+      "avatar": "Photo de profil",
+      "avatarHint": "PNG ou JPG, carrée, 800×800 px recommandé.",
+      "cover": "Bannière",
+      "coverHint": "Visible en haut de ta fiche publique."
+    },
+    "verification": {
+      "id": "Pièce d'identité",
+      "idDone": "Vérifiée",
+      "idStart": "Lancer la vérification",
+      "diploma": "Diplôme ou certification",
+      "diplomaHint": "PDF ou image. Visible uniquement par l'équipe darso.",
+      "contact": "Numéro de téléphone",
+      "contactDone": "Confirmé par SMS"
+    },
+    "pricing": {
+      "hourly": "Tarif horaire (DZD)",
+      "hourlyHint": "Tu peux ajuster séance par séance plus tard.",
+      "discount": "Forfait 10 séances avec remise",
+      "discountValue": "Remise (%)",
+      "availability": "Disponibilité",
+      "weekdays": "En semaine",
+      "weekends": "Week-ends",
+      "evenings": "Soirées",
+      "instantBook": "Réservation instantanée",
+      "instantBookHint": "Permet aux élèves de réserver sans demander d'abord."
+    },
+    "languages": {
+      "title": "Langues parlées",
+      "subjectsTitle": "Matières enseignées",
+      "audience": "Public visé",
+      "kids": "Enfants",
+      "teens": "Adolescents",
+      "adults": "Adultes",
+      "pros": "Professionnels"
+    },
+    "topRated": {
+      "title": "Tier Top Rated",
+      "subtitle": "Trois critères à valider pour ton badge.",
+      "remaining": "{count, plural, =0 {Tous les critères sont validés} one {# critère encore à valider} other {# critères encore à valider}}",
+      "tip": "Réponds plus rapidement aux nouvelles demandes pour pousser le dernier critère."
+    }
+  },
+  "courses": {
+    "title": "Tes cours",
+    "subtitle": "Crée, mets à jour et archive ce que tu enseignes.",
+    "create": "Créer un cours",
+    "filters": {
+      "all": "Tout",
+      "published": "Publié",
+      "draft": "Brouillon",
+      "archived": "Archivé"
+    },
+    "thead": {
+      "title": "Cours",
+      "format": "Format",
+      "capacity": "Places",
+      "next": "Prochaine séance",
+      "revenue": "CA du mois",
+      "actions": "Actions"
+    },
+    "format": {
+      "cohort": "Cohorte",
+      "oneToOne": "1:1",
+      "event": "Événement",
+      "ondemand": "À la demande"
+    },
+    "actions": {
+      "edit": "Modifier",
+      "duplicate": "Dupliquer",
+      "archive": "Archiver",
+      "unarchive": "Désarchiver",
+      "publish": "Publier"
+    },
+    "empty": {
+      "title": "Aucun cours dans cette catégorie",
+      "subtitle": "Crée ton premier cours pour commencer à recevoir des élèves."
+    },
+    "noNext": "Aucune séance planifiée"
+  },
+  "newCourse": {
+    "title": "Nouveau cours",
+    "subtitle": "Cinq étapes pour mettre ton cours en ligne.",
+    "saveDraft": "Brouillon",
+    "step": "Étape {current} sur {total}",
+    "steps": {
+      "basics": "Bases",
+      "details": "Détails",
+      "format": "Format & planning",
+      "pricing": "Tarifs",
+      "publish": "Publier"
+    },
+    "basics": {
+      "titleLabel": "Titre du cours",
+      "titleHint": "Court, précis. Pas de superlatifs.",
+      "summary": "Résumé en une phrase",
+      "category": "Catégorie",
+      "audience": "Public",
+      "language": "Langue principale"
+    },
+    "details": {
+      "description": "Description longue",
+      "descriptionHint": "Méthode, prérequis, ce qu'on construit ensemble.",
+      "syllabus": "Programme",
+      "syllabusItem": "Semaine {n}",
+      "addWeek": "Ajouter une semaine",
+      "outcomes": "À la fin de ce cours, l'élève saura…",
+      "addOutcome": "Ajouter une compétence"
+    },
+    "format": {
+      "title": "Format",
+      "oneToOne": "Cours 1:1",
+      "oneToOneHint": "Sessions privées à la demande",
+      "cohort": "Cohorte en groupe",
+      "cohortHint": "Plusieurs élèves, calendrier fixe",
+      "event": "Événement live",
+      "eventHint": "Une date, une session",
+      "ondemand": "À la demande",
+      "ondemandHint": "Vidéos pré-enregistrées",
+      "schedule": "Aperçu du planning",
+      "capacity": "Taille maximum du groupe"
+    },
+    "pricing": {
+      "price": "Prix",
+      "priceHint": "Tarif par séance pour 1:1, par cohorte pour les groupes.",
+      "discount": "Activer une promo de lancement",
+      "discountValue": "Réduction (%)"
+    },
+    "publish": {
+      "title": "Tout est prêt ?",
+      "checklist": "Avant publication, vérifie le titre, la description et le tarif.",
+      "publish": "Publier le cours",
+      "publishLater": "Garder en brouillon"
+    }
+  },
+  "editCourse": {
+    "title": "Modifier le cours",
+    "subtitle": "Toutes les sections de la création en un seul écran.",
+    "viewPublic": "Voir la fiche publique"
+  },
+  "events": {
+    "title": "Événements live",
+    "subtitle": "Sessions uniques, ateliers, marathons.",
+    "create": "Créer un événement",
+    "thead": {
+      "date": "Date",
+      "title": "Événement",
+      "places": "Places",
+      "price": "Tarif",
+      "actions": "Actions"
+    },
+    "empty": "Aucun événement programmé."
+  },
+  "requests": {
+    "title": "Demandes d'élèves",
+    "subtitle": "Réponds vite : la première réponse remporte la séance dans 70 % des cas.",
+    "tabs": {
+      "pending": "En attente",
+      "accepted": "Acceptées",
+      "rejected": "Refusées"
+    },
+    "accept": "Approuver",
+    "reject": "Refuser",
+    "viewProfile": "Voir le profil",
+    "confirm": {
+      "acceptTitle": "Accepter cette demande ?",
+      "acceptBody": "L'élève recevra un message et pourra réserver immédiatement.",
+      "acceptCta": "Confirmer",
+      "rejectTitle": "Refuser cette demande ?",
+      "rejectBody": "L'élève sera notifié et tu pourras laisser un mot court (optionnel).",
+      "rejectCta": "Refuser",
+      "cancel": "Annuler",
+      "note": "Note pour l'élève (optionnel)"
+    },
+    "empty": {
+      "pending": "Toutes les demandes ont été traitées. Tu peux respirer.",
+      "accepted": "Aucune demande acceptée pour le moment.",
+      "rejected": "Aucune demande refusée pour le moment."
+    }
+  },
+  "reviews": {
+    "title": "Avis reçus",
+    "subtitle": "Lis chaque commentaire, réponds quand le ton est juste.",
+    "filter": "Filtrer par note",
+    "filters": {
+      "all": "Tout",
+      "fiveStars": "5 étoiles",
+      "fourStars": "4 étoiles",
+      "threeAndUnder": "≤ 3 étoiles"
+    },
+    "reply": "Répondre",
+    "cancel": "Annuler",
+    "send": "Envoyer la réponse",
+    "yourReply": "Ta réponse",
+    "yourReplyPlaceholder": "Reste sobre et précis. Évite les justifications longues.",
+    "empty": "Aucun avis correspondant à ce filtre."
+  },
+  "subscription": {
+    "title": "Votre abonnement évolue avec vos revenus.",
+    "subtitle": "Pas d'abonnement fixe, pas de pénalité quand tu ralentis.",
+    "currentTier": "Palier actuel",
+    "thisMonth": "Ce mois",
+    "rate": "Taux",
+    "toNext": "Pour atteindre le palier suivant",
+    "simulator": {
+      "title": "Simulateur",
+      "subtitle": "Fais glisser le curseur pour voir le taux appliqué à un revenu cible.",
+      "ifEarn": "Si je gagne",
+      "rateBecomes": "mon taux est de",
+      "tierName": "Palier",
+      "perMonth": "/ mois"
+    },
+    "compare": {
+      "title": "Comparer les paliers",
+      "features": {
+        "publicProfile": "Profil public et fiche cours",
+        "instantBook": "Réservation instantanée",
+        "joinPriority": "Priorité dans les demandes",
+        "agencyTools": "Outils Agence (membres, partage CA)",
+        "manager": "Manager dédié"
+      },
+      "select": "Choisir ce palier"
+    },
+    "invoices": {
+      "title": "Factures",
+      "subtitle": "Six derniers mois.",
+      "thead": {
+        "id": "Référence",
+        "date": "Date",
+        "description": "Description",
+        "amount": "Montant",
+        "status": "Statut"
+      },
+      "paid": "Payée",
+      "pending": "En attente",
+      "download": "Télécharger"
+    },
+    "payment": {
+      "title": "Moyen de paiement",
+      "subtitle": "Prélèvement automatique le 1er de chaque mois.",
+      "card": "Carte CIB · •• 4218",
+      "change": "Modifier"
+    },
+    "cancel": {
+      "trigger": "Annuler mon abonnement",
+      "title": "Annuler ton abonnement ?",
+      "body": "Tu garderas ton profil public, mais tes cours seront archivés et tu ne pourras plus recevoir de nouvelles demandes.",
+      "keep": "Garder mon abonnement",
+      "confirm": "Confirmer l'annulation",
+      "retention": "Tu peux aussi mettre ton compte en pause pendant 3 mois, sans frais."
+    }
+  },
+  "agency": {
+    "title": "Studio Numidia",
+    "subtitle": "Le studio que tu pilotes — membres, revenus, image publique.",
+    "members": "{count, plural, =0 {Aucun membre} one {# membre} other {# membres}}",
+    "founded": "Fondée il y a {months} mois",
+    "totalMonth": "CA collectif du mois",
+    "profile": {
+      "title": "Profil de l'agence",
+      "logo": "Logo",
+      "logoHint": "Carrée, fond transparent recommandé.",
+      "name": "Nom de l'agence",
+      "bio": "À propos"
+    },
+    "membersTable": {
+      "title": "Membres",
+      "subtitle": "Voir les revenus et la part de chaque enseignant.",
+      "invite": "Inviter un enseignant",
+      "thead": {
+        "member": "Membre",
+        "subject": "Matière",
+        "revenue": "CA du mois",
+        "split": "Part",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewProfile": "Voir le profil",
+        "editSplit": "Modifier la part",
+        "remove": "Retirer du studio"
+      }
+    },
+    "invite": {
+      "title": "Inviter un enseignant",
+      "subtitle": "Il recevra un lien d'invitation par email.",
+      "email": "Email",
+      "name": "Nom (optionnel)",
+      "subject": "Matière",
+      "splitDefault": "Part par défaut (%)",
+      "send": "Envoyer l'invitation",
+      "cancel": "Annuler"
+    },
+    "inbox": {
+      "title": "Boîte commune",
+      "subtitle": "Les conversations partagées du studio.",
+      "openInMessages": "Ouvrir dans Messages",
+      "unread": "Non lus",
+      "participants": "{count} participants"
+    },
+    "split": {
+      "title": "Répartition des revenus",
+      "subtitle": "La somme doit toujours faire 100 %.",
+      "total": "Total réparti",
+      "save": "Enregistrer la répartition"
+    }
+  },
+  "common": {
+    "back": "Retour",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "loading": "Chargement…",
+    "perMonth": "/ mois",
+    "status": {
+      "draft": "Brouillon",
+      "published": "Publié",
+      "archived": "Archivé"
+    }
+  }
+  }
+}

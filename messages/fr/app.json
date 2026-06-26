@@ -1,0 +1,250 @@
+{
+  "app": {
+    "common": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "week": "Cette semaine",
+      "earlier": "Plus tôt",
+      "tomorrow": "Demain",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "lastActive": "Vu {label}",
+      "noContent": "Rien à afficher pour le moment.",
+      "open": "Ouvrir",
+      "back": "Retour",
+      "send": "Envoyer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "save": "Enregistrer",
+      "loading": "Chargement…",
+      "all": "Tout",
+      "more": "Plus",
+      "hours": "{n, plural, one {# heure} other {# heures}}",
+      "minutes": "{n, plural, one {# minute} other {# minutes}}",
+      "min": "min",
+      "fileSize": "{kb} Ko"
+    },
+    "calendar": {
+      "title": "Calendrier",
+      "subtitle": "Vos cours, plages libres et indisponibilités — au même endroit.",
+      "eyebrow": "Agenda",
+      "tabs": {
+        "week": "Semaine",
+        "month": "Mois",
+        "list": "Liste"
+      },
+      "today": "Aujourd'hui",
+      "previousWeek": "Semaine précédente",
+      "nextWeek": "Semaine suivante",
+      "previousMonth": "Mois précédent",
+      "nextMonth": "Mois suivant",
+      "status": {
+        "booked": "Réservé",
+        "available": "Disponible",
+        "blocked": "Indisponible",
+        "pending": "À confirmer"
+      },
+      "mode": {
+        "online": "En ligne",
+        "in-person": "En présentiel"
+      },
+      "format": {
+        "1to1": "Cours 1:1",
+        "cohort": "Cohorte",
+        "event": "Atelier"
+      },
+      "legend": "Légende",
+      "withTeacher": "avec {name}",
+      "sessionsLeft": "{n, plural, one {# séance restante} other {# séances restantes}}",
+      "block": {
+        "title": "Bloquer une plage",
+        "subtitle": "Indiquez une fenêtre où vous n'êtes pas disponible.",
+        "start": "Début",
+        "end": "Fin",
+        "reason": "Motif (facultatif)",
+        "reasonPlaceholder": "Trajet, examen, prière…",
+        "recurring": "Répéter chaque semaine",
+        "submit": "Bloquer cette plage",
+        "openSheet": "Bloquer une plage"
+      },
+      "month": {
+        "events": "{n, plural, one {# événement} other {# événements}}",
+        "popoverTitle": "{day}",
+        "noEvents": "Aucune séance ce jour."
+      },
+      "list": {
+        "empty": "Rien à venir cette semaine. Profitez-en pour explorer.",
+        "exploreCta": "Explorer la marketplace"
+      },
+      "week": {
+        "headerNote": "Semaine {weekNumber} · Africa/Algiers",
+        "hourAxisLabel": "Heure",
+        "weekdaysShort": ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
+      },
+      "popover": {
+        "join": "Rejoindre le cours",
+        "details": "Détails"
+      }
+    },
+    "messages": {
+      "title": "Messages",
+      "subtitle": "Conversations 1:1 et cohortes — gardez le fil entre deux séances.",
+      "tabs": {
+        "all": "Tout",
+        "oneToOne": "1:1",
+        "cohorts": "Cohortes"
+      },
+      "search": "Rechercher dans les messages",
+      "newMessage": "Nouveau message",
+      "empty": {
+        "title": "Choisissez une conversation",
+        "body": "Sélectionnez un fil sur la gauche, ou démarrez-en un nouveau depuis le profil d'un prof.",
+        "cta": "Découvrir des professeurs"
+      },
+      "emptyFiltered": {
+        "title": "Aucune conversation",
+        "body": "Aucun fil ne correspond à votre recherche."
+      },
+      "thread": {
+        "info": "Détails",
+        "joinCall": "Rejoindre l'appel",
+        "mute": "Mettre en sourdine",
+        "unmute": "Réactiver",
+        "viewCourse": "Voir le cours lié",
+        "participants": "{n, plural, one {# participant} other {# participants}}",
+        "membersTitle": "Membres",
+        "linkedTitle": "Cours lié",
+        "settingsTitle": "Préférences"
+      },
+      "composer": {
+        "placeholder": "Écrivez un message…",
+        "attach": "Joindre un fichier",
+        "emoji": "Emoji",
+        "send": "Envoyer"
+      },
+      "dateSep": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier"
+      },
+      "status": {
+        "sent": "Envoyé",
+        "delivered": "Reçu",
+        "read": "Lu"
+      },
+      "kind": {
+        "1to1": "1:1",
+        "cohort": "Cohorte",
+        "event": "Atelier"
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Suivez vos cours, vos messages et vos paiements — sans bruit inutile.",
+      "markAllRead": "Tout marquer comme lu",
+      "tabs": {
+        "all": "Tout",
+        "bookings": "Cours",
+        "messages": "Messages",
+        "reviews": "Avis",
+        "billing": "Facturation"
+      },
+      "sections": {
+        "today": "Aujourd'hui",
+        "week": "Cette semaine",
+        "earlier": "Plus tôt"
+      },
+      "empty": {
+        "title": "Vous êtes à jour",
+        "body": "Aucune notification pour ce filtre."
+      },
+      "row": {
+        "markRead": "Marquer comme lu",
+        "muteType": "Mettre ce type en sourdine",
+        "options": "Options"
+      },
+      "type": {
+        "booking": "Réservation",
+        "message": "Message",
+        "review": "Avis",
+        "system": "Système",
+        "billing": "Facturation",
+        "dispute": "Dossier"
+      },
+      "ago": {
+        "now": "à l'instant",
+        "minutes": "il y a {n} min",
+        "hours": "il y a {n} h",
+        "days": "il y a {n} j"
+      }
+    },
+    "disputes": {
+      "title": "Résolution de litiges",
+      "subtitle": "Un cadre serein pour clarifier les désaccords — médiation gérée par darso.",
+      "tabs": {
+        "open": "Ouverts",
+        "resolved": "Résolus",
+        "all": "Tous"
+      },
+      "list": {
+        "openedAt": "Ouvert {date}",
+        "lastActivity": "Dernière activité {time}",
+        "against": "avec {name}",
+        "empty": {
+          "title": "Aucun dossier",
+          "body": "Vous n'avez aucun litige en cours. C'est plutôt bon signe."
+        }
+      },
+      "state": {
+        "open": "Ouvert",
+        "awaiting-response": "Attente de réponse",
+        "in-mediation": "En médiation",
+        "resolved": "Résolu",
+        "refunded": "Remboursé",
+        "rejected": "Rejeté"
+      },
+      "detail": {
+        "id": "Dossier",
+        "amount": "Montant en jeu",
+        "openedBy": "Ouvert par",
+        "claimTitle": "Réclamation",
+        "evidence": "Pièces jointes",
+        "noEvidence": "Aucune pièce jointe.",
+        "timeline": "Historique",
+        "actions": "Actions",
+        "messages": "Échanges",
+        "parties": "Parties",
+        "you": "Vous",
+        "mediator": "Médiation darso"
+      },
+      "actor": {
+        "student": "Étudiant",
+        "teacher": "Professeur",
+        "mediator": "Médiateur darso",
+        "system": "Système"
+      },
+      "actions": {
+        "respond": {
+          "title": "Envoyer une réponse",
+          "placeholder": "Apportez votre version des faits…",
+          "submit": "Envoyer la réponse"
+        },
+        "mediation": {
+          "title": "Proposer la médiation",
+          "submit": "Demander un médiateur",
+          "dialogTitle": "Demander un médiateur darso",
+          "dialogBody": "Un médiateur neutre rejoindra le dossier sous 24 h. La conversation reste privée."
+        },
+        "resolve": {
+          "title": "Marquer comme résolu",
+          "refundLabel": "Remboursement proposé",
+          "submit": "Confirmer la résolution"
+        },
+        "withdraw": "Retirer le dossier"
+      },
+      "composer": {
+        "placeholder": "Répondre à ce dossier…",
+        "send": "Envoyer"
+      }
+    }
+  }
+}
