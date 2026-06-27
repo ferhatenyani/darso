@@ -21,7 +21,7 @@
 
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Paperclip, ShieldCheck } from "lucide-react";
+import { Loader2, Paperclip, ShieldCheck } from "lucide-react";
 
 import {
   Dialog,
@@ -380,7 +380,8 @@ export function DisputeOpenDialog({
                 size="md"
                 disabled={submitting}
               >
-                {submitting ? t("submitting") : t("submit")}
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                <span className={submitting ? "opacity-0" : ""}>{t("submit")}</span>
               </Button>
             </DialogFooter>
           </form>

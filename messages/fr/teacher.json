@@ -21,13 +21,26 @@
       "messages": "Messages",
       "reviews": "Avis",
       "subscription": "Abonnement",
+      "payouts": "Versements",
+      "analytics": "Analytiques",
+      "agencyAnalytics": "Analytiques studio",
       "agency": "Agence"
     },
     "topRated": "Top Rated",
     "responseLabel": "Répond en",
     "responseHours": "{hours, plural, =0 {moins d'1 h} one {# h} other {# h}}",
     "openSidebar": "Ouvrir la navigation",
-    "closeSidebar": "Fermer la navigation"
+    "closeSidebar": "Fermer la navigation",
+    "notifications": {
+      "bellLabel": "Notifications",
+      "empty": "Tout est calme — aucune notification pour l'instant.",
+      "viewAll": "Tout afficher",
+      "markAllRead": "Tout lire",
+      "markAllReadToast": {
+        "title": "Notifications lues",
+        "desc": "Toutes vos notifications sont marquées comme lues."
+      }
+    }
   },
   "home": {
     "indexLabel": "Section",
@@ -241,7 +254,9 @@
     },
     "empty": {
       "title": "Aucun cours dans cette catégorie",
-      "subtitle": "Crée ton premier cours pour commencer à recevoir des élèves."
+      "subtitle": "Crée ton premier cours pour commencer à recevoir des élèves.",
+      "primary": "Créer un cours",
+      "secondary": "Voir les modèles"
     },
     "noNext": "Aucune séance planifiée",
     "toasts": {
@@ -291,7 +306,8 @@
         "basic": "Bases",
         "format": "Format",
         "pricing": "Tarifs",
-        "description": "Description"
+        "description": "Description",
+        "content": "Contenu"
       },
       "fields": {
         "titleFr": "Titre (français)",
@@ -301,9 +317,20 @@
         "capacity": "Capacité maximum",
         "price": "Prix par séance",
         "priceHint": "En dinars algériens. Tu peux ajuster à tout moment.",
+        "summary": "Résumé court",
+        "summaryPlaceholder": "Une phrase d'accroche (≤ 140 caractères).",
+        "summaryHint": "Affiché en sous-titre sur la carte du cours.",
         "description": "Description longue",
         "descriptionPlaceholder": "Méthode, prérequis, ce que les élèves apprendront…",
-        "descriptionHint": "Affichée sur la fiche publique du cours."
+        "descriptionHint": "Affichée sur la fiche publique du cours.",
+        "weeks": "Plan hebdomadaire",
+        "weeksHint": "Un titre par semaine — l'ordre est respecté.",
+        "weekPlaceholder": "Semaine {n} — thème",
+        "addWeek": "Ajouter une semaine",
+        "outcomes": "Objectifs d'apprentissage",
+        "outcomesHint": "Ce que l'élève saura faire à la fin du cours.",
+        "outcomePlaceholder": "Décrire un acquis concret",
+        "addOutcome": "Ajouter un objectif"
       },
       "status": {
         "draft": "Brouillon",
@@ -418,6 +445,12 @@
       "actions": "Actions"
     },
     "empty": "Aucun événement programmé.",
+    "emptyState": {
+      "title": "Aucun événement à l'affiche",
+      "body": "Programme un atelier ou une session live pour rassembler tes élèves autour d'un format court.",
+      "primary": "Créer un événement",
+      "secondary": "Voir l'agenda"
+    },
     "actions": {
       "duplicate": "Dupliquer",
       "cancel": "Annuler l'événement",
@@ -487,6 +520,11 @@
     "yourReply": "Ta réponse",
     "yourReplyPlaceholder": "Reste sobre et précis. Évite les justifications longues.",
     "empty": "Aucun avis correspondant à ce filtre.",
+    "emptyState": {
+      "title": "Pas d'avis dans cette catégorie",
+      "bodyAll": "Les premiers avis arriveront après tes prochaines séances. Ils façonnent ta réputation publique.",
+      "bodyFiltered": "Ajuste le filtre par note pour voir les avis disponibles, ou commence par « Tout »."
+    },
     "replyByLabel": "Ta réponse",
     "toasts": {
       "replyPosted": {
@@ -644,6 +682,134 @@
       "editingSplit": {
         "title": "Modification de la part",
         "desc": "Ajuste le curseur dans le tableau ci-dessous."
+      }
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Activation du compte",
+    "title": "Préparons votre espace d'enseignement",
+    "subtitle": "Quatre étapes pour publier sereinement. Vos informations restent privées et ne servent qu'à la vérification.",
+    "stepLabel": "Étape {n} sur {total}",
+    "stepShort": "{n}/{total}",
+    "back": "Retour",
+    "next": "Continuer",
+    "skip": "Passer pour le moment",
+    "finish": "Activer mon profil",
+    "finishing": "Finalisation…",
+    "completeToast": {
+      "title": "Profil activé",
+      "desc": "Bienvenue dans darso. Votre tableau de bord est prêt."
+    },
+    "secureNote": "Les pièces téléversées sont chiffrées et ne s'affichent qu'à l'équipe vérification.",
+    "errors": {
+      "idMissing": "Ajoutez une pièce d'identité pour continuer.",
+      "diplomaMissing": "Téléversez au moins un diplôme ou certificat.",
+      "bankMissing": "Renseignez l'IBAN et le titulaire du compte.",
+      "termsMissing": "Acceptez les deux conditions pour terminer."
+    },
+    "stepNav": {
+      "identity": "Identité",
+      "diploma": "Diplômes",
+      "payout": "Paiement",
+      "terms": "Conditions"
+    },
+    "steps": {
+      "identity": {
+        "title": "Vérification d'identité",
+        "hint": "Téléversez une pièce d'identité officielle et capturez un selfie pour confirmer que c'est bien vous.",
+        "idTypeLabel": "Type de document",
+        "idTypePassport": "Passeport",
+        "idTypeNational": "Carte d'identité nationale",
+        "idTypeLicense": "Permis de conduire",
+        "idNumberLabel": "Numéro du document",
+        "idNumberPlaceholder": "Ex. 123 456 789",
+        "uploadLabel": "Pièce d'identité (recto)",
+        "uploadHint": "PDF, JPG ou PNG · 8 Mo max",
+        "selfieLabel": "Selfie de vérification",
+        "selfieHint": "Cadrez votre visage dans un endroit bien éclairé.",
+        "selfieCapture": "Capturer un selfie",
+        "selfieDone": "Selfie capturé",
+        "selfieRetake": "Reprendre",
+        "selfieToast": {
+          "title": "Selfie enregistré",
+          "desc": "Image temporaire ajoutée au dossier."
+        }
+      },
+      "diploma": {
+        "title": "Diplômes et expertise",
+        "hint": "Aidez-nous à comprendre votre champ d'expertise pour bien vous référencer.",
+        "uploadLabel": "Diplôme principal",
+        "uploadHint": "PDF ou image · ajoutez d'autres certificats plus tard",
+        "subjectsLabel": "Matières enseignées",
+        "subjectsHint": "Sélectionnez jusqu'à 5 spécialités.",
+        "experienceLabel": "Années d'expérience",
+        "experiencePlaceholder": "Ex. 8",
+        "languagesLabel": "Langues d'enseignement",
+        "languagesHint": "Au moins une langue de cours active."
+      },
+      "payout": {
+        "title": "Configuration des paiements",
+        "hint": "Vos gains sont transférés une fois par semaine. Les coordonnées sont vérifiées avant le premier virement.",
+        "holderLabel": "Titulaire du compte",
+        "holderPlaceholder": "Nom complet tel qu'il apparaît sur le RIB",
+        "bankLabel": "Banque",
+        "bankPlaceholder": "Sélectionnez une banque",
+        "ibanLabel": "RIB / IBAN (20 chiffres)",
+        "ibanPlaceholder": "DZ12 0000 0000 0000 0000 0000",
+        "currencyLabel": "Devise de versement",
+        "currencyDzd": "Dinar algérien (DZD)",
+        "currencyEur": "Euro (EUR) — bientôt",
+        "scheduleLabel": "Cadence de virement",
+        "scheduleWeekly": "Hebdomadaire",
+        "scheduleMonthly": "Mensuelle",
+        "feeNote": "Aucun frais de transfert pour la première année."
+      },
+      "terms": {
+        "title": "Conditions et engagements",
+        "hint": "Prenez un instant pour lire le résumé de notre accord enseignant.",
+        "scrollHint": "Faites défiler pour tout lire",
+        "agreementTitle": "Résumé de l'accord enseignant",
+        "agreementParagraphs": [
+          "darso met en relation des élèves et des enseignants vérifiés en Algérie. En activant votre profil, vous confirmez exercer une activité d'enseignement légitime et accepter de respecter le code de conduite de la plateforme.",
+          "La commission appliquée sur chaque réservation est dégressive : 12 % jusqu'à 25 000 DA mensuels, puis 8 % jusqu'à 50 000 DA, et 6 % au-delà. Les paiements sont reversés sous 7 jours via le compte que vous avez renseigné.",
+          "Les contenus que vous publiez (cours, supports, photos de profil) restent votre propriété. Vous accordez à darso une licence non exclusive pour les afficher dans le cadre du service.",
+          "En cas de litige, darso peut suspendre temporairement les versements le temps de l'enquête. La décision finale est rendue sous 14 jours ouvrés et notifiée par email.",
+          "Vous pouvez désactiver votre compte à tout moment depuis Paramètres → Compte. Les réservations en cours doivent être honorées ou remboursées intégralement avant fermeture définitive.",
+          "En cochant les cases ci-dessous, vous confirmez avoir lu et accepté l'intégralité des conditions ainsi que l'exactitude des informations renseignées."
+        ],
+        "acceptTerms": "J'accepte les conditions enseignant et la structure de commission.",
+        "acceptAccuracy": "Je confirme que les informations fournies sont exactes."
+      },
+      "subjects": {
+        "math": "Mathématiques",
+        "physics": "Physique-Chimie",
+        "biology": "SVT",
+        "french": "Français",
+        "arabic": "Arabe",
+        "english": "Anglais",
+        "history": "Histoire-Géo",
+        "philosophy": "Philosophie",
+        "programming": "Programmation",
+        "music": "Musique",
+        "quran": "Coran & tajwid",
+        "ielts": "Préparation IELTS"
+      },
+      "languages": {
+        "fr": "Français",
+        "ar": "Arabe",
+        "en": "Anglais",
+        "kab": "Kabyle",
+        "es": "Espagnol"
+      },
+      "banks": {
+        "bna": "BNA — Banque Nationale d'Algérie",
+        "bea": "BEA — Banque Extérieure d'Algérie",
+        "bdl": "BDL — Banque de Développement Local",
+        "cnep": "CNEP-Banque",
+        "cpa": "CPA — Crédit Populaire d'Algérie",
+        "agb": "AGB — Gulf Bank Algérie",
+        "natixis": "Natixis Algérie",
+        "sgalgerie": "Société Générale Algérie"
       }
     }
   },

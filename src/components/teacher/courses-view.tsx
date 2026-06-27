@@ -7,6 +7,7 @@ import { MoreHorizontal, Pencil, Copy, Archive, ArchiveRestore, Send, BookText, 
 import { Link, useRouter } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Progress } from "@/components/ui/progress";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useCurrentUser } from "@/lib/auth/context";
@@ -84,6 +85,7 @@ export function CoursesView({ locale }: { locale: "fr" | "ar" }) {
               onClick={() => setFilter(f)}
               className={cn(
                 "h-9 rounded-full border px-3.5 text-[13px] font-medium transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                 active
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-background text-ink-2 hover:bg-surface",
@@ -168,7 +170,7 @@ export function CoursesView({ locale }: { locale: "fr" | "ar" }) {
                     <div className="text-end font-semibold tabular text-foreground">
                       {c.monthRevenueDzd > 0 ? formatPrice(c.monthRevenueDzd, locale) : <span className="font-normal text-ink-3">—</span>}
                     </div>
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-2">
                       <ViewPublicLink courseId={c.id} />
                       <CourseActions
                         courseId={c.id}
@@ -207,7 +209,7 @@ function CourseCard({
         <Link href={`/teach/courses/${course.id}`} className="text-[15px] font-semibold text-foreground">
           {course.title[locale]}
         </Link>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <ViewPublicLink courseId={course.id} />
           <CourseActions
             courseId={course.id}
@@ -385,12 +387,13 @@ function ViewPublicLink({ courseId }: { courseId: string }) {
 function EmptyCourses() {
   const t = useTranslations("teacher.courses.empty");
   return (
-    <div className="grid place-items-center rounded-[var(--radius-xl)] border border-dashed border-border bg-card px-6 py-16 text-center">
-      <span className="grid h-12 w-12 place-items-center rounded-full bg-surface text-ink-3">
-        <BookText className="h-5 w-5" aria-hidden />
-      </span>
-      <h3 className="mt-4 text-base font-semibold text-foreground">{t("title")}</h3>
-      <p className="mt-1 max-w-xs text-[13px] text-ink-3">{t("subtitle")}</p>
-    </div>
+    <EmptyState
+      icon={BookText}
+      tone="accent"
+      title={t("title")}
+      description={t("subtitle")}
+      primary={{ label: t("primary"), href: "/teach/courses/new" }}
+      secondary={{ label: t("secondary"), href: "/teach/resources" }}
+    />
   );
 }

@@ -1,5 +1,5 @@
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { categories } from "@/lib/mock/categories";
@@ -9,9 +9,6 @@ export function CategoriesGrid() {
   const t = useTranslations("home.categories");
   const locale = useLocale();
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
-
-  // Hero category (first in the list) gets the editorial treatment; rest fits a tight grid
-  const [hero, ...rest] = categories;
 
   return (
     <section className="border-b border-border">
@@ -41,54 +38,17 @@ export function CategoriesGrid() {
             </Link>
           </div>
 
-          {/* Asymmetric grid */}
-          <div className="grid gap-2 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-6">
-            {/* Big hero category — spans 4 cols × 2 rows on lg */}
-            <Link
-              href={`/browse?subject=${hero!.key}` as never}
-              className="group relative col-span-full sm:col-span-2 sm:row-span-2 lg:col-span-4 lg:row-span-2 flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card p-6 transition-shadow hover:shadow-e2"
-            >
-              <div
-                aria-hidden
-                className="absolute inset-0 -z-10 bg-grid opacity-50"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -end-6 -bottom-10 -z-10 text-[180px] font-black leading-none tracking-[-0.05em] text-primary/[0.04]"
-              >
-                01
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="grid h-12 w-12 place-items-center rounded-[var(--radius-md)] bg-primary text-primary-foreground shadow-e1">
-                  <hero.icon className="h-5 w-5" />
-                </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
-                  {t("countLabel", { count: hero!.teacherCount })}
-                </span>
-              </div>
-              <div>
-                <h3 className="text-2xl font-semibold text-foreground md:text-3xl">
-                  {t(`items.${hero!.key}.name` as never)}
-                </h3>
-                <p className="mt-2 max-w-md text-sm text-ink-2">
-                  {t(`items.${hero!.key}.blurb` as never)}
-                </p>
-                <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-                  {t("viewAll")}
-                  <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                </div>
-              </div>
-            </Link>
-
-            {/* Smaller categories */}
-            {rest.map((cat, i) => (
+          {/* Uniform tile grid (no bento spans). Hierarchy is carried by the
+              heading column + numbered indices, not by tile size variation. */}
+          <div className="grid gap-2 sm:grid-cols-2 lg:col-span-9 lg:grid-cols-3">
+            {categories.map((cat, i) => (
               <Link
                 key={cat.key}
                 href={`/browse?subject=${cat.key}` as never}
-                className="group relative flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors hover:border-accent/40"
+                className="group relative flex h-full flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5 transition-colors hover:border-accent/40"
               >
-                <span className="absolute end-3 top-3 text-[10px] font-semibold tabular text-ink-3">
-                  [{String(i + 2).padStart(2, "0")}]
+                <span className="absolute end-3 top-3 font-mono text-[10px] tabular text-ink-3">
+                  [{String(i + 1).padStart(2, "0")}]
                 </span>
                 <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] bg-surface text-primary transition-colors group-hover:bg-accent-soft group-hover:text-accent">
                   <cat.icon className="h-4 w-4" />
@@ -97,7 +57,7 @@ export function CategoriesGrid() {
                   <h4 className="text-[15px] font-semibold text-foreground">
                     {t(`items.${cat.key}.name` as never)}
                   </h4>
-                  <p className="mt-0.5 text-xs text-ink-3 line-clamp-1">
+                  <p className="mt-0.5 text-xs text-ink-3 line-clamp-2">
                     {t(`items.${cat.key}.blurb` as never)}
                   </p>
                 </div>

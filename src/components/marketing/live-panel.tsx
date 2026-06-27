@@ -108,6 +108,7 @@ export function LivePanel() {
           const rowClass = cn(
             "group relative flex w-full gap-3 rounded-[var(--radius-lg)] border border-border bg-background p-3 text-start transition-all",
             "hover:border-accent/40 hover:shadow-e1",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
             isLive && "border-danger/30 bg-gradient-to-br from-danger/[0.04] to-transparent",
           );
           return (

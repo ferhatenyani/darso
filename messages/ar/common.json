@@ -234,6 +234,38 @@
     "relatedTitle": "في انتظار ذلك، اكتشف"
   },
   "search": {
+    "title": "البحث",
+    "placeholder": "ابحث عن أستاذ أو درس أو حدث…",
+    "ariaLabel": "البحث الشامل",
+    "eyebrow": "البحث الشامل",
+    "noQuery": "ماذا تبحث عنه اليوم؟",
+    "resultsFor": "نتائج عن",
+    "totalCount": "{count, plural, =0 {لا توجد نتائج} zero {لا توجد نتائج} one {نتيجة واحدة} two {نتيجتان} few {# نتائج} many {# نتيجة} other {# نتيجة}}",
+    "results": {
+      "teachers": "الأساتذة",
+      "courses": "الدّروس",
+      "events": "الأحداث",
+      "viewAll": "عرض الكل",
+      "count": "{count, plural, =0 {0} zero {0} one {#} two {#} few {#} many {#} other {#}}"
+    },
+    "empty": {
+      "shortTitle": "اكتب لتبدأ",
+      "short": "أدخل حرفين على الأقل، أو تصفّح هذه الفئات.",
+      "jumpEyebrow": "الانتقال مباشرة إلى",
+      "jumpTeachers": "الأساتذة",
+      "jumpCourses": "الدّروس",
+      "jumpLive": "البثّ المباشر",
+      "jumpRequests": "الطلبات",
+      "noResultsTitle": "لا توجد نتائج",
+      "noResults": "لا توجد نتائج عن «{q}» — جرّب كلمة أخرى.",
+      "suggestionEyebrow": "أفكار للبحث"
+    },
+    "row": {
+      "teacherMeta": "{subject} · {city}",
+      "courseMeta": "{subject} · {teacher}",
+      "eventMeta": "{format} · {date}",
+      "openLabel": "فتح"
+    },
     "wilayas": {
       "any": "كامل الجزائر",
       "adrar": "أدرار",

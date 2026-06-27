@@ -1,4 +1,25 @@
 /**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/teacher/courses         → seeds initial state for getTeacherCourses
+ *   GET    /api/teacher/courses/:id     → getCourseById(id)
+ *   POST   /api/teacher/courses         → addCourse(input)
+ *   PATCH  /api/teacher/courses/:id     → updateCourse(id, patch)
+ *   DELETE /api/teacher/courses/:id     → deleteCourse(id)
+ *   (subscribe maps to either SSE/WebSocket OR client-side polling)
+ *
+ * Shape: the backend should return TeacherCourse[] matching the type below.
+ * Cache invalidation: every mutation should invalidate the per-account snapshot
+ *   cache (mirror the current pattern — caches are read by useSyncExternalStore
+ *   subscribers, so identity must change on every mutation).
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+
+/**
  * In-memory store for teacher-owned course catalogue.
  *
  * Wires the course wizard's Publish / Publish later buttons (Batch 5a)
@@ -74,6 +95,11 @@ export function getCourseById(id: string | null | undefined): TeacherCourse | un
  * Input shape for `addCourse`. Wizard / edit flows supply at least
  * title + format + price + status; missing fields default to draft-y
  * zero values so the listing renders without blowing up.
+ *
+ * Optional wizard-collected fields (description / weeks / outcomes /
+ * category / audience / language / summary / promoPct) flow through
+ * untouched so the edit form can read them back later. None of them
+ * influence the dashboard listing.
  */
 export type NewCourseInput = {
   title: { fr: string; ar: string };
@@ -87,6 +113,14 @@ export type NewCourseInput = {
   accountId?: string;
   /** Optional client-supplied slug seed; defaults derived from title. */
   slug?: string;
+  description?: string;
+  weeks?: string[];
+  outcomes?: string[];
+  category?: TeacherCourse["category"];
+  audience?: TeacherCourse["audience"];
+  language?: TeacherCourse["language"];
+  summary?: string;
+  promoPct?: number;
 };
 
 function slugify(input: string): string {
@@ -117,6 +151,16 @@ export function addCourse(input: NewCourseInput): TeacherCourse {
     priceDzd: input.priceDzd,
     studentCount: input.studentCount ?? 0,
     accountId: input.accountId,
+    // Wizard fields — undefined when caller doesn't supply, so the
+    // existing edit form can still pull defaults from form state.
+    description: input.description,
+    weeks: input.weeks,
+    outcomes: input.outcomes,
+    category: input.category,
+    audience: input.audience,
+    language: input.language,
+    summary: input.summary,
+    promoPct: input.promoPct,
   };
   // Newest first so the listing surfaces don't have to re-sort.
   courses = [entry, ...courses];

@@ -82,7 +82,8 @@ export function Composer({ onSend, placeholder }: ComposerProps) {
                   <button
                     key={e}
                     type="button"
-                    className="grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] text-lg transition-colors hover:bg-surface focus-visible:bg-surface"
+                    aria-label={e}
+                    className="grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] text-lg transition-colors hover:bg-surface focus-visible:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     onClick={() => setText((s) => s + e)}
                   >
                     <span aria-hidden>{e}</span>

@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 import type { ChatThread, ChatMessage } from "@/lib/mock/chats";
 import { currentUser } from "@/lib/mock/chats";
 import { useCurrentUser } from "@/lib/auth";
-import { useToast } from "@/lib/toast";
 import { MessageBubble } from "./message-bubble";
 import { Composer } from "./composer";
 
@@ -73,7 +72,6 @@ function bucketByDay(messages: ChatMessage[], locale: string) {
 export function ChatThreadView({ thread }: Props) {
   const t = useTranslations("app.messages");
   const tc = useTranslations("app.common");
-  const tt = useTranslations("app.chat.toasts");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
@@ -81,7 +79,6 @@ export function ChatThreadView({ thread }: Props) {
   const [muted, setMuted] = React.useState(!!thread.muted);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const { user } = useCurrentUser();
-  const { show } = useToast();
   // Sender id for outbound messages — current account if signed in, else
   // the legacy "u-self" mock so unauthenticated previews still render.
   const senderId = user?.id ?? currentUser.id;
@@ -117,7 +114,7 @@ export function ChatThreadView({ thread }: Props) {
       <header className="relative flex items-center gap-3 border-b border-border bg-background px-4 py-3">
         <Button asChild variant="ghost" size="icon" className="md:hidden">
           <Link href="/messages" aria-label={tc("back")}>
-            <Back className="h-4 w-4" />
+            <Back className="h-4 w-4" aria-hidden />
           </Link>
         </Button>
 
@@ -161,25 +158,24 @@ export function ChatThreadView({ thread }: Props) {
           </p>
         </div>
 
+        {/* Video call — opens the mock call room. The threadId doubles as
+            the sessionId (pragmatic for mock; backend will replace with a
+            real call session id at integration time). */}
         <Button
+          asChild
           variant="ghost"
           size="icon"
           aria-label={t("thread.joinCall")}
           title={t("thread.joinCall")}
-          onClick={() =>
-            show({
-              title: tt("videoComingSoon.title"),
-              description: tt("videoComingSoon.desc"),
-              variant: "default",
-            })
-          }
         >
-          <Video className="h-5 w-5" />
+          <Link href={`/call/${thread.id}` as never}>
+            <Video className="h-5 w-5" aria-hidden />
+          </Link>
         </Button>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" aria-label={t("thread.info")} title={t("thread.info")}>
-              <Info className="h-5 w-5" />
+              <Info className="h-5 w-5" aria-hidden />
             </Button>
           </SheetTrigger>
           <SheetContent side="end" className="w-full sm:max-w-sm">

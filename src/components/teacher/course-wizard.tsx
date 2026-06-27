@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Check, Plus, Trash2 } from "lucide-react";
+import { Check, Loader2, Plus, Trash2 } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -137,6 +137,17 @@ export function CourseWizard({ locale }: { locale: "fr" | "ar" }) {
           monthRevenueDzd: 0,
           studentCount: 0,
           accountId: user?.id,
+          // Persist the full Details/Basics/Pricing payload so the edit
+          // form's Content tab can read these back. Empty strings/arrays
+          // are filtered so we don't pollute the store with placeholders.
+          description: form.description.trim() || undefined,
+          weeks: form.weeks.map((w) => w.trim()).filter(Boolean),
+          outcomes: form.outcomes.map((o) => o.trim()).filter(Boolean),
+          category: form.category,
+          audience: form.audience,
+          language: form.language,
+          summary: form.summary.trim() || undefined,
+          promoPct: form.promoEnabled ? form.promoPct : undefined,
         });
 
         show({
@@ -179,6 +190,7 @@ export function CourseWizard({ locale }: { locale: "fr" | "ar" }) {
                   onClick={() => setStep(s)}
                   className={cn(
                     "flex items-center gap-2 rounded-[var(--radius-md)] px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                     active && "bg-primary text-primary-foreground",
                     done && !active && "text-success",
                     !active && !done && "text-ink-3 hover:text-foreground",
@@ -578,10 +590,12 @@ function PublishStep({
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="primary" size="lg" disabled={submitting} onClick={onPublish}>
-          {t("publish")}
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+          <span className={submitting ? "opacity-0" : ""}>{t("publish")}</span>
         </Button>
         <Button variant="outline" size="lg" disabled={submitting} onClick={onPublishLater}>
-          {t("publishLater")}
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+          <span className={submitting ? "opacity-0" : ""}>{t("publishLater")}</span>
         </Button>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Sparkles, MoreHorizontal, Plus, UserMinus, PencilLine, Eye } from "lucide-react";
+import { Sparkles, MoreHorizontal, Loader2, Plus, UserMinus, PencilLine, Eye } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -87,13 +87,17 @@ export function AgencyMembersTable({ locale }: { locale: "fr" | "ar" }) {
     });
   };
 
+  const [splitPending, startSplitTransition] = React.useTransition();
+
   const saveSplits = () => {
-    // Persist into the members array (in-session mutation).
-    setMembers((prev) => prev.map((m) => ({ ...m, splitPercent: splits[m.id] ?? m.splitPercent })));
-    show({
-      title: tt("splitSaved.title"),
-      description: tt("splitSaved.desc"),
-      variant: "success",
+    startSplitTransition(() => {
+      // Persist into the members array (in-session mutation).
+      setMembers((prev) => prev.map((m) => ({ ...m, splitPercent: splits[m.id] ?? m.splitPercent })));
+      show({
+        title: tt("splitSaved.title"),
+        description: tt("splitSaved.desc"),
+        variant: "success",
+      });
     });
   };
 
@@ -209,8 +213,9 @@ export function AgencyMembersTable({ locale }: { locale: "fr" | "ar" }) {
                 {total}%
               </span>
             </div>
-            <Button variant="primary" size="sm" disabled={total !== 100} onClick={saveSplits}>
-              {tSplit("save")}
+            <Button variant="primary" size="sm" disabled={total !== 100 || splitPending} onClick={saveSplits}>
+              {splitPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+              <span className={splitPending ? "opacity-0" : ""}>{tSplit("save")}</span>
             </Button>
           </div>
         </div>
@@ -323,6 +328,7 @@ function InviteDialog({
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [subject, setSubject] = React.useState("");
+  const [pending, startTransition] = React.useTransition();
 
   const reset = () => {
     setEmail("");
@@ -339,19 +345,21 @@ function InviteDialog({
       });
       return;
     }
-    onSend({
-      id: `inv-${Date.now().toString(36)}`,
-      email: email.trim(),
-      name: name.trim(),
-      subject: subject.trim(),
+    startTransition(() => {
+      onSend({
+        id: `inv-${Date.now().toString(36)}`,
+        email: email.trim(),
+        name: name.trim(),
+        subject: subject.trim(),
+      });
+      show({
+        title: tt("invitePending.title"),
+        description: tt("invitePending.desc", { email: email.trim() }),
+        variant: "success",
+      });
+      reset();
+      setOpen(false);
     });
-    show({
-      title: tt("invitePending.title"),
-      description: tt("invitePending.desc", { email: email.trim() }),
-      variant: "success",
-    });
-    reset();
-    setOpen(false);
   };
 
   return (
@@ -391,8 +399,11 @@ function InviteDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => { reset(); setOpen(false); }}>{t("cancel")}</Button>
-          <Button variant="primary" onClick={handleSend}>{t("send")}</Button>
+          <Button variant="outline" disabled={pending} onClick={() => { reset(); setOpen(false); }}>{t("cancel")}</Button>
+          <Button variant="primary" disabled={pending} onClick={handleSend}>
+            {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+            <span className={pending ? "opacity-0" : ""}>{t("send")}</span>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

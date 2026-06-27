@@ -9,6 +9,7 @@ import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { routes } from "@/lib/routes";
 
 export function MobileNav() {
   const t = useTranslations("nav");
@@ -16,11 +17,11 @@ export function MobileNav() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/browse" as const, label: t("browse") },
-    { href: "/teachers" as const, label: t("teachers") },
-    { href: "/requests" as const, label: t("requests") },
-    { href: "/how-it-works" as const, label: t("howItWorks") },
-    { href: "/teach" as const, label: t("becomeTeacher") },
+    { href: routes.browse(), label: t("browse") },
+    { href: routes.teachers(), label: t("teachers") },
+    { href: routes.requests(), label: t("requests") },
+    { href: routes.howItWorks(), label: t("howItWorks") },
+    { href: routes.teachLanding(), label: t("becomeTeacher") },
   ];
 
   return (
@@ -78,7 +79,7 @@ export function MobileNav() {
               return (
                 <Link
                   key={l.href}
-                  href={l.href}
+                  href={l.href as never /* mixed route literal types */}
                   onClick={() => setOpen(false)}
                   className={cn(
                     "rounded-[var(--radius-md)] px-3 py-3 text-base font-medium",
@@ -93,12 +94,12 @@ export function MobileNav() {
           <Separator />
           <div className="flex flex-col gap-2">
             <Button asChild variant="primary" size="lg">
-              <Link href="/sign-up" onClick={() => setOpen(false)}>
+              <Link href={routes.signUp()} onClick={() => setOpen(false)}>
                 {t("signUp")}
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/sign-in" onClick={() => setOpen(false)}>
+              <Link href={routes.signIn()} onClick={() => setOpen(false)}>
                 {t("signIn")}
               </Link>
             </Button>

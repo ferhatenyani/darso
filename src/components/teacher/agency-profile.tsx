@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ export function AgencyProfileEditor({ locale }: { locale: "fr" | "ar" }) {
   const [files, setFiles] = React.useState<File[]>([]);
   const [name, setName] = React.useState(agency.name[locale]);
   const [bio, setBio] = React.useState(agency.bio[locale]);
+  const [pending, startTransition] = React.useTransition();
 
   return (
     <div className="space-y-5 rounded-[var(--radius-xl)] border border-border bg-card p-6">
@@ -37,15 +39,21 @@ export function AgencyProfileEditor({ locale }: { locale: "fr" | "ar" }) {
         <Button
           variant="primary"
           size="md"
+          disabled={pending}
           onClick={() =>
-            show({
-              title: tt("profileSaved.title"),
-              description: tt("profileSaved.desc"),
-              variant: "success",
+            startTransition(() => {
+              show({
+                title: tt("profileSaved.title"),
+                description: tt("profileSaved.desc"),
+                variant: "success",
+              });
             })
           }
         >
-          {locale === "ar" ? "حفظ" : "Enregistrer"}
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+          <span className={pending ? "opacity-0" : ""}>
+            {locale === "ar" ? "حفظ" : "Enregistrer"}
+          </span>
         </Button>
       </div>
     </div>

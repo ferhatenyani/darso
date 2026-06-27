@@ -1,4 +1,23 @@
 /**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/disputes                → seeds initial state for getDisputes
+ *   GET    /api/disputes/:id            → getDisputeById(id)
+ *   POST   /api/disputes                → addDispute(input)
+ *   (subscribe maps to either SSE/WebSocket OR client-side polling)
+ *
+ * Shape: the backend should return Dispute[] matching the type below.
+ * Cache invalidation: every mutation should invalidate the per-account snapshot
+ *   cache (mirror the current pattern — caches are read by useSyncExternalStore
+ *   subscribers, so identity must change on every mutation).
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+
+/**
  * In-memory store for disputes opened in-session.
  *
  * Backs the "+ Start a dispute" CTA on the disputes shell and the

@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import { useRouter } from "@/i18n/navigation";
 import { upcomingSessions, type Session } from "@/lib/mock/sessions";
 import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
@@ -19,14 +20,18 @@ export function LivePage() {
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const { show } = useToast();
+  const router = useRouter();
   const [tab, setTab] = useState<"now" | "soon" | "today" | "tomorrow">("now");
 
-  const handleJoinLive = (sessionTitle: string) => {
+  // Joining a live session — toast for feedback, then push to the mock
+  // call room. The session id doubles as the call-session id.
+  const handleJoinLive = (session: Session) => {
     show({
       title: tBooking("toasts.joiningLive.title"),
-      description: tBooking("toasts.joiningLive.desc", { title: sessionTitle }),
+      description: tBooking("toasts.joiningLive.desc", { title: session.title[lang] }),
       variant: "default",
     });
+    router.push(`/call/${session.id}` as never);
   };
 
   const filterByTab = (s: Session) => {
@@ -137,7 +142,7 @@ export function LivePage() {
                               type="button"
                               size="sm"
                               variant="danger"
-                              onClick={() => handleJoinLive(s.title[lang])}
+                              onClick={() => handleJoinLive(s)}
                             >
                               {t("joinNow")}
                               <Arrow className="h-3.5 w-3.5" />

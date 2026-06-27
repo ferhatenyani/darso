@@ -1,0 +1,185 @@
+{
+  "events": {
+    "wizard": {
+      "eyebrow": "Nouvel événement",
+      "pageTitle": "Créer un événement",
+      "pageSubtitle": "Cinq étapes pour publier un atelier, une cohorte ou une première de capsule. Tout est modifiable plus tard.",
+      "stepLabel": "Étape {current} sur {total}",
+      "publish": "Publier l'événement",
+      "publishLater": "Enregistrer en brouillon",
+      "steps": {
+        "basics": {
+          "title": "Bases",
+          "hint": "Donnez à l'événement un nom mémorable et un format clair."
+        },
+        "schedule": {
+          "title": "Date & heure",
+          "hint": "Quand l'événement commence-t-il, et combien de temps dure-t-il ?"
+        },
+        "audience": {
+          "title": "Audience & capacité",
+          "hint": "Qui visez-vous, et combien de places ouvrez-vous ?"
+        },
+        "pricing": {
+          "title": "Tarification",
+          "hint": "Définissez un prix ou rendez l'événement gratuit."
+        },
+        "review": {
+          "title": "Récap & publication",
+          "hint": "Vérifiez chaque ligne avant de publier."
+        }
+      },
+      "basics": {
+        "titleFr": "Titre (français)",
+        "titleFrPlaceholder": "Marathon Bac · révisions intensives",
+        "titleAr": "Titre (arabe)",
+        "titleArPlaceholder": "ماراطون الباك · مراجعة مكثّفة",
+        "format": "Format de l'événement",
+        "formatHint": "Le format apparaît sur la fiche publique et oriente les attentes des élèves.",
+        "formatOptions": {
+          "liveWorkshop": "Atelier en direct",
+          "cohort": "Cohorte fermée",
+          "openHouse": "Portes ouvertes",
+          "recordingPremiere": "Première d'un enregistrement"
+        },
+        "description": "Description",
+        "descriptionPlaceholder": "Décrivez le programme, ce que les élèves vont apprendre, et les prérequis éventuels.",
+        "descriptionHint": "Une bonne description double le taux de réservation. Visez 60-120 mots."
+      },
+      "schedule": {
+        "start": "Début",
+        "end": "Fin",
+        "timezoneNotice": "Toutes les heures sont affichées dans le fuseau"
+      },
+      "audience": {
+        "capacity": "Nombre de places",
+        "capacityHint": "Vous pourrez augmenter la capacité plus tard si la salle se remplit.",
+        "capacityUnit": "places",
+        "target": "Audience cible",
+        "audiences": {
+          "students": "Élèves",
+          "parents": "Parents",
+          "teachers": "Enseignants"
+        },
+        "audienceHints": {
+          "students": "Apprenants en quête de cours.",
+          "parents": "Pour les portes ouvertes & démonstrations.",
+          "teachers": "Pour le partage entre pairs."
+        },
+        "language": "Langue principale",
+        "languageMixed": "Bilingue FR + AR"
+      },
+      "pricing": {
+        "free": "Événement gratuit",
+        "freeHint": "Les places restent comptabilisées, mais aucun paiement n'est requis.",
+        "price": "Prix par place",
+        "priceHint": "Commission progressive appliquée selon votre palier mensuel.",
+        "refundPolicy": "Politique de remboursement",
+        "refundOptions": {
+          "flexible": "Souple — remboursement jusqu'à 24 h avant",
+          "moderate": "Modérée — remboursement jusqu'à 7 j avant",
+          "strict": "Stricte — aucun remboursement après inscription",
+          "none": "Aucune politique (gratuit)"
+        }
+      },
+      "review": {
+        "untitled": "Événement sans titre",
+        "when": "Quand",
+        "audience": "Audience",
+        "language": "Langue",
+        "price": "Tarif",
+        "refund": "Remboursement",
+        "edit": "Modifier",
+        "legalNote": "En publiant, vous acceptez la charte des organisateurs darso."
+      },
+      "toasts": {
+        "missing": {
+          "title": "Champs manquants",
+          "desc": "Vérifiez les étapes signalées avant de publier.",
+          "draftNeedsTitle": "Un brouillon a besoin d'un titre pour être retrouvé."
+        },
+        "draftNeedsTitle": "Un brouillon a besoin d'un titre pour être retrouvé.",
+        "published": {
+          "title": "Événement publié",
+          "desc": "Votre événement est désormais visible dans la liste."
+        },
+        "draftSaved": {
+          "title": "Brouillon enregistré",
+          "desc": "Vous pouvez le reprendre à tout moment depuis la liste."
+        }
+      }
+    },
+    "edit": {
+      "title": "Modifier l'événement",
+      "subtitle": "Toutes les sections du brief en un seul écran.",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "tabs": {
+        "basics": "Bases",
+        "schedule": "Date & heure",
+        "audience": "Audience",
+        "pricing": "Tarification"
+      },
+      "fields": {
+        "status": "Statut"
+      },
+      "status": {
+        "draft": "Brouillon",
+        "published": "Publié"
+      },
+      "toasts": {
+        "saved": {
+          "title": "Événement mis à jour",
+          "desc": "Les changements sont visibles immédiatement."
+        },
+        "missing": {
+          "title": "Champs manquants",
+          "desc": "Titre, début et capacité sont requis."
+        },
+        "deleted": {
+          "title": "Événement supprimé",
+          "desc": "L'événement n'apparaîtra plus dans votre liste."
+        },
+        "deleteFailed": {
+          "title": "Suppression impossible",
+          "desc": "Cet événement est introuvable."
+        }
+      },
+      "deleteDialog": {
+        "title": "Supprimer cet événement ?",
+        "body": "« {title} » sera définitivement retiré de votre liste. Cette action est irréversible dans la démo.",
+        "cancel": "Annuler",
+        "confirm": "Supprimer"
+      }
+    },
+    "toasts": {
+      "duplicated": {
+        "title": "Événement dupliqué",
+        "desc": "Un brouillon a été créé à partir de cet événement."
+      },
+      "duplicateFailed": {
+        "title": "Duplication impossible",
+        "desc": "Cet événement est introuvable."
+      },
+      "cancelled": {
+        "title": "Événement annulé",
+        "desc": "L'événement a été retiré de la liste."
+      },
+      "cancelFailed": {
+        "title": "Annulation impossible",
+        "desc": "Cet événement est introuvable."
+      },
+      "cancelConfirm": {
+        "title": "Annuler cet événement ?",
+        "body": "L'événement sera retiré de votre liste et les participants seraient notifiés en production. Cette action est irréversible dans la démo.",
+        "cancel": "Garder",
+        "confirm": "Annuler l'événement"
+      }
+    },
+    "shared": {
+      "free": "Gratuit",
+      "places": "places"
+    }
+  }
+}

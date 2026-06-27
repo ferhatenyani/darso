@@ -379,7 +379,7 @@ function MyRequestRow({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link href={`/requests/${request.slug}` as never}>
               {t("my.card.openDetail")}

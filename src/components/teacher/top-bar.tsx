@@ -8,6 +8,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { Logo } from "@/components/brand/logo";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { TeacherSidebar } from "./sidebar";
+import { NotificationsBell } from "./notifications-bell";
 
 export function TeacherTopBar() {
   const t = useTranslations("teacher.shell");
@@ -26,6 +27,12 @@ export function TeacherTopBar() {
     if (pathname.includes("/teach/requests")) return tnav("requests");
     if (pathname.includes("/teach/reviews")) return tnav("reviews");
     if (pathname.includes("/teach/subscription")) return tnav("subscription");
+    if (pathname.includes("/teach/payouts")) return tnav("payouts");
+    // Order matters: check `/teach/agency/analytics` before the bare
+    // `/teach/agency` prefix; and `/teach/analytics` before `/teach/agency`
+    // wouldn't conflict, but keep the analytics checks adjacent for clarity.
+    if (pathname.includes("/teach/agency/analytics")) return tnav("agencyAnalytics");
+    if (pathname.includes("/teach/analytics")) return tnav("analytics");
     if (pathname.includes("/teach/agency")) return tnav("agency");
     if (pathname.includes("/messages")) return tnav("messages");
     return tnav("home");
@@ -38,7 +45,7 @@ export function TeacherTopBar() {
           <button
             type="button"
             aria-label={t("openSidebar")}
-            className="grid h-10 w-10 place-items-center rounded-[var(--radius-md)] text-ink-2 hover:bg-surface"
+            className="grid h-10 w-10 place-items-center rounded-[var(--radius-md)] text-ink-2 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <Menu className="h-5 w-5" aria-hidden />
           </button>
@@ -51,13 +58,16 @@ export function TeacherTopBar() {
         <Logo mark />
       </Link>
       <h1 className="ms-1 truncate text-sm font-semibold text-foreground">{title}</h1>
-      <Link
-        href="/"
-        className="ms-auto inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-md)] border border-border bg-background px-2.5 text-[12px] font-medium text-ink-2 hover:bg-surface"
-      >
-        <Eye className="h-3.5 w-3.5" aria-hidden />
-        <span className="hidden sm:inline">{t("viewAsStudent")}</span>
-      </Link>
+      <div className="ms-auto flex items-center gap-1">
+        <NotificationsBell />
+        <Link
+          href="/"
+          className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-md)] border border-border bg-background px-2.5 text-[12px] font-medium text-ink-2 hover:bg-surface"
+        >
+          <Eye className="h-3.5 w-3.5" aria-hidden />
+          <span className="hidden sm:inline">{t("viewAsStudent")}</span>
+        </Link>
+      </div>
     </header>
   );
 }
@@ -67,6 +77,7 @@ export function TeacherDesktopHeader() {
   const t = useTranslations("teacher.shell");
   return (
     <div className="hidden lg:flex sticky top-0 z-20 h-14 items-center justify-end gap-2 border-b border-border bg-background/85 px-6 backdrop-blur">
+      <NotificationsBell />
       <Link
         href="/"
         className="inline-flex h-9 items-center gap-2 rounded-[var(--radius-md)] border border-border bg-background px-3 text-[13px] font-medium text-ink-2 hover:bg-surface hover:text-foreground"

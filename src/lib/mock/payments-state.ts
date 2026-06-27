@@ -1,4 +1,27 @@
 /**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/payments/methods        → seeds the user's saved cards (currently
+ *                                          lives inside account-shell PaymentsSection)
+ *   POST   /api/payments/methods        → add a new card / method
+ *   PATCH  /api/payments/methods/:id    → update label / set as default
+ *   DELETE /api/payments/methods/:id    → remove method
+ *   (no subscribe — request/response, optionally refetched on focus)
+ *
+ * Shape: the backend should return PaymentMethod[] matching the type below.
+ *   `defaultMockPaymentMethods` is a localized fallback for visitors who
+ *   haven't saved any method yet — drop it once the GET endpoint returns
+ *   an empty-state shape.
+ * Cache invalidation: mutations should invalidate the per-account cache
+ *   so both account-shell and CheckoutDialog re-read in sync.
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+
+/**
  * Shared payment-method shape used by both `account-shell` (the user-managed
  * list) and `CheckoutDialog` (the picker at booking time).
  *

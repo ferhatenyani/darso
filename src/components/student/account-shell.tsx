@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
+import { useCallback, useState, useSyncExternalStore, useTransition, type FormEvent, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   User as UserIcon,
@@ -18,6 +18,7 @@ import {
   LogOut,
   Download,
   Flag,
+  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -111,7 +112,7 @@ export function AccountShell() {
       </section>
 
       <section className="bg-background">
-        <div className="container-narrow grid gap-8 py-10 lg:grid-cols-[240px_1fr] lg:gap-12">
+        <div className="container-narrow grid gap-8 py-10 md:grid-cols-[200px_1fr] md:gap-10 lg:grid-cols-[240px_1fr] lg:gap-12">
           {/* Sidebar nav */}
           <nav aria-label={t("title")}>
             <ul className="grid gap-1 rounded-[var(--radius-lg)] border border-border bg-card p-2">
@@ -123,6 +124,7 @@ export function AccountShell() {
                     aria-current={section === it.key ? "page" : undefined}
                     className={cn(
                       "group flex w-full items-center gap-2.5 rounded-[var(--radius-md)] px-3 py-2.5 text-[13.5px] text-ink-2 transition-colors",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                       section === it.key
                         ? "bg-surface text-foreground font-semibold"
                         : "hover:bg-surface hover:text-foreground",
@@ -447,9 +449,30 @@ function PaymentsSection() {
   ]);
 
   const [history] = useState(() => [
-    { id: "h-1", date: "12 sept 2025", item: lang === "ar" ? "رياضيات الباك · النهايات" : "Math Bac · Limites", amount: 4500, status: "Paid" as const },
-    { id: "h-2", date: "05 sept 2025", item: lang === "ar" ? "IELTS التحدّث · ورشة" : "IELTS Speaking · workshop", amount: 1800, status: "Refunded" as const },
-    { id: "h-3", date: "28 aout 2025", item: lang === "ar" ? "React من الصفر" : "React from scratch · cohort", amount: 9800, status: "Paid" as const },
+    {
+      id: "h-1",
+      invoiceId: "INV-2025-0042",
+      date: "12 sept 2025",
+      item: lang === "ar" ? "رياضيات الباك · النهايات" : "Math Bac · Limites",
+      amount: 4500,
+      status: "Paid" as const,
+    },
+    {
+      id: "h-2",
+      invoiceId: "INV-2025-0039",
+      date: "05 sept 2025",
+      item: lang === "ar" ? "IELTS التحدّث · ورشة" : "IELTS Speaking · workshop",
+      amount: 1800,
+      status: "Refunded" as const,
+    },
+    {
+      id: "h-3",
+      invoiceId: "INV-2025-0028",
+      date: "28 aout 2025",
+      item: lang === "ar" ? "React من الصفر" : "React from scratch · cohort",
+      amount: 9800,
+      status: "Paid" as const,
+    },
   ]);
 
   // Live bookings — surfaced from the in-memory booking store. Filtered to
@@ -662,19 +685,19 @@ function PaymentsSection() {
                     </Badge>
                   </span>
                   <span className="order-5 md:order-none md:text-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() =>
-                        show({
-                          title: tToasts("invoiceDownloaded.title"),
-                          description: tToasts("invoiceDownloaded.desc", { item: b.subjectTitle[lang] }),
-                          variant: "default",
-                        })
-                      }
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      {t("downloadInvoice")}
+                    {/* Plain <a target="_blank"> — next-intl's Link doesn't
+                        forward target; we already prepend the locale prefix
+                        ourselves. The invoice page is auth-gated server-side
+                        so anonymous tabs bounce to /sign-in. */}
+                    <Button asChild variant="ghost" size="sm">
+                      <a
+                        href={`/${locale}/account/invoices/${b.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t("downloadInvoice")}
+                      </a>
                     </Button>
                   </span>
                   <span className="order-6 md:order-none md:text-end">
@@ -745,19 +768,15 @@ function PaymentsSection() {
                   </Badge>
                 </span>
                 <span className="order-5 md:order-none md:text-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      show({
-                        title: tToasts("invoiceDownloaded.title"),
-                        description: tToasts("invoiceDownloaded.desc", { item: h.item }),
-                        variant: "default",
-                      })
-                    }
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    {t("downloadInvoice")}
+                  <Button asChild variant="ghost" size="sm">
+                    <a
+                      href={`/${locale}/account/invoices/${h.invoiceId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      {t("downloadInvoice")}
+                    </a>
                   </Button>
                 </span>
               </li>
@@ -796,6 +815,7 @@ function SecuritySection() {
   const [pwCurrent, setPwCurrent] = useState("");
   const [pwNew, setPwNew] = useState("");
   const [pwConfirm, setPwConfirm] = useState("");
+  const [pwPending, startPwTransition] = useTransition();
 
   const resetPasswordForm = () => {
     setPwCurrent("");
@@ -821,12 +841,14 @@ function SecuritySection() {
       });
       return;
     }
-    setPwOpen(false);
-    resetPasswordForm();
-    show({
-      title: tToasts("passwordChanged.title"),
-      description: tToasts("passwordChanged.desc"),
-      variant: "success",
+    startPwTransition(() => {
+      setPwOpen(false);
+      resetPasswordForm();
+      show({
+        title: tToasts("passwordChanged.title"),
+        description: tToasts("passwordChanged.desc"),
+        variant: "success",
+      });
     });
   };
 
@@ -942,6 +964,7 @@ function SecuritySection() {
                   type="button"
                   variant="ghost"
                   size="md"
+                  disabled={pwPending}
                   onClick={() => {
                     setPwOpen(false);
                     resetPasswordForm();
@@ -949,8 +972,9 @@ function SecuritySection() {
                 >
                   {t("dialogCancel")}
                 </Button>
-                <Button type="submit" size="md">
-                  {t("dialogSubmit")}
+                <Button type="submit" size="md" disabled={pwPending}>
+                  {pwPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                  <span className={pwPending ? "opacity-0" : ""}>{t("dialogSubmit")}</span>
                 </Button>
               </DialogFooter>
             </form>
@@ -1024,19 +1048,22 @@ function DangerSection() {
   const { show } = useToast();
   const [open, setOpen] = useState(false);
   const [word, setWord] = useState("");
+  const [pending, startTransition] = useTransition();
 
   const confirmDisabled =
     word.trim().toUpperCase() !== "SUPPRIMER" && word.trim() !== "احذف";
 
   const handleConfirm = () => {
     if (confirmDisabled) return;
-    setOpen(false);
-    setWord("");
-    show({
-      title: tToasts("accountDeleteRequested.title"),
-      description: tToasts("accountDeleteRequested.desc"),
-      variant: "warning",
-      durationMs: 7000,
+    startTransition(() => {
+      setOpen(false);
+      setWord("");
+      show({
+        title: tToasts("accountDeleteRequested.title"),
+        description: tToasts("accountDeleteRequested.desc"),
+        variant: "warning",
+        durationMs: 7000,
+      });
     });
   };
 
@@ -1076,6 +1103,7 @@ function DangerSection() {
               <Button
                 variant="ghost"
                 size="md"
+                disabled={pending}
                 onClick={() => {
                   setOpen(false);
                   setWord("");
@@ -1086,10 +1114,11 @@ function DangerSection() {
               <Button
                 variant="danger"
                 size="md"
-                disabled={confirmDisabled}
+                disabled={confirmDisabled || pending}
                 onClick={handleConfirm}
               >
-                {t("deleteConfirm")}
+                {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                <span className={pending ? "opacity-0" : ""}>{t("deleteConfirm")}</span>
               </Button>
             </DialogFooter>
           </DialogContent>

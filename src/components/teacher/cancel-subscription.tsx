@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -50,12 +50,16 @@ export function CancelSubscriptionDialog() {
     });
   };
 
+  const [pending, startTransition] = React.useTransition();
+
   const handleConfirm = () => {
-    setOpen(false);
-    show({
-      title: tt("cancelRequested.title"),
-      description: tt("cancelRequested.desc", { date: endDate }),
-      variant: "warning",
+    startTransition(() => {
+      setOpen(false);
+      show({
+        title: tt("cancelRequested.title"),
+        description: tt("cancelRequested.desc", { date: endDate }),
+        variant: "warning",
+      });
     });
   };
 
@@ -64,7 +68,7 @@ export function CancelSubscriptionDialog() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="flex w-full items-center justify-between gap-2 rounded-[var(--radius-xl)] border border-dashed border-danger/30 bg-card p-5 text-start text-[13px] font-medium text-danger transition-colors hover:bg-danger/5"
+          className="flex w-full items-center justify-between gap-2 rounded-[var(--radius-xl)] border border-dashed border-danger/30 bg-card p-5 text-start text-[13px] font-medium text-danger transition-colors hover:bg-danger/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
         >
           <span className="flex items-center gap-2">
             <CircleAlert className="h-4 w-4" aria-hidden />
@@ -97,14 +101,15 @@ export function CancelSubscriptionDialog() {
           />
         </div>
         <DialogFooter>
-          <Button variant="primary" onClick={handleKeep}>{t("keep")}</Button>
+          <Button variant="primary" onClick={handleKeep} disabled={pending}>{t("keep")}</Button>
           <Button
             variant="outline"
             onClick={handleConfirm}
-            disabled={!canConfirm}
-            aria-disabled={!canConfirm}
+            disabled={!canConfirm || pending}
+            aria-disabled={!canConfirm || pending}
           >
-            {t("confirm")}
+            {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+            <span className={pending ? "opacity-0" : ""}>{t("confirm")}</span>
           </Button>
         </DialogFooter>
       </DialogContent>

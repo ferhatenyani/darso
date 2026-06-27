@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Heart, ArrowRight, ArrowLeft } from "lucide-react";
+import { Heart } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TeacherCard } from "@/components/student/teacher-card";
 import { CourseCard } from "@/components/student/course-card";
@@ -15,9 +14,10 @@ import { courses } from "@/lib/mock/courses";
 
 export function FavoritesPage() {
   const t = useTranslations("student.favorites");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
-  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const [tab, setTab] = useState<"all" | "teachers" | "courses">("all");
+  void locale;
 
   const teachers = savedItems
     .filter((s) => s.type === "teacher")
@@ -45,19 +45,20 @@ export function FavoritesPage() {
       <section className="bg-surface/30">
         <div className="container-narrow py-10">
           {empty ? (
-            <div className="mx-auto grid max-w-md place-items-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-card p-12 text-center">
-              <span className="grid h-12 w-12 place-items-center rounded-full bg-surface text-ink-3">
-                <Heart className="h-5 w-5" />
-              </span>
-              <h2 className="text-[16px] font-semibold text-foreground">{t("empty")}</h2>
-              <p className="text-[13px] text-ink-2">{t("emptyHint")}</p>
-              <Button asChild variant="primary" size="md" className="mt-2">
-                <Link href="/browse">
-                  {t("exploreNow")}
-                  <Arrow className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
+            <EmptyState
+              icon={Heart}
+              tone="accent"
+              title={t("emptyState.title")}
+              description={t("emptyState.body")}
+              primary={{ label: t("emptyState.primary"), href: "/teachers" }}
+              secondary={{ label: t("emptyState.secondary"), href: "/browse" }}
+              hintsLabel={t("emptyState.hintsLabel")}
+              hints={(tCommon.raw("hero.popularChips") as string[]).slice(0, 5).map((label) => ({
+                label,
+                href: `/browse?subject=${encodeURIComponent(label.toLowerCase())}`,
+              }))}
+              className="mx-auto max-w-2xl"
+            />
           ) : (
             <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
               <TabsList>

@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { StateBadge } from "@/components/app/disputes/state-badge";
 import { DisputeOpenDialog } from "@/components/disputes/dispute-open-dialog";
 import {
@@ -112,7 +113,7 @@ export function DisputesShell() {
         </TabsList>
         <TabsContent value={tab} className="mt-6">
           {filtered.length === 0 ? (
-            <EmptyState />
+            <DisputesEmpty />
           ) : (
             <ul className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-e1">
               {filtered.map((d, idx) => {
@@ -188,20 +189,15 @@ export function DisputesShell() {
   );
 }
 
-function EmptyState() {
+function DisputesEmpty() {
   const t = useTranslations("app.disputes.list.empty");
   return (
-    <div className="grid place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-card py-16 text-center">
-      <div className="grid h-12 w-12 place-items-center rounded-full bg-success/10 text-success">
-        <Scale className="h-5 w-5" />
-      </div>
-      <h3
-        className="mt-4 font-serif text-xl italic text-foreground"
-        style={{ fontFamily: "ui-serif, Georgia, serif" }}
-      >
-        {t("title")}
-      </h3>
-      <p className="mt-2 max-w-sm text-pretty text-sm text-ink-2">{t("body")}</p>
-    </div>
+    <EmptyState
+      icon={Scale}
+      tone="success"
+      title={t("title")}
+      description={t("body")}
+      secondary={{ label: t("learnMore"), href: "/trust" }}
+    />
   );
 }

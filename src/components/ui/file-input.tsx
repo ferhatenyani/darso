@@ -47,12 +47,13 @@ export function FileInput({ accept, multiple, value, onValueChange, className, l
         }}
         className={cn(
           "group relative flex w-full flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-surface px-6 py-8 text-center transition-colors",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
           drag && "border-accent bg-accent-soft/60",
           "hover:border-accent",
         )}
       >
         <span className="grid h-10 w-10 place-items-center rounded-full bg-background text-accent shadow-e1">
-          <Upload className="h-4 w-4" />
+          <Upload className="h-4 w-4" aria-hidden />
         </span>
         <span className="text-sm font-medium text-foreground">{label ?? "Glisser un fichier ou cliquer"}</span>
         {hint && <span className="text-xs text-ink-3">{hint}</span>}
@@ -73,11 +74,17 @@ export function FileInput({ accept, multiple, value, onValueChange, className, l
               key={`${f.name}-${i}`}
               className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border bg-card px-3 py-2 text-sm"
             >
-              <FileIcon className="h-4 w-4 text-ink-3" />
+              <FileIcon className="h-4 w-4 text-ink-3" aria-hidden />
               <span className="flex-1 truncate text-foreground">{f.name}</span>
               <span className="text-xs text-ink-3 tabular">{Math.ceil(f.size / 1024)} Ko</span>
-              <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)}>
-                <X className="h-4 w-4" />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => remove(i)}
+                aria-label={`Remove ${f.name}`}
+              >
+                <X className="h-4 w-4" aria-hidden />
               </Button>
             </li>
           ))}

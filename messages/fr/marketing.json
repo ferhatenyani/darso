@@ -1,0 +1,439 @@
+{
+  "marketing": {
+    "about": {
+      "metaTitle": "À propos · Darso",
+      "eyebrow": "Notre histoire",
+      "title": "Donner accès aux meilleurs professeurs d'Algérie, où que tu sois.",
+      "lede": "Darso est une plateforme algérienne qui connecte élèves, étudiants et apprenants adultes aux enseignants les plus qualifiés du pays — sans dépendre de l'adresse, du wilaya, ou du carnet d'adresses.",
+      "founded": "Fondée en",
+      "foundedYear": "2024",
+      "foundedCity": "Alger, Algérie",
+      "team": "Équipe",
+      "teamSize": "12 personnes",
+      "reach": "Couverture",
+      "reachValue": "48 wilayas",
+      "missionEyebrow": "Mission",
+      "missionTitle": "Un cours particulier ne devrait jamais dépendre de ton code postal.",
+      "missionBody": "Pendant trop longtemps, l'accès aux meilleurs professeurs algériens a été un privilège urbain — concentré dans une poignée de quartiers d'Alger, Oran et Constantine. Darso renverse cette logique. Cours en ligne, cours à domicile, sessions en direct, demandes inversées : la plateforme s'adapte à ta région, ton niveau et ton budget — pas l'inverse.",
+      "pillarsEyebrow": "Ce qui nous tient",
+      "pillarsTitle": "Trois principes non négociables",
+      "pillars": [
+        {
+          "title": "Vérification humaine",
+          "body": "Chaque professeur est entretenu, ses diplômes contrôlés. Pas d'inscription automatique. La confiance se gagne avant le premier cours."
+        },
+        {
+          "title": "Algérien d'abord",
+          "body": "Programmes nationaux, dialecte algérien, paiement local en DZD, support en français et en arabe. Darso est conçu ici, pour d'ici."
+        },
+        {
+          "title": "Rémunération équitable",
+          "body": "Notre commission diminue à mesure que le professeur réussit. Plus tu enseignes, plus tu gardes. Pas d'abonnement, pas de frais cachés."
+        }
+      ],
+      "storyEyebrow": "L'origine",
+      "storyTitle": "Comment Darso est né",
+      "storyChapters": [
+        {
+          "year": "2023",
+          "title": "Le constat",
+          "body": "Deux cofondateurs, l'un ingénieur à Alger, l'autre prof de math à Béjaïa, partagent le même problème : les élèves talentueux en dehors des grandes villes n'ont aucun accès aux meilleurs professeurs. Les groupes WhatsApp et les bouches-à-oreilles ne suffisent plus."
+        },
+        {
+          "year": "Janvier 2024",
+          "title": "Premier prototype",
+          "body": "Un MVP en six semaines, testé avec 14 professeurs vérifiés à la main et 80 élèves de Bac. Premier cours réservé le 12 février 2024."
+        },
+        {
+          "year": "Septembre 2024",
+          "title": "Ouverture nationale",
+          "body": "Darso s'ouvre aux 48 wilayas. 300+ professeurs actifs, demandes inversées en bêta, premiers cours en darija et tamazight."
+        },
+        {
+          "year": "Aujourd'hui",
+          "title": "Vers la maturité",
+          "body": "Plus de 50 000 sessions tenues, un taux de satisfaction de 4,8/5, et une équipe qui grandit autour d'une seule conviction : la qualité avant l'échelle."
+        }
+      ],
+      "teamEyebrow": "L'équipe",
+      "teamTitle": "Construit par des Algériens, pour des Algériens",
+      "teamSubtitle": "Six cofondateurs, douze personnes au total. Tous restent proches du terrain — chacun donne ou suit au moins un cours par mois.",
+      "members": [
+        { "name": "Yacine Belkacem", "role": "Cofondateur · CEO", "city": "Alger", "initials": "YB" },
+        { "name": "Lina Hamadouche", "role": "Cofondatrice · Pédagogie", "city": "Béjaïa", "initials": "LH" },
+        { "name": "Karim Belhadj", "role": "Cofondateur · Produit", "city": "Alger", "initials": "KB" },
+        { "name": "Sara Mansouri", "role": "Cofondatrice · Opérations", "city": "Oran", "initials": "SM" },
+        { "name": "Mohamed Tahar Ould Ali", "role": "Cofondateur · Engineering", "city": "Constantine", "initials": "MO" },
+        { "name": "Amina Bensalem", "role": "Cofondatrice · Communauté", "city": "Tizi Ouzou", "initials": "AB" }
+      ],
+      "metricsTitle": "Darso en chiffres",
+      "metrics": [
+        { "value": "48", "label": "wilayas couvertes" },
+        { "value": "1 200+", "label": "professeurs vérifiés" },
+        { "value": "50 k+", "label": "sessions tenues" },
+        { "value": "4,8/5", "label": "satisfaction moyenne" }
+      ],
+      "ctaTitle": "Tu veux faire partie de l'histoire ?",
+      "ctaBody": "Que tu enseignes, apprends, ou que tu veuilles rejoindre l'équipe — tout commence par un compte gratuit.",
+      "ctaPrimary": "Créer un compte",
+      "ctaSecondary": "Voir les postes ouverts"
+    },
+    "howItWorks": {
+      "metaTitle": "Comment ça marche · Darso",
+      "eyebrow": "Guide pas-à-pas",
+      "title": "De la recherche au premier cours en moins de cinq minutes.",
+      "lede": "Darso fonctionne dans les deux sens : les élèves choisissent un professeur, ou bien décrivent ce qu'ils cherchent et reçoivent des propositions. Voici comment.",
+      "tabStudents": "Pour les élèves",
+      "tabTeachers": "Pour les professeurs",
+      "studentSteps": [
+        {
+          "title": "Explore ou demande",
+          "body": "Parcours le catalogue par matière, niveau ou wilaya — ou poste une demande inversée et laisse les professeurs te répondre."
+        },
+        {
+          "title": "Compare les profils",
+          "body": "Diplômes vérifiés, avis détaillés, vidéos d'introduction, tarif horaire. Tout est transparent avant la réservation."
+        },
+        {
+          "title": "Réserve un créneau",
+          "body": "Calendrier en temps réel, paiement sécurisé en DZD. Cours en ligne, à domicile, ou en présentiel — tu décides du format."
+        },
+        {
+          "title": "Apprends et évalue",
+          "body": "Salle de classe virtuelle intégrée, tableau partagé, enregistrement disponible. Note ton professeur après chaque session."
+        }
+      ],
+      "teacherSteps": [
+        {
+          "title": "Crée ton profil",
+          "body": "Diplômes, expérience, tarifs, formats proposés. Notre équipe vérifie chaque profil en moins de 48 heures."
+        },
+        {
+          "title": "Construis ton offre",
+          "body": "Cours particuliers, cohortes, sessions en direct, événements ponctuels. Réponds aussi aux demandes inversées qui correspondent à ton profil."
+        },
+        {
+          "title": "Anime tes sessions",
+          "body": "Studio intégré, gestion de cohorte, devoirs, suivi de progression. Aucun outil externe à installer."
+        },
+        {
+          "title": "Encaisse, fais croître",
+          "body": "Paiements hebdomadaires, commission décroissante avec tes revenus, tableau de bord clair. Pas d'abonnement fixe."
+        }
+      ],
+      "formatsEyebrow": "Formats disponibles",
+      "formatsTitle": "Choisis le format qui te convient",
+      "formats": [
+        {
+          "name": "Cours particulier",
+          "body": "Un-à-un, en ligne ou en présentiel. Idéal pour préparer un examen ou combler une lacune ciblée.",
+          "duration": "1 à 2 h",
+          "price": "à partir de 1 200 DZD"
+        },
+        {
+          "name": "Cohorte",
+          "body": "Petit groupe (4 à 12 élèves), même niveau, même objectif. Échange entre pairs et tarif partagé.",
+          "duration": "8 à 12 semaines",
+          "price": "à partir de 6 000 DZD"
+        },
+        {
+          "name": "Session live",
+          "body": "Atelier en direct ouvert à tous, durée limitée. Parfait pour découvrir un professeur ou un sujet.",
+          "duration": "45 à 90 min",
+          "price": "gratuit ou symbolique"
+        }
+      ],
+      "faqEyebrow": "On nous demande souvent",
+      "faqTitle": "Questions fréquentes",
+      "faqs": [
+        {
+          "q": "Combien coûte un cours en moyenne ?",
+          "a": "Cela dépend du niveau et du format. Un cours particulier de math niveau Bac coûte entre 1 500 et 3 000 DZD/heure. Les cohortes reviennent souvent à moins de 500 DZD/heure par élève."
+        },
+        {
+          "q": "Comment sont vérifiés les professeurs ?",
+          "a": "Notre équipe contrôle les diplômes, mène un entretien vidéo, et active le profil seulement après validation. Les premiers cours sont suivis de près pour garantir la qualité."
+        },
+        {
+          "q": "Et si je ne suis pas satisfait d'un cours ?",
+          "a": "Tu disposes de 72 heures pour ouvrir un litige. Notre équipe arbitre, et le remboursement est automatique si la session n'a pas été tenue ou ne correspondait pas à la description."
+        },
+        {
+          "q": "Quels paiements acceptez-vous ?",
+          "a": "CIB, Edahabia, virement BaridiMob, et bientôt le paiement à la séance par opérateur télécom. Toutes les transactions sont en dinars."
+        }
+      ],
+      "ctaTitle": "Prêt à commencer ?",
+      "ctaBody": "Crée un compte en deux minutes — pas de carte requise pour explorer.",
+      "ctaPrimary": "Trouver un professeur",
+      "ctaSecondary": "Devenir professeur"
+    },
+    "press": {
+      "metaTitle": "Presse · Darso",
+      "eyebrow": "Salle de presse",
+      "title": "Tout ce qu'il faut pour parler de Darso.",
+      "lede": "Communiqués, chiffres-clés, logos, captures d'écran haute résolution. Pour toute demande supplémentaire, écris-nous à presse@darso.dz — réponse sous 24 heures ouvrées.",
+      "ctaContact": "Contacter l'équipe presse",
+      "ctaKit": "Télécharger le kit média",
+      "factsTitle": "En bref",
+      "facts": [
+        { "label": "Fondée", "value": "Février 2024" },
+        { "label": "Siège", "value": "Alger, Algérie" },
+        { "label": "Couverture", "value": "48 wilayas" },
+        { "label": "Professeurs actifs", "value": "1 200+" },
+        { "label": "Sessions tenues", "value": "50 000+" },
+        { "label": "Langues d'enseignement", "value": "Français, arabe, tamazight, anglais" }
+      ],
+      "releasesEyebrow": "Communiqués",
+      "releasesTitle": "Dernières annonces",
+      "readMore": "Lire le communiqué",
+      "releases": [
+        {
+          "date": "12 mai 2026",
+          "category": "Levée de fonds",
+          "title": "Darso boucle un tour d'amorçage de 2,4 M USD mené par Algiers Ventures",
+          "excerpt": "Les fonds serviront à doubler l'équipe technique et à lancer les sessions en darija pour les niveaux primaire et collège."
+        },
+        {
+          "date": "03 mars 2026",
+          "category": "Partenariat",
+          "title": "Darso signe avec le Ministère de l'Enseignement Supérieur pour les bourses Bac",
+          "excerpt": "1 000 élèves de wilayas reculées bénéficieront cette année d'un programme de tutorat pris en charge."
+        },
+        {
+          "date": "18 janvier 2026",
+          "category": "Produit",
+          "title": "Lancement officiel des demandes inversées — les élèves invitent les professeurs",
+          "excerpt": "Une mécanique inédite en Afrique du Nord qui inverse le rapport classique du marketplace éducatif."
+        },
+        {
+          "date": "21 octobre 2025",
+          "category": "Communauté",
+          "title": "Cap des 30 000 sessions, principalement portées par les wilayas du sud",
+          "excerpt": "Tamanrasset, Adrar et Béchar enregistrent la plus forte croissance du trimestre."
+        },
+        {
+          "date": "05 septembre 2025",
+          "category": "Reconnaissance",
+          "title": "Darso lauréat du Prix de l'innovation pédagogique algérienne 2025",
+          "excerpt": "Décerné par l'Association nationale des enseignants pour la mécanique de vérification humaine."
+        },
+        {
+          "date": "14 février 2025",
+          "category": "Cap symbolique",
+          "title": "Un an après le premier cours, Darso annonce 10 000 utilisateurs actifs",
+          "excerpt": "Retour sur douze mois d'apprentissage produit et de rencontres avec la communauté enseignante."
+        }
+      ],
+      "coverageEyebrow": "Ils en ont parlé",
+      "coverageTitle": "Couverture média",
+      "coverage": [
+        { "outlet": "El Watan", "title": "L'EdTech algérienne qui mise sur la confiance avant l'échelle" },
+        { "outlet": "TSA Algérie", "title": "Darso, ou comment un cours de math arrive jusqu'à Tamanrasset" },
+        { "outlet": "Liberté", "title": "Rémunération équitable des enseignants : le pari de Darso" },
+        { "outlet": "Maghreb Émergent", "title": "Les jeunes pousses algériennes qui réinventent l'éducation" }
+      ]
+    },
+    "careers": {
+      "metaTitle": "Carrières · Darso",
+      "eyebrow": "Rejoins l'équipe",
+      "title": "Construis l'infrastructure éducative de l'Algérie de demain.",
+      "lede": "On embauche pour aller plus vite, pas pour gonfler l'organigramme. Chaque rôle compte, chaque décision est explicite. Si tu cherches une étape qui aura un impact réel sur des dizaines de milliers d'apprenants — on devrait se parler.",
+      "valuesTitle": "Comment on travaille",
+      "values": [
+        { "title": "Proche du terrain", "body": "Tout le monde — design, ingénierie, ops — assiste à au moins un cours par mois en tant qu'élève ou prof." },
+        { "title": "Décisions explicites", "body": "Pas de réunion sans note préalable, pas de note sans décision proposée. On écrit avant de parler." },
+        { "title": "Remote-friendly, Algérie-first", "body": "Bureaux à Alger et Oran, télétravail accepté pour toute personne basée en Algérie. Salaires en DZD indexés sur les pratiques tech locales." }
+      ],
+      "openingsEyebrow": "Postes ouverts",
+      "openingsTitle": "Six rôles à pourvoir",
+      "applyLabel": "Postuler",
+      "filterAll": "Tous",
+      "filterEng": "Ingénierie",
+      "filterDesign": "Design",
+      "filterOps": "Ops & Pédagogie",
+      "filterMarketing": "Marketing",
+      "typeFullTime": "Temps plein",
+      "typeContract": "Contrat",
+      "remoteFull": "100 % remote",
+      "openings": [
+        { "title": "Senior Frontend Engineer", "team": "Ingénierie", "location": "Alger ou remote (Algérie)", "type": "Temps plein", "salary": "180 000 – 260 000 DZD / mois", "tags": ["React 19", "Next.js 16", "Tailwind v4"] },
+        { "title": "Backend Engineer (Node + PostgreSQL)", "team": "Ingénierie", "location": "Alger ou remote (Algérie)", "type": "Temps plein", "salary": "160 000 – 240 000 DZD / mois", "tags": ["Node 22", "PostgreSQL", "Redis"] },
+        { "title": "Mobile Engineer (React Native)", "team": "Ingénierie", "location": "Remote (Algérie)", "type": "Temps plein", "salary": "150 000 – 220 000 DZD / mois", "tags": ["React Native", "Expo", "iOS + Android"] },
+        { "title": "Product Designer", "team": "Design", "location": "Alger", "type": "Temps plein", "salary": "140 000 – 200 000 DZD / mois", "tags": ["Figma", "Recherche utilisateur", "FR + AR"] },
+        { "title": "Pedagogy Lead", "team": "Ops & Pédagogie", "location": "Remote (Algérie)", "type": "Temps plein", "salary": "130 000 – 180 000 DZD / mois", "tags": ["Conception pédagogique", "Bac DZ"] },
+        { "title": "Community Manager", "team": "Marketing", "location": "Oran", "type": "Temps plein", "salary": "90 000 – 130 000 DZD / mois", "tags": ["TikTok", "Instagram", "Bilingue"] },
+        { "title": "Operations Coordinator", "team": "Ops & Pédagogie", "location": "Alger", "type": "Temps plein", "salary": "80 000 – 110 000 DZD / mois", "tags": ["Support", "Vérification profs"] },
+        { "title": "Content Writer (FR + AR)", "team": "Marketing", "location": "Remote (Algérie)", "type": "Contrat", "salary": "Tarif journalier négociable", "tags": ["Édition", "SEO", "Bilingue"] }
+      ],
+      "benefitsTitle": "Ce qu'on offre",
+      "benefits": [
+        { "title": "Salaire compétitif en DZD", "body": "Indexé sur le marché tech algérien, revu chaque année, sans plafond opaque." },
+        { "title": "Équipement à la prise de poste", "body": "MacBook Pro ou équivalent, écran 4K, casque audio, abonnement Notion + Linear." },
+        { "title": "5 semaines de congés", "body": "Plus les jours fériés algériens et un vendredi sur deux libre en été." },
+        { "title": "Budget formation 80 000 DZD/an", "body": "Livres, conférences, cours en ligne — tu choisis, on rembourse." }
+      ],
+      "noFitTitle": "Tu ne vois pas ton rôle ?",
+      "noFitBody": "On grandit vite et on a tendance à ouvrir des postes au fil de l'eau. Si ton profil colle à la mission, écris-nous — on garde toutes les candidatures spontanées en mémoire.",
+      "noFitCta": "Envoyer une candidature spontanée"
+    },
+    "blog": {
+      "metaTitle": "Blog · Darso",
+      "eyebrow": "Carnet de bord",
+      "title": "Apprendre, enseigner, construire — en public.",
+      "lede": "On documente nos partis-pris produit, on partage la recherche pédagogique qui guide nos choix, et on donne la parole aux professeurs qui font vivre la plateforme.",
+      "searchPlaceholder": "Rechercher un article…",
+      "filterAll": "Tous",
+      "filterProduct": "Produit",
+      "filterPedagogy": "Pédagogie",
+      "filterStories": "Témoignages",
+      "filterTech": "Tech",
+      "readTimeLabel": "min de lecture",
+      "by": "par",
+      "featuredEyebrow": "À la une",
+      "featuredTitle": "L'article du mois",
+      "posts": [
+        {
+          "category": "Produit",
+          "title": "Pourquoi nous avons inversé le marketplace : la mécanique des demandes inversées",
+          "excerpt": "L'idée semblait absurde : laisser les élèves dicter ce qu'ils cherchent, et faire postuler les professeurs. Six mois plus tard, c'est 38 % de nos réservations. Retour sur les choix produit qui ont rendu ça viable.",
+          "author": "Karim Belhadj",
+          "date": "22 juin 2026",
+          "readTime": 9,
+          "featured": true
+        },
+        {
+          "category": "Pédagogie",
+          "title": "Cohortes ou un-à-un ? Ce que nos données disent vraiment",
+          "excerpt": "Sur 18 000 sessions de math Bac, nous avons croisé format, progression mesurée et satisfaction. Spoiler : aucun format ne gagne tout le temps.",
+          "author": "Lina Hamadouche",
+          "date": "08 juin 2026",
+          "readTime": 7
+        },
+        {
+          "category": "Témoignages",
+          "title": "De Tamanrasset à Polytech : le parcours d'Inès",
+          "excerpt": "Quatre soirs par semaine, depuis le sud, Inès suivait des cours de physique. Aujourd'hui elle est en première année à Polytechnique d'Alger. Voici son histoire — et celle de sa professeure.",
+          "author": "Amina Bensalem",
+          "date": "27 mai 2026",
+          "readTime": 6
+        },
+        {
+          "category": "Tech",
+          "title": "Comment on a fait passer notre studio vidéo de 4 G à 3 G",
+          "excerpt": "Optimisations vidéo, codecs, fallback texte+audio : le récit ingénierie de notre passage de Bénin à Béchar.",
+          "author": "Mohamed Tahar Ould Ali",
+          "date": "12 mai 2026",
+          "readTime": 11
+        },
+        {
+          "category": "Produit",
+          "title": "Le carnet de notes intégré : trois mois de recherche utilisateur",
+          "excerpt": "Pourquoi un simple champ « notes » a pris autant de temps à concevoir — et les enseignements qu'on en tire pour la suite.",
+          "author": "Sara Mansouri",
+          "date": "02 mai 2026",
+          "readTime": 8
+        },
+        {
+          "category": "Pédagogie",
+          "title": "Enseigner en darija : retours d'expérience après six mois",
+          "excerpt": "Quand on a ouvert le darija comme langue d'enseignement, on s'attendait à un essai. C'est devenu un pilier — voici ce qu'on en retient."
+        }
+      ],
+      "ctaTitle": "Reçois nos publications",
+      "ctaBody": "Une newsletter mensuelle, le premier vendredi du mois. Pas de spam, pas de promo, juste les meilleurs articles.",
+      "ctaButton": "S'inscrire à la newsletter",
+      "ctaEmailPlaceholder": "ton@email.dz"
+    },
+    "teachPricing": {
+      "metaTitle": "Tarifs enseignants · Darso",
+      "eyebrow": "Modèle de rémunération",
+      "title": "Pas d'abonnement. Une commission qui décroît à mesure que tu réussis.",
+      "lede": "Darso ne te facture rien tant que tu n'as pas généré de revenu. Et plus tu enseignes, plus la part qui te revient grandit — pour de vrai, palier après palier.",
+      "primaryCta": "Commencer à enseigner",
+      "secondaryCta": "Voir les ressources",
+      "principleEyebrow": "Le principe",
+      "principleTitle": "Trois règles, zéro surprise",
+      "principles": [
+        {
+          "title": "Aucun frais fixe",
+          "body": "Pas d'abonnement mensuel, pas de frais d'installation, pas de coût d'inscription. Tu commences gratuitement, tu paies seulement quand tu gagnes."
+        },
+        {
+          "title": "Commission décroissante",
+          "body": "Plus tes revenus du mois augmentent, plus notre commission baisse — par paliers clairs. Un succès t'est facturé moins cher qu'un démarrage."
+        },
+        {
+          "title": "Transparence totale",
+          "body": "Tu vois ton palier en temps réel, ton revenu net, ta facture. Aucun frais caché, aucune retenue non documentée."
+        }
+      ],
+      "simulatorEyebrow": "Simulateur",
+      "simulatorTitle": "Calcule ce que tu garderais réellement",
+      "simulatorBody": "Fais glisser le curseur pour voir comment notre commission évolue selon tes revenus mensuels. Ce que tu vois ici est exactement ce que tu paierais — aucun calcul caché.",
+      "comparisonEyebrow": "Comparaison",
+      "comparisonTitle": "Ce que tu gardes vs. ailleurs",
+      "comparisonNote": "Comparaison indicative sur 100 000 DZD de revenu mensuel généré par l'enseignant.",
+      "comparison": [
+        { "label": "Cours particulier classique (intermédiaire)", "rate": "20 – 30 %", "net": "70 000 – 80 000 DZD" },
+        { "label": "Plateformes internationales (Preply, italki…)", "rate": "15 – 33 %", "net": "67 000 – 85 000 DZD" },
+        { "label": "Darso (palier Pro)", "rate": "8 %", "net": "92 000 DZD", "highlight": true }
+      ],
+      "faqEyebrow": "Questions de profs",
+      "faqTitle": "FAQ tarifs",
+      "faqs": [
+        { "q": "Quand suis-je facturé(e) ?", "a": "À chaque paiement reçu d'un élève. La commission est prélevée à la source, et tu reçois le net directement sur ton compte chaque vendredi." },
+        { "q": "Le palier se réinitialise chaque mois ?", "a": "Oui, le compteur reprend à zéro le 1er de chaque mois. Tu peux atteindre un palier plus avantageux à tout moment dans le mois." },
+        { "q": "Puis-je facturer mes propres prix ?", "a": "Absolument. Tu fixes librement ton tarif horaire. Darso ne plafonne pas et ne dicte aucun prix." },
+        { "q": "Y a-t-il une période d'essai ?", "a": "Pas besoin — tant que tu n'as pas généré de revenu, tu ne paies rien. Tu peux explorer la plateforme aussi longtemps que tu veux." },
+        { "q": "Et pour les cohortes et événements ?", "a": "Même grille tarifaire, même paliers. Aucune différence entre cours particulier, cohorte ou événement live." }
+      ],
+      "ctaTitle": "Prêt à recevoir ton premier élève ?",
+      "ctaBody": "Crée ton profil professeur en 10 minutes. Notre équipe le vérifie sous 48 h.",
+      "ctaPrimary": "Créer mon profil",
+      "ctaSecondary": "Parler à un humain"
+    },
+    "teachResources": {
+      "metaTitle": "Ressources enseignants · Darso",
+      "eyebrow": "Bibliothèque",
+      "title": "Tout ce qu'il faut pour démarrer, grandir, durer.",
+      "lede": "Guides pratiques, modèles téléchargeables, masterclass vidéo, check-lists légales. Mis à jour chaque mois par notre équipe pédagogie et les meilleurs professeurs de la plateforme.",
+      "searchPlaceholder": "Rechercher un guide, un modèle, une vidéo…",
+      "filterAll": "Tout",
+      "filterStart": "Démarrer",
+      "filterMarketing": "Te faire connaître",
+      "filterScale": "Enseigner à l'échelle",
+      "filterLegal": "Fiscalité & légal",
+      "filterTemplates": "Modèles",
+      "openLabel": "Ouvrir",
+      "downloadLabel": "Télécharger",
+      "watchLabel": "Regarder",
+      "typePdf": "PDF",
+      "typeVideo": "Vidéo",
+      "typeTemplate": "Modèle",
+      "typeGuide": "Guide",
+      "minutesLabel": "min",
+      "pagesLabel": "pages",
+      "resources": [
+        { "category": "Démarrer", "type": "Guide", "title": "Premiers pas sur Darso : du profil au premier élève", "summary": "Le guide officiel pour bien démarrer — création de profil, vérification, fixation du tarif, première réservation.", "meta": "12 pages", "kind": "pdf" },
+        { "category": "Démarrer", "type": "Vidéo", "title": "Masterclass : structurer ta première semaine d'enseignement", "summary": "Lina Hamadouche, cofondatrice pédagogie, partage les routines des meilleurs professeurs débutants.", "meta": "38 min", "kind": "video" },
+        { "category": "Te faire connaître", "type": "Guide", "title": "Bien écrire ta bio professeur — 18 exemples annotés", "summary": "Ce qui marche, ce qui repousse, et comment rester soi-même tout en convertissant un parent indécis.", "meta": "24 pages", "kind": "pdf" },
+        { "category": "Te faire connaître", "type": "Modèle", "title": "Plan de communication TikTok / Instagram (90 jours)", "summary": "Calendrier éditorial téléchargeable, 12 formats vidéo testés, scripts d'accroche.", "meta": "Notion + PDF", "kind": "template" },
+        { "category": "Te faire connaître", "type": "Vidéo", "title": "Filme un cours pédagogique en 20 minutes — kit smartphone", "summary": "Cadrage, son, lumière naturelle, post-prod basique. Zéro matériel coûteux requis.", "meta": "22 min", "kind": "video" },
+        { "category": "Enseigner à l'échelle", "type": "Guide", "title": "Passer du un-à-un à la cohorte sans perdre la qualité", "summary": "Les 7 décisions structurantes : taille de cohorte, sélection, séquence type, devoirs, évaluation.", "meta": "31 pages", "kind": "pdf" },
+        { "category": "Enseigner à l'échelle", "type": "Modèle", "title": "Trame de cohorte 8 semaines (math Bac, physique Bac, anglais B2)", "summary": "Trois trames complètes, prêtes à dupliquer dans ton dashboard Darso.", "meta": "3 modèles", "kind": "template" },
+        { "category": "Fiscalité & légal", "type": "Guide", "title": "Statut d'auto-entrepreneur en Algérie : le mode d'emploi 2026", "summary": "Démarches CASNOS, déclaration trimestrielle, plafonds, exemples chiffrés.", "meta": "18 pages", "kind": "pdf" },
+        { "category": "Fiscalité & légal", "type": "Guide", "title": "Comprendre tes relevés Darso et tes factures émises", "summary": "Lecture ligne à ligne de ton bulletin mensuel et de la facture envoyée à l'élève.", "meta": "8 pages", "kind": "pdf" },
+        { "category": "Modèles", "type": "Modèle", "title": "Devoirs et corrigés — pack 50 exercices Bac Math", "summary": "Énoncés, corrigés détaillés, barème indicatif. Libre d'utilisation avec tes élèves.", "meta": "120 pages", "kind": "template" },
+        { "category": "Modèles", "type": "Modèle", "title": "Email type de relance d'un parent indécis", "summary": "Trois variantes, courtes, polies, non commerciales. Testées sur 400 envois.", "meta": "3 modèles", "kind": "template" },
+        { "category": "Démarrer", "type": "Vidéo", "title": "Bien utiliser le studio vidéo intégré", "summary": "Tableau partagé, partage d'écran, enregistrement, redécoupage des sessions.", "meta": "15 min", "kind": "video" }
+      ],
+      "newsletterTitle": "Une nouvelle ressource chaque vendredi",
+      "newsletterBody": "Notre équipe pédagogie publie au moins une ressource par semaine. Tu peux les recevoir directement par email.",
+      "newsletterCta": "S'abonner",
+      "newsletterPlaceholder": "ton@email.dz",
+      "tagToastTitle": "Lien externe",
+      "tagToastBody": "Cette ressource s'ouvrirait dans un nouvel onglet sur la version finale."
+    }
+  }
+}

@@ -2,11 +2,12 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { CornerDownRight, MessageSquarePlus, Star } from "lucide-react";
+import { CornerDownRight, Loader2, MessageSquarePlus, Star } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Stars } from "@/components/teacher/stars";
@@ -27,6 +28,8 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
   const [replying, setReplying] = React.useState<string | null>(null);
   const [drafts, setDrafts] = React.useState<Record<string, string>>({});
   const [replies, setReplies] = React.useState<Record<string, Reply[]>>({});
+  const [pendingId, setPendingId] = React.useState<string | null>(null);
+  const [, startTransition] = React.useTransition();
 
   const myReviews = reviews.filter((r) => r.teacherId === currentTeacher.id);
 
@@ -55,17 +58,21 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
       });
       return;
     }
-    const postedAt = locale === "ar" ? "الآن" : "à l'instant";
-    setReplies((prev) => ({
-      ...prev,
-      [reviewId]: [...(prev[reviewId] ?? []), { text, postedAt }],
-    }));
-    setDrafts((prev) => ({ ...prev, [reviewId]: "" }));
-    setReplying(null);
-    show({
-      title: tt("replyPosted.title"),
-      description: tt("replyPosted.desc"),
-      variant: "success",
+    setPendingId(reviewId);
+    startTransition(() => {
+      const postedAt = locale === "ar" ? "الآن" : "à l'instant";
+      setReplies((prev) => ({
+        ...prev,
+        [reviewId]: [...(prev[reviewId] ?? []), { text, postedAt }],
+      }));
+      setDrafts((prev) => ({ ...prev, [reviewId]: "" }));
+      setReplying(null);
+      setPendingId(null);
+      show({
+        title: tt("replyPosted.title"),
+        description: tt("replyPosted.desc"),
+        variant: "success",
+      });
     });
   };
 
@@ -85,6 +92,7 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
               onClick={() => setFilter(f.id)}
               className={cn(
                 "h-9 rounded-full border px-3.5 text-[13px] font-medium transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                 active
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-background text-ink-2 hover:bg-surface",
@@ -97,9 +105,21 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-[var(--radius-xl)] border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-ink-3">
-          {t("empty")}
-        </p>
+        <EmptyState
+          icon={Star}
+          tone="warning"
+          title={t("emptyState.title")}
+          description={
+            filter === "all"
+              ? t("emptyState.bodyAll")
+              : t("emptyState.bodyFiltered")
+          }
+          secondary={
+            filter !== "all"
+              ? { label: t("filters.all"), onClick: () => setFilter("all") }
+              : undefined
+          }
+        />
       ) : (
         <ul className="space-y-3">
           {filtered.map((rv, i) => {
@@ -134,12 +154,12 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
                   <p className="mt-3 text-[14px] leading-relaxed text-ink-2">{rv.body[locale]}</p>
 
                   {myReplies.length > 0 && (
-                    <ul className="mt-4 space-y-3 border-s-2 border-accent/30 ps-4">
+                    <ul className="mt-4 ms-11 space-y-3">
                       {myReplies.map((rep, idx) => (
                         <li key={idx} className="rounded-[var(--radius-md)] bg-surface/60 p-3">
-                          <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent">
-                            <CornerDownRight className="h-3 w-3 rtl-flip" aria-hidden />
-                            {t("replyByLabel")} · <span className="tabular text-ink-3">{rep.postedAt}</span>
+                          <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-3">
+                            {t("replyByLabel")}
+                            <span className="ms-1.5 tabular text-ink-3/80">· {rep.postedAt}</span>
                           </p>
                           <p className="mt-1.5 text-[13px] leading-relaxed text-ink-2 whitespace-pre-wrap">
                             {rep.text}
@@ -176,8 +196,14 @@ export function ReviewsList({ locale }: { locale: "fr" | "ar" }) {
                       >
                         {t("cancel")}
                       </Button>
-                      <Button variant="primary" size="sm" onClick={() => sendReply(rv.id)}>
-                        {t("send")}
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => sendReply(rv.id)}
+                        disabled={pendingId === rv.id}
+                      >
+                        {pendingId === rv.id ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                        <span className={pendingId === rv.id ? "opacity-0" : ""}>{t("send")}</span>
                       </Button>
                     </div>
                   </div>

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Lock, Repeat } from "lucide-react";
+import { Loader2, Lock, Repeat } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,7 @@ export function BlockTimeForm() {
   const [to, setTo] = React.useState("20:00");
   const [reason, setReason] = React.useState("");
   const [recurring, setRecurring] = React.useState(false);
+  const [pending, startTransition] = React.useTransition();
 
   return (
     <form
@@ -53,13 +54,15 @@ export function BlockTimeForm() {
           });
           return;
         }
-        addBlock({ start: from, end: to, reason: reason.trim() || undefined, recurring });
-        show({
-          title: tt("blockAdded.title"),
-          description: tt("blockAdded.desc", { from, to }),
-          variant: "success",
+        startTransition(() => {
+          addBlock({ start: from, end: to, reason: reason.trim() || undefined, recurring });
+          show({
+            title: tt("blockAdded.title"),
+            description: tt("blockAdded.desc", { from, to }),
+            variant: "success",
+          });
+          setReason("");
         });
-        setReason("");
       }}
     >
       <div className="grid grid-cols-2 gap-3">
@@ -113,9 +116,13 @@ export function BlockTimeForm() {
         <Switch id="block-recurring" checked={recurring} onCheckedChange={setRecurring} />
       </div>
 
-      <Button type="submit" variant="primary" size="md" className="mt-1">
-        <Lock className="h-4 w-4" />
-        {t("submit")}
+      <Button type="submit" variant="primary" size="md" className="mt-1" disabled={pending}>
+        {pending ? (
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+        ) : (
+          <Lock className="h-4 w-4" />
+        )}
+        <span className={pending ? "opacity-0" : ""}>{t("submit")}</span>
       </Button>
     </form>
   );

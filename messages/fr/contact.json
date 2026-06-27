@@ -1,0 +1,83 @@
+{
+  "contact": {
+    "meta": {
+      "title": "Nous contacter",
+      "description": "Écrivez à l'équipe darso. Réponse sous 24 h ouvrées."
+    },
+    "hero": {
+      "eyebrow": "Contact",
+      "title": "Parlez à une vraie personne, basée à Alger.",
+      "subtitle": "Question, demande de partenariat, presse ou simple bonjour — l'équipe vous répond en moins de 24 h, du dimanche au jeudi."
+    },
+    "form": {
+      "title": "Envoyer un message",
+      "subtitle": "Tous les champs sont requis. Vos coordonnées ne sont jamais partagées.",
+      "name": "Nom complet",
+      "namePlaceholder": "ex. Yasmine Benali",
+      "email": "Adresse e-mail",
+      "emailPlaceholder": "vous@exemple.dz",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Choisir un sujet",
+      "subjects": {
+        "support": "Aide & support",
+        "billing": "Facturation",
+        "partnership": "Partenariat",
+        "press": "Presse & médias",
+        "report": "Signaler un problème",
+        "other": "Autre"
+      },
+      "message": "Votre message",
+      "messagePlaceholder": "Décrivez votre demande aussi précisément que possible…",
+      "submit": "Envoyer le message",
+      "submitting": "Envoi en cours…",
+      "privacyNote": "En envoyant ce message, vous acceptez notre politique de confidentialité.",
+      "errors": {
+        "name": "Veuillez indiquer votre nom.",
+        "email": "Adresse e-mail invalide.",
+        "subject": "Choisissez un sujet.",
+        "message": "Le message doit faire au moins 20 caractères."
+      }
+    },
+    "toast": {
+      "successTitle": "Message envoyé",
+      "successDescription": "On vous répond dans les 24 h, à l'adresse {email}."
+    },
+    "sidebar": {
+      "title": "Coordonnées",
+      "subtitle": "Plusieurs canaux pour nous joindre.",
+      "emailLabel": "E-mail",
+      "emailValue": "hello@darso.dz",
+      "phoneLabel": "Téléphone",
+      "phoneValue": "+213 555 11 22 00",
+      "addressLabel": "Bureau",
+      "addressLine1": "Rue Hassiba Ben Bouali",
+      "addressLine2": "Alger 16000 — Algérie",
+      "hoursLabel": "Horaires",
+      "hoursValue": "Dim. – Jeu. · 9 h 00 – 18 h 00",
+      "closedValue": "Vendredi et samedi fermés",
+      "supportLabel": "Support en direct",
+      "supportValue": "Chat dans l'application (apprenants connectés)"
+    },
+    "elsewhere": {
+      "title": "Autres canaux",
+      "help": {
+        "title": "Centre d'aide",
+        "blurb": "FAQ, guides, dépannage rapide.",
+        "cta": "Parcourir",
+        "href": "/help"
+      },
+      "trust": {
+        "title": "Confiance & sécurité",
+        "blurb": "Vérifications, médiation, données.",
+        "cta": "En savoir plus",
+        "href": "/trust"
+      },
+      "press": {
+        "title": "Espace presse",
+        "blurb": "Communiqués, logos, contact média.",
+        "cta": "Visiter",
+        "href": "/press"
+      }
+    }
+  }
+}

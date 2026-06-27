@@ -1,4 +1,23 @@
 /**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/bookings                → seeds initial state for getBookings / getBookingsForAccount
+ *   POST   /api/bookings                → addBooking(input)
+ *   POST   /api/bookings/:id/cancel     → cancelBooking(id)
+ *   (subscribe maps to either SSE/WebSocket OR client-side polling)
+ *
+ * Shape: the backend should return Booking[] matching the Booking type below.
+ * Cache invalidation: every mutation should invalidate the per-account snapshot
+ *   cache (mirror the current pattern — caches are read by useSyncExternalStore
+ *   subscribers, so identity must change on every mutation).
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+
+/**
  * In-memory store for student-confirmed bookings.
  *
  * Wires the Reserve / Book / Apply / Join CTAs across teacher-profile,
@@ -51,6 +70,22 @@ export function getBookings(): readonly Booking[] {
   return bookings;
 }
 
+/**
+ * Lookup helper for invoice / receipt routes. Returns the booking if its id
+ * matches AND it belongs to the given account (when provided). The accountId
+ * scope keeps the in-memory store safe to read from auth-gated server pages
+ * without leaking a record across accounts.
+ */
+export function findBookingByIdForAccount(
+  id: string,
+  accountId: string | null | undefined,
+): Booking | null {
+  const b = bookings.find((x) => x.id === id) ?? null;
+  if (!b) return null;
+  if (accountId && b.accountId !== accountId) return null;
+  return b;
+}
+
 export function getBookingsForAccount(accountId: string | null | undefined): readonly Booking[] {
   if (!accountId) return EMPTY;
   const cached = accountCache.get(accountId);
@@ -71,6 +106,29 @@ export function addBooking(input: Omit<Booking, "id" | "bookedAt">): Booking {
   accountCache.clear();
   listeners.forEach((fn) => fn());
   return entry;
+}
+
+/**
+ * Flip a confirmed booking to "cancelled". Returns the updated record,
+ * or `null` when no booking with that id exists. Invalidates the
+ * per-account snapshot cache and notifies subscribers so the calendar
+ * + /account payments surfaces re-render with the new status.
+ */
+export function cancelBooking(id: string): Booking | null {
+  let updated: Booking | null = null;
+  bookings = bookings.map((b) => {
+    if (b.id !== id) return b;
+    if (b.status === "cancelled") {
+      updated = b;
+      return b;
+    }
+    updated = { ...b, status: "cancelled" as const };
+    return updated;
+  });
+  if (!updated) return null;
+  accountCache.clear();
+  listeners.forEach((fn) => fn());
+  return updated;
 }
 
 export function subscribeBookings(fn: () => void): () => void {

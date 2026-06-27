@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -58,8 +58,12 @@ export function CourseEditForm({
   const [status, setStatus] = React.useState<TeacherCourse["status"]>(course.status);
   const [priceDzd, setPriceDzd] = React.useState<number>(course.priceDzd);
   const [capacity, setCapacity] = React.useState<number>(course.capacity.total);
-  const [description, setDescription] = React.useState("");
+  const [description, setDescription] = React.useState(course.description ?? "");
+  const [summary, setSummary] = React.useState(course.summary ?? "");
+  const [weeks, setWeeks] = React.useState<string[]>(course.weeks ?? []);
+  const [outcomes, setOutcomes] = React.useState<string[]>(course.outcomes ?? []);
   const [saving, setSaving] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const handleSave = React.useCallback(() => {
@@ -92,6 +96,12 @@ export function CourseEditForm({
         status,
         priceDzd,
         capacity: { taken, total: capacity },
+        // Persist the wizard-collected fields (Batch 8). Empty strings
+        // collapse to undefined so the store stays clean.
+        description: description.trim() || undefined,
+        summary: summary.trim() || undefined,
+        weeks: weeks.map((w) => w.trim()).filter(Boolean),
+        outcomes: outcomes.map((o) => o.trim()).filter(Boolean),
       });
       show({
         title: t("toasts.saved.title"),
@@ -104,11 +114,13 @@ export function CourseEditForm({
     } finally {
       setSaving(false);
     }
-  }, [titleFr, titleAr, priceDzd, format, status, capacity, course.id, course.capacity.taken, router, show, t]);
+  }, [titleFr, titleAr, priceDzd, format, status, capacity, description, summary, weeks, outcomes, course.id, course.capacity.taken, router, show, t]);
 
   const handleDelete = React.useCallback(() => {
+    setDeleting(true);
     const removed = deleteCourse(course.id);
     if (!removed) {
+      setDeleting(false);
       show({
         title: t("toasts.deleteFailed.title"),
         description: t("toasts.deleteFailed.desc"),
@@ -132,7 +144,7 @@ export function CourseEditForm({
           <TabsTrigger value="basics">{t("tabs.basic")}</TabsTrigger>
           <TabsTrigger value="format">{t("tabs.format")}</TabsTrigger>
           <TabsTrigger value="pricing">{t("tabs.pricing")}</TabsTrigger>
-          <TabsTrigger value="description">{t("tabs.description")}</TabsTrigger>
+          <TabsTrigger value="content">{t("tabs.content")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="basics">
@@ -235,8 +247,20 @@ export function CourseEditForm({
           </section>
         </TabsContent>
 
-        <TabsContent value="description">
-          <section className="rounded-[var(--radius-xl)] border border-border bg-card p-6">
+        <TabsContent value="content">
+          <section className="grid gap-6 rounded-[var(--radius-xl)] border border-border bg-card p-6">
+            <div className="grid gap-2">
+              <Label htmlFor="summary">{t("fields.summary")}</Label>
+              <Input
+                id="summary"
+                maxLength={140}
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                placeholder={t("fields.summaryPlaceholder")}
+              />
+              <p className="text-[11px] text-ink-3">{t("fields.summaryHint")}</p>
+            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="desc">{t("fields.description")}</Label>
               <Textarea
@@ -248,6 +272,25 @@ export function CourseEditForm({
               />
               <p className="text-[11px] text-ink-3">{t("fields.descriptionHint")}</p>
             </div>
+
+            <ListEditor
+              label={t("fields.weeks")}
+              hint={t("fields.weeksHint")}
+              addLabel={t("fields.addWeek")}
+              items={weeks}
+              onChange={setWeeks}
+              numbered
+              placeholder={(i) => t("fields.weekPlaceholder", { n: i + 1 })}
+            />
+
+            <ListEditor
+              label={t("fields.outcomes")}
+              hint={t("fields.outcomesHint")}
+              addLabel={t("fields.addOutcome")}
+              items={outcomes}
+              onChange={setOutcomes}
+              placeholder={() => t("fields.outcomePlaceholder")}
+            />
           </section>
         </TabsContent>
       </Tabs>
@@ -267,7 +310,8 @@ export function CourseEditForm({
             {t("cancel")}
           </Button>
           <Button variant="primary" size="md" disabled={saving} onClick={handleSave}>
-            {saving ? t("saving") : t("save")}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+            <span className={saving ? "opacity-0" : ""}>{t("save")}</span>
           </Button>
         </div>
       </footer>
@@ -281,15 +325,91 @@ export function CourseEditForm({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+            <Button variant="outline" disabled={deleting} onClick={() => setConfirmOpen(false)}>
               {t("deleteDialog.cancel")}
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
-              {t("deleteDialog.confirm")}
+            <Button variant="danger" disabled={deleting} onClick={handleDelete}>
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+              <span className={deleting ? "opacity-0" : ""}>{t("deleteDialog.confirm")}</span>
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+/**
+ * Small reusable list editor used by the Content tab for weeks /
+ * outcomes. Keeps the parent component readable by colocating
+ * add / edit / remove handling here. `numbered` switches the leading
+ * chip between a counter ("01") and a hairline bullet so the visual
+ * weight matches the semantic difference (weeks have order, outcomes
+ * are a flat list).
+ */
+function ListEditor({
+  label,
+  hint,
+  addLabel,
+  items,
+  onChange,
+  placeholder,
+  numbered = false,
+}: {
+  label: string;
+  hint?: string;
+  addLabel: string;
+  items: string[];
+  onChange: (next: string[]) => void;
+  placeholder: (index: number) => string;
+  numbered?: boolean;
+}) {
+  return (
+    <div>
+      <Label className="mb-1.5 block">{label}</Label>
+      {hint && <p className="mb-3 text-[11px] text-ink-3">{hint}</p>}
+      <ul className="space-y-2">
+        {items.map((value, i) => (
+          <li key={i} className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className={
+                numbered
+                  ? "grid h-9 w-12 shrink-0 place-items-center rounded-[var(--radius-md)] bg-surface font-mono text-[11px] font-semibold tabular text-ink-3"
+                  : "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent-soft/40 font-mono text-[10px] font-semibold tabular text-accent"
+              }
+            >
+              {numbered ? String(i + 1).padStart(2, "0") : "·"}
+            </span>
+            <Input
+              value={value}
+              onChange={(e) =>
+                onChange(items.map((x, j) => (j === i ? e.target.value : x)))
+              }
+              placeholder={placeholder(i)}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => onChange(items.filter((_, j) => j !== i))}
+              aria-label={`Remove ${i + 1}`}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </li>
+        ))}
+      </ul>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="mt-3"
+        onClick={() => onChange([...items, ""])}
+      >
+        <Plus className="h-3.5 w-3.5" />
+        {addLabel}
+      </Button>
+    </div>
   );
 }

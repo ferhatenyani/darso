@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
 import { useToast } from "@/lib/toast";
 import { useCurrentUser } from "@/lib/auth";
+import { cancelBooking } from "@/lib/mock/bookings-state";
+import { hideEvent, removeBlock } from "@/lib/mock/calendar-state";
 import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/lib/mock/calendar";
 
@@ -35,6 +37,7 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
   const { show } = useToast();
   const { user } = useCurrentUser();
   const isTeacher = user?.role === "teacher";
+  const [pending, startTransition] = React.useTransition();
 
   const Mode = event.mode === "online" ? Wifi : MapPin;
   const dateLabel = React.useMemo(() => {
@@ -69,27 +72,45 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
   }, [router]);
 
   const handleCancelBooking = React.useCallback(() => {
-    show({
-      title: t("event.toasts.cancelComingSoon.title"),
-      description: t("event.toasts.cancelComingSoon.desc"),
+    startTransition(() => {
+      // First try the bookings store (in-session reservations). Seeded
+      // static `ev-*` events aren't in that store — for those we fall
+      // back to hiding the event id so the calendar still updates.
+      const cancelled = cancelBooking(event.id);
+      if (!cancelled) {
+        hideEvent(event.id);
+      }
+      show({
+        title: t("event.toasts.bookingCancelled.title"),
+        description: t("event.toasts.bookingCancelled.desc", {
+          title: event.title[lang],
+        }),
+        variant: "warning",
+      });
+      // The shell filters cancelled bookings + hidden ids out of the
+      // calendar event source so the popover (and its trigger) unmount
+      // on the next tick.
     });
-  }, [show, t]);
-
-  const handleEditBlock = React.useCallback(() => {
-    show({
-      title: t("event.toasts.editComingSoon.title"),
-      description: t("event.toasts.editComingSoon.desc"),
-    });
-  }, [show, t]);
+  }, [event.id, event.title, lang, show, t]);
 
   const handleRemoveBlock = React.useCallback(() => {
-    // Deferred — would need a `removeBlock` mutator in calendar-state (Agent 3d
-    // territory); for the mockup we surface the same "coming soon" toast.
-    show({
-      title: t("event.toasts.editComingSoon.title"),
-      description: t("event.toasts.editComingSoon.desc"),
+    startTransition(() => {
+      const removed = removeBlock(event.id);
+      if (!removed) {
+        show({
+          title: t("event.toasts.removeFailed.title"),
+          description: t("event.toasts.removeFailed.desc"),
+          variant: "danger",
+        });
+        return;
+      }
+      show({
+        title: t("event.toasts.blockRemoved.title"),
+        description: t("event.toasts.blockRemoved.desc"),
+        variant: "success",
+      });
     });
-  }, [show, t]);
+  }, [event.id, show, t]);
 
   const handleAddBlock = React.useCallback(() => {
     if (onAddBlock) onAddBlock(event);
@@ -109,6 +130,7 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
             variant="primary"
             onClick={handleOpenBooking}
             className="flex-1"
+            disabled={pending}
           >
             <BookOpen className="h-3.5 w-3.5" />
             {t("event.actions.openBooking")}
@@ -118,6 +140,7 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
             size="sm"
             variant="ghost"
             onClick={handleCancelBooking}
+            disabled={pending}
           >
             <CalendarX className="h-3.5 w-3.5" />
             {t("event.actions.cancelBooking")}
@@ -127,13 +150,20 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
     }
     if (event.status === "blocked") {
       if (!isTeacher) return null;
+      // "Edit" deferred — block-form expects HH:MM + recurring shape,
+      // whereas seeded static blocks carry date+startHour+endHour. Wiring
+      // the form to also handle that second shape (and prefilling from
+      // calendar-shell) is more than ~80 LOC; ship Remove only for now.
+      // Surface the button as disabled with a title attribute so the
+      // affordance still reads correctly.
       return (
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
             size="sm"
             variant="outline"
-            onClick={handleEditBlock}
+            disabled
+            title={t("event.actions.editBlockHint")}
             className="flex-1"
           >
             <Pencil className="h-3.5 w-3.5" />
@@ -144,6 +174,7 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
             size="sm"
             variant="ghost"
             onClick={handleRemoveBlock}
+            disabled={pending}
           >
             <Trash2 className="h-3.5 w-3.5" />
             {t("event.actions.removeBlock")}

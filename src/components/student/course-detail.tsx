@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import { useCurrentUser } from "@/lib/auth";
+import { ensureThread } from "@/lib/mock/chats";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
 import type { Course } from "@/lib/mock/courses";
 import { useToast } from "@/lib/toast";
@@ -46,16 +48,35 @@ export function CourseDetail({ course }: { course: Course }) {
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
   const router = useRouter();
   const { show } = useToast();
+  const { user } = useCurrentUser();
+  const [, startMessageTransition] = useTransition();
 
   const handleAskQuestion = () => {
-    show({
-      title: tBooking("toasts.openingConversation.title"),
-      description: tBooking("toasts.openingConversation.desc", {
-        name: course.teacher.name[lang],
-      }),
-      variant: "default",
+    if (!user) {
+      show({
+        title: tBooking("toasts.signInRequired.title"),
+        description: tBooking("toasts.signInRequired.desc"),
+        variant: "warning",
+      });
+      const path = typeof window !== "undefined" ? window.location.pathname : "/";
+      router.push(`/sign-in?next=${encodeURIComponent(path)}` as never);
+      return;
+    }
+    startMessageTransition(() => {
+      const threadId = ensureThread(course.teacher.slug, user.id);
+      if (!threadId) {
+        router.push("/messages" as never);
+        return;
+      }
+      show({
+        title: tBooking("toasts.openingConversation.title"),
+        description: tBooking("toasts.openingConversation.desc", {
+          name: course.teacher.name[lang],
+        }),
+        variant: "default",
+      });
+      router.push(`/messages/${threadId}` as never);
     });
-    router.push(`/messages?to=${course.teacher.slug}` as never);
   };
 
   const [pickedDate, setPickedDate] = useState<string>(course.dates[0]?.id ?? "");

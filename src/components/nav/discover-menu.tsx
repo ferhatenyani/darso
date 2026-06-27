@@ -44,6 +44,7 @@ export function DiscoverMenu() {
           type="button"
           className={cn(
             "group inline-flex h-10 items-center gap-1 rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
             open && "text-foreground",
           )}
         >

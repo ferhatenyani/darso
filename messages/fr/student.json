@@ -351,10 +351,6 @@
           "title": "Carte invalide",
           "desc": "Vérifiez les 4 derniers chiffres et la date d'expiration (MM/AA)."
         },
-        "invoiceDownloaded": {
-          "title": "Facture téléchargée",
-          "desc": "Reçu pour « {item} » envoyé dans vos téléchargements."
-        },
         "passwordChanged": {
           "title": "Mot de passe modifié",
           "desc": "Vos autres appareils ont été déconnectés."
@@ -401,6 +397,53 @@
           "expiry": "Date d'expiration",
           "cancel": "Annuler",
           "submit": "Ajouter la carte"
+        }
+      },
+      "invoice": {
+        "documentTitle": "Facture",
+        "eyebrow": "Document fiscal",
+        "title": "Facture",
+        "number": "Facture N°",
+        "issueDate": "Date d'émission",
+        "dueDate": "Date d'échéance",
+        "billTo": "Facturé à",
+        "from": "Émis par",
+        "tagline": "La marketplace algérienne de l'apprentissage.",
+        "items": {
+          "th": {
+            "description": "Désignation",
+            "quantity": "Qté",
+            "unitPrice": "Prix unitaire",
+            "total": "Montant"
+          },
+          "sessionLabel": "Séance individuelle",
+          "courseLabel": "Cohorte · {sessions} séances",
+          "eventLabel": "Atelier · workshop",
+          "liveLabel": "Cours live",
+          "withTeacher": "avec {teacher}"
+        },
+        "subtotal": "Sous-total HT",
+        "vat": "TVA ({rate}%)",
+        "total": "Total TTC",
+        "paymentMethod": "Mode de règlement",
+        "paymentTerms": "Conditions de règlement",
+        "paidBy": "Payée par {method} le {date}.",
+        "dueIn": "À régler sous {days} jours.",
+        "status": {
+          "paid": "Payée",
+          "pending": "En attente"
+        },
+        "legalFooter": "darso SARL — RC : 16/00-12345678 · NIF : 198516000123456 · NIS : 098516001234567 · Rue Hassiba Ben Bouali, Alger 16000, Algérie. Facture conforme à la loi 03-05 du 18 juillet 2003 relative au commerce électronique et à la loi 79-07 du 21 juillet 1979 portant code des douanes (extraits). En cas de litige, le tribunal de commerce d'Alger est seul compétent.",
+        "toolbar": {
+          "print": "Imprimer",
+          "downloadPdf": "Télécharger en PDF",
+          "back": "Retour aux paiements",
+          "downloadComingSoon": "La génération PDF arrive bientôt — pour l'instant, utilisez « Imprimer » et choisissez Enregistrer en PDF."
+        },
+        "notFound": {
+          "title": "Facture introuvable",
+          "body": "Ce numéro de facture n'existe pas ou n'est plus accessible.",
+          "back": "Retour à mon compte"
         }
       }
     },
@@ -466,6 +509,13 @@
       "empty": "Pas encore de favoris.",
       "emptyHint": "Touchez le cœur sur une carte pour la garder ici.",
       "exploreNow": "Explorer la marketplace",
+      "emptyState": {
+        "title": "Votre liste favoris est vide",
+        "body": "Touchez le cœur sur une fiche prof ou un cours pour le retrouver ici sans refaire la recherche.",
+        "primary": "Découvrir des profs",
+        "secondary": "Parcourir les cours",
+        "hintsLabel": "Explorer par sujet"
+      },
       "tabAll": "Tout",
       "tabTeachers": "Professeurs",
       "tabCourses": "Cours"

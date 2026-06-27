@@ -164,7 +164,7 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="group inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background ps-3 pe-3.5 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground data-[active=true]:border-accent data-[active=true]:bg-accent-soft/40 data-[active=true]:text-accent"
+            className="group inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background ps-3 pe-3.5 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent data-[active=true]:border-accent data-[active=true]:bg-accent-soft/40 data-[active=true]:text-accent"
             data-active={filters.budgetMax !== 5000}
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -237,7 +237,7 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
           <SheetTrigger asChild>
             <button
               type="button"
-              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-3 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground"
+              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-3 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               <span className="font-mono uppercase tracking-wider text-[10.5px]">
@@ -292,7 +292,7 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
                 key={key}
                 type="button"
                 onClick={() => clearOne(key)}
-                className="group inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="group inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <span>{t(`browse.filters.${key}`)}</span>
                 <X className="h-3 w-3" />
@@ -302,7 +302,7 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
               <button
                 type="button"
                 onClick={() => clearOne("budgetMax")}
-                className="group inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="group inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <span className="tabular">
                   ≤ {formatPrice(filters.budgetMax, locale)}

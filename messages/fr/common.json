@@ -234,6 +234,38 @@
     "relatedTitle": "En attendant, découvrez"
   },
   "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher un professeur, un cours, un événement…",
+    "ariaLabel": "Recherche globale",
+    "eyebrow": "Recherche globale",
+    "noQuery": "Que cherchez-vous aujourd'hui ?",
+    "resultsFor": "Résultats pour",
+    "totalCount": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
+    "results": {
+      "teachers": "Professeurs",
+      "courses": "Cours",
+      "events": "Événements",
+      "viewAll": "Tout voir",
+      "count": "{count, plural, =0 {0} one {#} other {#}}"
+    },
+    "empty": {
+      "shortTitle": "Tapez pour commencer",
+      "short": "Saisissez au moins deux caractères, ou parcourez ces catégories pour vous lancer.",
+      "jumpEyebrow": "Sauter directement vers",
+      "jumpTeachers": "Professeurs",
+      "jumpCourses": "Cours",
+      "jumpLive": "En direct",
+      "jumpRequests": "Demandes",
+      "noResultsTitle": "Aucun résultat",
+      "noResults": "Aucun résultat pour « {q} » — essayez un autre terme.",
+      "suggestionEyebrow": "Idées de recherche"
+    },
+    "row": {
+      "teacherMeta": "{subject} · {city}",
+      "courseMeta": "{subject} · {teacher}",
+      "eventMeta": "{format} · {date}",
+      "openLabel": "Ouvrir"
+    },
     "wilayas": {
       "any": "Toute l'Algérie",
       "adrar": "Adrar",

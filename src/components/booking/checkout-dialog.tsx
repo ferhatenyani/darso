@@ -15,7 +15,7 @@
 
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CreditCard, ShieldCheck, Sparkles } from "lucide-react";
+import { CreditCard, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 
 import {
   Dialog,
@@ -302,7 +302,8 @@ export function CheckoutDialog({
               onClick={handleConfirm}
               disabled={submitting}
             >
-              {submitting ? t("checkout.confirming") : t("checkout.confirm")}
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+              <span className={submitting ? "opacity-0" : ""}>{t("checkout.confirm")}</span>
             </Button>
           </DialogFooter>
         </DialogContent>

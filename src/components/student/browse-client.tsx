@@ -480,24 +480,24 @@ export function BrowseClient({
                   onClick={() => setView("grid")}
                   aria-pressed={view === "grid"}
                   className={cn(
-                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground",
+                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                     view === "grid" && "bg-surface text-foreground shadow-e1",
                   )}
                   aria-label={t("viewGrid")}
                 >
-                  <LayoutGrid className="h-4 w-4" />
+                  <LayoutGrid className="h-4 w-4" aria-hidden />
                 </button>
                 <button
                   type="button"
                   onClick={() => setView("list")}
                   aria-pressed={view === "list"}
                   className={cn(
-                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground",
+                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                     view === "list" && "bg-surface text-foreground shadow-e1",
                   )}
                   aria-label={t("viewList")}
                 >
-                  <ListIcon className="h-4 w-4" />
+                  <ListIcon className="h-4 w-4" aria-hidden />
                 </button>
               </div>
             </div>

@@ -1,4 +1,22 @@
-import { featuredTeachers, type Teacher, type LocalizedString } from "./teachers";
+/**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/messages/threads        → seeds initial state for getChatThreads
+ *   POST   /api/messages/threads        → ensureThread(teacherSlug) (idempotent on teacherSlug)
+ *   POST   /api/messages/threads/:id    → append message to a thread
+ *   (subscribe maps to either SSE/WebSocket OR client-side polling)
+ *
+ * Shape: the backend should return ChatThread[] matching the type below.
+ * Cache invalidation: every mutation should invalidate the snapshot
+ *   cache (mirror the current pattern — caches are read by useSyncExternalStore
+ *   subscribers, so identity must change on every mutation).
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+import { featuredTeachers, findTeacherById, type Teacher, type LocalizedString } from "./teachers";
 
 export type ChatKind = "1to1" | "cohort" | "event";
 export type MessageStatus = "sent" | "delivered" | "read";
@@ -71,7 +89,12 @@ export const currentUser = {
   accent: "from-[#2F6BFF] to-[#3E8FD0]",
 };
 
-export const chatThreads: ChatThread[] = [
+// Seed list — held in a module-scoped `let` so the `ensureThread`
+// mutator can prepend new 1:1 threads in-session. Consumers that want
+// the live list should call `getChatThreads()` (and subscribe via
+// `subscribeChats`); the legacy named export still points at the same
+// underlying array for SSR/static callers, but is frozen-by-convention.
+let chatThreads: ChatThread[] = [
   // 1:1 — Khalil (math teacher), with recent thread
   {
     id: "th-khalil",
@@ -321,3 +344,101 @@ export function findThread(id: string): ChatThread | undefined {
 
 /** Common emojis for the reaction picker */
 export const commonEmojis = ["👍", "❤️", "🙏", "🎯", "🔥", "✅", "👀"];
+
+// ────────────────────────────────────────────────────────────────────────
+// In-session mutator store
+//
+// `chatThreads` was historically a `const` array consumed directly by the
+// inbox shell + thread page. To wire student → teacher "Send a message"
+// CTAs into a real thread, we need to (a) look up an existing 1:1 thread
+// for the given teacher, and (b) create one when missing. The new
+// `ensureThread` returns the thread id and notifies subscribers so any
+// component subscribed via `useSyncExternalStore` re-renders with the
+// new thread visible. Mirrors the calendar-state.ts / bookings-state.ts
+// snapshot-cache pattern.
+// ────────────────────────────────────────────────────────────────────────
+
+const listeners = new Set<() => void>();
+let threadsCache: readonly ChatThread[] | null = null;
+
+function invalidate() {
+  threadsCache = null;
+  listeners.forEach((fn) => fn());
+}
+
+/**
+ * Frozen snapshot of the current thread list. Stays referentially stable
+ * across renders until `ensureThread` (or any future mutator) invalidates
+ * the cache. Safe for `useSyncExternalStore.getSnapshot`.
+ */
+export function getChatThreads(): readonly ChatThread[] {
+  if (threadsCache) return threadsCache;
+  threadsCache = Object.freeze(chatThreads.slice());
+  return threadsCache;
+}
+
+export function subscribeChats(fn: () => void): () => void {
+  listeners.add(fn);
+  return () => {
+    listeners.delete(fn);
+  };
+}
+
+/**
+ * Returns the id of the 1:1 thread between the current user and the
+ * teacher identified by `teacherSlug`, creating one on the fly when none
+ * exists. The created thread has no seeded messages — the conversation
+ * starts from the student's first send.
+ *
+ * `currentUserId` is accepted for parity with the eventual backend shape
+ * (server would scope the lookup by viewer), but in the mock there's a
+ * single `currentUser` per session so the parameter is currently used
+ * only for the deterministic thread id.
+ */
+export function ensureThread(teacherSlug: string, currentUserId: string): string {
+  // 1) Existing 1:1 thread that matches by teacher.slug.
+  const existing = chatThreads.find(
+    (t) => t.kind === "1to1" && t.teacher?.slug === teacherSlug,
+  );
+  if (existing) return existing.id;
+
+  // 2) Resolve the teacher record. featuredTeachers exposes `slug`
+  //    alongside id; fall back to the first teacher only if the slug is
+  //    genuinely unknown (defensive — surfaces should always pass a
+  //    valid slug).
+  const teacher =
+    featuredTeachers.find((t) => t.slug === teacherSlug) ??
+    findTeacherById(teacherSlug);
+  if (!teacher) {
+    // Don't create a thread for an unknown teacher — return the inbox
+    // root id so the caller can route to /messages instead.
+    return "";
+  }
+
+  const id = `th-${teacher.id.replace(/^t-/, "")}-${Date.now().toString(36)}`;
+  const fresh: ChatThread = {
+    id,
+    kind: "1to1",
+    title: teacher.name,
+    teacher,
+    unread: 0,
+    online: false,
+    messages: [
+      {
+        id: `m-${id}-sys`,
+        authorId: "system",
+        at: new Date().toISOString(),
+        system: {
+          fr: `Nouvelle conversation avec ${teacher.name.fr}.`,
+          ar: `محادثة جديدة مع ${teacher.name.ar}.`,
+        },
+      },
+    ],
+  };
+  // Surface the new thread at the top of the inbox so the student sees
+  // it immediately on /messages.
+  chatThreads = [fresh, ...chatThreads];
+  void currentUserId;
+  invalidate();
+  return id;
+}

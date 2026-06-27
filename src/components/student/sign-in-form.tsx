@@ -206,6 +206,7 @@ export function SignInForm({ next }: { next?: string }) {
                       className={cn(
                         "group flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-border bg-card p-2.5 text-start transition-all",
                         "hover:border-accent hover:shadow-e1 disabled:opacity-60",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                       )}
                     >
                       <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">

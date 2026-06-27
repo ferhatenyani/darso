@@ -1,3 +1,7 @@
+// Batch 11 expansion — new courses for t-mounir, t-nadia, t-farid, t-kahina,
+// t-leila, t-bilal, t-djamila plus extra catalog entries with varied formats,
+// dates (past archived / now in-progress / future / always-on) and seat
+// counts (sold-out / nearly-full / spacious / empty).
 import { featuredTeachers, type Teacher, type LocalizedString } from "./teachers";
 
 export type CourseFormat = "1to1" | "cohort" | "event" | "ondemand";
@@ -1077,6 +1081,650 @@ export const courses: Course[] = [
     ],
     accent: "from-[#3E8FD0] to-[#1C3A5E]",
     language: { fr: ["FR", "AR"], ar: ["AR", "FR"] },
+  },
+  // ────────────────────────────────────────────────────────────────────────
+  // Batch 11 — additional catalogue across the broadened teacher roster
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id: "c-chimie-bac",
+    slug: "chimie-bac-acide-base",
+    teacher: t("t-mounir"),
+    title: {
+      fr: "Chimie Bac · acido-basique en 4 semaines",
+      ar: "كيمياء الباك · حمض-قاعدة في 4 أسابيع",
+    },
+    subtitle: {
+      fr: "Cohorte courte avec expériences filmées et tableaux d'avancement guidés.",
+      ar: "فوج قصير مع تجارب مصوّرة وجداول تقدّم موجَّهة.",
+    },
+    subject: { fr: "Chimie", ar: "الكيمياء" },
+    format: "cohort",
+    level: "intermediate",
+    durationLabel: { fr: "4 semaines · 8h", ar: "4 أسابيع · 8 سا" },
+    priceDzd: 3200,
+    rating: 4.84,
+    reviews: 26,
+    outcomes: [
+      { fr: "Construire un tableau d'avancement sans erreur", ar: "بناء جدول تقدّم بلا أخطاء" },
+      { fr: "Identifier les couples acido-basiques d'une réaction", ar: "تحديد الأزواج حمض-قاعدة في تفاعل" },
+      { fr: "Tracer et lire une courbe de titrage pH-mètrique", ar: "رسم وقراءة منحنى المعايرة pH" },
+      { fr: "Rédiger une copie type bac sur un dosage", ar: "تحرير ورقة باك على معايرة" },
+    ],
+    includes: [
+      { fr: "8 séances live · 60 min", ar: "8 جلسات مباشرة · 60 د" },
+      { fr: "12 vidéos d'expériences en HD", ar: "12 فيديو تجارب HD" },
+      { fr: "Fiches méthode pH-mètre / indicateurs", ar: "بطاقات منهجية pH/كواشف" },
+      { fr: "Annales Bac 2020-2025 corrigées", ar: "مواضيع باك 2020-2025 مع التصحيح" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Semaine 1 — Acides et bases", ar: "الأسبوع 1 — الأحماض والقواعد" },
+        items: [
+          { fr: "Définitions Brönsted et couples", ar: "تعاريف برونستد والأزواج" },
+          { fr: "Calculs de pH simples", ar: "حساب pH بسيط" },
+        ],
+      },
+      {
+        title: { fr: "Semaines 2-3 — Titrage et équivalence", ar: "الأسبوعان 2-3 — المعايرة ونقطة التكافؤ" },
+        items: [
+          { fr: "Choisir l'indicateur coloré", ar: "اختيار الكاشف الملوّن" },
+          { fr: "Lire une courbe pH-mètrique", ar: "قراءة منحنى pH" },
+        ],
+      },
+      {
+        title: { fr: "Semaine 4 — Sujets type Bac", ar: "الأسبوع 4 — مواضيع نمط الباك" },
+        items: [
+          { fr: "Exercices d'annales en autonomie", ar: "تمارين مواضيع سابقة فردية" },
+          { fr: "Correction commentée en direct", ar: "تصحيح موجَّه مباشر" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Sam. 11 juil · 16h", ar: "البداية: السبت 11 جويلية · 16:00" },
+        startISO: "2026-07-11T16:00:00+01:00",
+        spotsTaken: 11,
+        spotsTotal: 12,
+      },
+      {
+        id: "d-2",
+        label: { fr: "Démarrage : Sam. 15 août · 16h", ar: "البداية: السبت 15 أوت · 16:00" },
+        startISO: "2026-08-15T16:00:00+01:00",
+        spotsTaken: 2,
+        spotsTotal: 12,
+      },
+    ],
+    accent: "from-[#2E9E78] to-[#1C3A5E]",
+    language: { fr: ["FR", "AR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-chimie-ondemand",
+    slug: "chimie-organique-on-demand",
+    teacher: t("t-mounir"),
+    title: {
+      fr: "Chimie organique · cours on-demand",
+      ar: "الكيمياء العضوية · درس عند الطلب",
+    },
+    subtitle: {
+      fr: "10h de vidéos pour réviser les fonctions organiques à votre rythme.",
+      ar: "10 ساعات فيديو لمراجعة المجموعات العضوية على إيقاعك.",
+    },
+    subject: { fr: "Chimie", ar: "الكيمياء" },
+    format: "ondemand",
+    level: "intermediate",
+    durationLabel: { fr: "10h vidéo · accès 1 an", ar: "10 سا فيديو · وصول لسنة" },
+    priceDzd: 4500,
+    rating: 4.7,
+    reviews: 18,
+    outcomes: [
+      { fr: "Reconnaître les fonctions organiques principales", ar: "تمييز المجموعات العضوية الرئيسية" },
+      { fr: "Maîtriser les mécanismes SN1 / SN2 / E1 / E2", ar: "إتقان الميكانيزمات SN1 / SN2 / E1 / E2" },
+    ],
+    includes: [
+      { fr: "20 vidéos HD", ar: "20 فيديو HD" },
+      { fr: "Exercices auto-corrigés", ar: "تمارين مع تصحيح ذاتي" },
+      { fr: "Accès illimité 1 an", ar: "وصول غير محدود لسنة" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Modules disponibles", ar: "الوحدات المتاحة" },
+        items: [
+          { fr: "Fonctions oxygénées", ar: "المجموعات الأكسجينية" },
+          { fr: "Mécanismes réactionnels", ar: "آليات التفاعل" },
+          { fr: "Stéréochimie", ar: "الكيمياء الفراغية" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Toujours disponible", ar: "متاح دائمًا" },
+        startISO: "2026-01-01T00:00:00+01:00",
+        spotsTaken: 0,
+        spotsTotal: 0,
+      },
+    ],
+    accent: "from-[#2E9E78] to-[#3E8FD0]",
+    language: { fr: ["FR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-tcf-prepa",
+    slug: "tcf-prepa-canada",
+    teacher: t("t-nadia"),
+    title: {
+      fr: "TCF Canada · objectif NCLC 7 garanti",
+      ar: "TCF كندا · هدف NCLC 7 مضمون",
+    },
+    subtitle: {
+      fr: "Cohorte intensive 8 semaines pour décrocher votre dossier d'immigration.",
+      ar: "فوج مكثّف لـ 8 أسابيع لضمان ملفّ الهجرة.",
+    },
+    subject: { fr: "Français · TCF", ar: "الفرنسية · TCF" },
+    format: "cohort",
+    level: "advanced",
+    durationLabel: { fr: "8 semaines · 24h", ar: "8 أسابيع · 24 سا" },
+    priceDzd: 12000,
+    rating: 4.93,
+    reviews: 72,
+    outcomes: [
+      { fr: "Atteindre NCLC 7 sur les 4 épreuves", ar: "بلوغ NCLC 7 في الاختبارات الأربعة" },
+      { fr: "Maîtriser la grille de notation officielle", ar: "إتقان سلّم التقييم الرسمي" },
+      { fr: "3 mocks complets corrigés à l'oral", ar: "3 امتحانات تجريبية كاملة مع تصحيح شفهي" },
+    ],
+    includes: [
+      { fr: "24 séances · 60 min", ar: "24 جلسة · 60 د" },
+      { fr: "Banque de sujets TCF 2024-2026", ar: "بنك مواضيع TCF 2024-2026" },
+      { fr: "Coaching final 1:1 avant le test", ar: "كوتشينغ نهائي فردي قبل الامتحان" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Semaines 1-3 — Compréhension écrite/orale", ar: "الأسابيع 1-3 — الفهم الكتابي والشفهي" },
+        items: [
+          { fr: "Stratégies de lecture rapide", ar: "استراتيجيات القراءة السريعة" },
+          { fr: "Pièges audio courants", ar: "فخاخ الاستماع الشائعة" },
+        ],
+      },
+      {
+        title: { fr: "Semaines 4-6 — Expression écrite", ar: "الأسابيع 4-6 — التعبير الكتابي" },
+        items: [
+          { fr: "Tâche 1 message et tâche 2 article", ar: "المهمّة 1 رسالة والمهمّة 2 مقال" },
+          { fr: "Tâche 3 essai argumenté", ar: "المهمّة 3 مقال حجاجي" },
+        ],
+      },
+      {
+        title: { fr: "Semaines 7-8 — Expression orale + mocks", ar: "الأسبوعان 7-8 — التعبير الشفهي + امتحانات تجريبية" },
+        items: [
+          { fr: "Les 3 tâches orales en conditions réelles", ar: "المهام الشفهية الثلاث في ظروف حقيقية" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Lun. 7 juil · 19h", ar: "البداية: الإثنين 7 جويلية · 19:00" },
+        startISO: "2026-07-07T19:00:00+01:00",
+        spotsTaken: 12,
+        spotsTotal: 12,
+      },
+      {
+        id: "d-2",
+        label: { fr: "Démarrage : Lun. 1 sept · 19h", ar: "البداية: الإثنين 1 سبتمبر · 19:00" },
+        startISO: "2026-09-01T19:00:00+01:00",
+        spotsTaken: 4,
+        spotsTotal: 12,
+      },
+    ],
+    accent: "from-[#DD514D] to-[#2F6BFF]",
+    language: { fr: ["FR"], ar: ["FR", "AR"] },
+  },
+  {
+    id: "c-redaction-college",
+    slug: "redaction-college-methode",
+    teacher: t("t-nadia"),
+    title: {
+      fr: "Rédaction CEM · méthode introduction-développement-conclusion",
+      ar: "التحرير في المتوسط · منهج مقدّمة-عرض-خاتمة",
+    },
+    subtitle: {
+      fr: "1:1 personnalisé pour passer la moyenne en français au CEM.",
+      ar: "حصص فردية مخصّصة لتجاوز معدّل الفرنسية في المتوسط.",
+    },
+    subject: { fr: "Français · rédaction", ar: "الفرنسية · التعبير الكتابي" },
+    format: "1to1",
+    level: "beginner",
+    durationLabel: { fr: "Sessions de 60 min", ar: "جلسات 60 د" },
+    priceDzd: 1500,
+    rating: 4.9,
+    reviews: 41,
+    outcomes: [
+      { fr: "Structurer toute rédaction en 3 paragraphes", ar: "بناء أي إنشاء في 3 فقرات" },
+      { fr: "Enrichir le lexique avec 50 mots-clés par mois", ar: "إثراء المعجم بـ 50 كلمة شهريًا" },
+    ],
+    includes: [
+      { fr: "Correction écrite à chaque séance", ar: "تصحيح كتابي في كل حصّة" },
+      { fr: "Suivi WhatsApp entre les cours", ar: "متابعة واتساب بين الحصص" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme personnalisé", ar: "برنامج مخصّص" },
+        items: [
+          { fr: "Évaluation initiale d'une rédaction", ar: "تقييم أوّلي لإنشاء" },
+          { fr: "Plan d'action sur 8 séances", ar: "خطّة عمل على 8 حصص" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Créneaux : Mer 16h-19h", ar: "الفترات: الأربعاء 16:00-19:00" },
+        startISO: "2026-07-08T16:00:00+01:00",
+        spotsTaken: 5,
+        spotsTotal: 8,
+      },
+    ],
+    accent: "from-[#DD514D] to-[#DDA13A]",
+    language: { fr: ["FR"], ar: ["FR", "AR"] },
+  },
+  {
+    id: "c-fiqh-essentials",
+    slug: "fiqh-essentials-ramadan",
+    teacher: t("t-farid"),
+    title: {
+      fr: "Fiqh essentiel · ahkam du quotidien",
+      ar: "أساسيات الفقه · أحكام الحياة اليومية",
+    },
+    subtitle: {
+      fr: "Cohorte de 6 semaines sur les piliers du fiqh malékite — accessible à tous.",
+      ar: "فوج لـ 6 أسابيع حول أركان الفقه المالكي — متاح للجميع.",
+    },
+    subject: { fr: "Sciences religieuses", ar: "العلوم الشرعية" },
+    format: "cohort",
+    level: "any",
+    durationLabel: { fr: "6 semaines · 12h", ar: "6 أسابيع · 12 سا" },
+    priceDzd: 2400,
+    rating: 4.95,
+    reviews: 58,
+    outcomes: [
+      { fr: "Maîtriser tahara, salat et zakat", ar: "إتقان الطهارة والصلاة والزكاة" },
+      { fr: "Distinguer fard, sunna et nafl", ar: "التمييز بين الفرض والسنّة والنفل" },
+    ],
+    includes: [
+      { fr: "12 séances live", ar: "12 جلسة مباشرة" },
+      { fr: "Polycopié bilingue FR/AR", ar: "ملخّص ثنائي اللغة FR/AR" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Modules", ar: "الوحدات" },
+        items: [
+          { fr: "Tahara et nawaqid", ar: "الطهارة والنواقض" },
+          { fr: "Salat — conditions et piliers", ar: "الصلاة — شروط وأركان" },
+          { fr: "Zakat et siyam", ar: "الزكاة والصيام" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Dim. 13 juil · 21h", ar: "البداية: الأحد 13 جويلية · 21:00" },
+        startISO: "2026-07-13T21:00:00+01:00",
+        spotsTaken: 18,
+        spotsTotal: 24,
+      },
+    ],
+    accent: "from-[#2E9E78] to-[#DDA13A]",
+    language: { fr: ["AR", "FR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-coran-tahfeedh",
+    slug: "coran-tahfeedh-juz-amma",
+    teacher: t("t-farid"),
+    title: {
+      fr: "Tahfeedh · juz 'Amma en 12 semaines",
+      ar: "تحفيظ · جزء عمّ في 12 أسبوعًا",
+    },
+    subtitle: {
+      fr: "Cohorte de mémorisation guidée, suivi audio quotidien.",
+      ar: "فوج حفظ موجَّه، متابعة صوتية يومية.",
+    },
+    subject: { fr: "Coran · mémorisation", ar: "القرآن · حفظ" },
+    format: "cohort",
+    level: "any",
+    durationLabel: { fr: "12 semaines · 24h", ar: "12 أسبوعًا · 24 سا" },
+    priceDzd: 3600,
+    rating: 4.96,
+    reviews: 92,
+    outcomes: [
+      { fr: "Mémoriser juz 'Amma avec tajwid", ar: "حفظ جزء عمّ بالتجويد" },
+      { fr: "Auto-évaluation hebdo guidée", ar: "تقييم ذاتي أسبوعي موجَّه" },
+    ],
+    includes: [
+      { fr: "24 séances live", ar: "24 جلسة مباشرة" },
+      { fr: "Récitations audio modèles", ar: "تلاوات صوتية نموذجية" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme par semaine", ar: "البرنامج الأسبوعي" },
+        items: [
+          { fr: "Sourate de la semaine + révision", ar: "سورة الأسبوع + مراجعة" },
+          { fr: "Audio de validation hebdo", ar: "صوت تثبيت أسبوعي" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-past",
+        label: { fr: "Cohorte du printemps · clôturée", ar: "فوج الربيع · مغلق" },
+        startISO: "2026-03-01T20:00:00+01:00",
+        spotsTaken: 22,
+        spotsTotal: 24,
+      },
+      {
+        id: "d-summer",
+        label: { fr: "Démarrage : Sam. 5 juil · 20h", ar: "البداية: السبت 5 جويلية · 20:00" },
+        startISO: "2026-07-05T20:00:00+01:00",
+        spotsTaken: 23,
+        spotsTotal: 24,
+      },
+    ],
+    accent: "from-[#DDA13A] to-[#2E9E78]",
+    language: { fr: ["AR", "FR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-svt-bac",
+    slug: "svt-bac-genetique",
+    teacher: t("t-kahina"),
+    title: {
+      fr: "SVT Bac · génétique humaine",
+      ar: "علوم طبيعية للباك · الوراثة البشرية",
+    },
+    subtitle: {
+      fr: "Cohorte de 6 semaines sur le chapitre le plus piégeur du Bac SE.",
+      ar: "فوج لـ 6 أسابيع حول أكثر فصل تعقيدًا في الباك علوم تجريبية.",
+    },
+    subject: { fr: "SVT", ar: "علوم الحياة والأرض" },
+    format: "cohort",
+    level: "advanced",
+    durationLabel: { fr: "6 semaines · 12h", ar: "6 أسابيع · 12 سا" },
+    priceDzd: 3800,
+    rating: 4.78,
+    reviews: 22,
+    outcomes: [
+      { fr: "Construire un arbre généalogique sans erreur", ar: "بناء شجرة عائلة بلا أخطاء" },
+      { fr: "Maîtriser la transmission liée au sexe", ar: "إتقان النقل المرتبط بالجنس" },
+      { fr: "Rédiger 5 exercices type Bac corrigés", ar: "تحرير 5 تمارين باك مع التصحيح" },
+    ],
+    includes: [
+      { fr: "12 séances live · 60 min", ar: "12 جلسة مباشرة · 60 د" },
+      { fr: "Planches schématiques en couleur", ar: "لوحات مخطّطة ملوّنة" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme", ar: "البرنامج" },
+        items: [
+          { fr: "Lois de Mendel", ar: "قوانين مندل" },
+          { fr: "Arbres généalogiques", ar: "أشجار العائلة" },
+          { fr: "Maladies génétiques humaines", ar: "الأمراض الوراثية البشرية" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Mar. 22 juil · 18h", ar: "البداية: الثلاثاء 22 جويلية · 18:00" },
+        startISO: "2026-07-22T18:00:00+01:00",
+        spotsTaken: 5,
+        spotsTotal: 16,
+      },
+    ],
+    accent: "from-[#2E9E78] to-[#3E8FD0]",
+    language: { fr: ["FR", "AR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-oud-debutant",
+    slug: "oud-debutant-tlemcen",
+    teacher: t("t-leila"),
+    title: {
+      fr: "Oud débutant · à Tlemcen, en présentiel",
+      ar: "العود للمبتدئين · بتلمسان، حضوريًا",
+    },
+    subtitle: {
+      fr: "Atelier mensuel de 3h pour découvrir l'oud — instrument fourni.",
+      ar: "ورشة شهرية 3 ساعات لاكتشاف العود — الآلة متوفّرة.",
+    },
+    subject: { fr: "Oud", ar: "العود" },
+    format: "event",
+    level: "beginner",
+    durationLabel: { fr: "Atelier · 3h", ar: "ورشة · 3 سا" },
+    priceDzd: 2500,
+    rating: 4.86,
+    reviews: 14,
+    outcomes: [
+      { fr: "Découvrir la tenue et l'accordage", ar: "اكتشاف الإمساك والدوزان" },
+      { fr: "Jouer 2 mélodies traditionnelles", ar: "عزف لحنين تقليديين" },
+    ],
+    includes: [
+      { fr: "Atelier en présentiel à Tlemcen", ar: "ورشة حضورية بتلمسان" },
+      { fr: "Instrument fourni pendant l'atelier", ar: "الآلة متوفّرة خلال الورشة" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Au programme", ar: "البرنامج" },
+        items: [
+          { fr: "Tenue et accordage (45 min)", ar: "الإمساك والدوزان (45 د)" },
+          { fr: "Doigtés de base (1h)", ar: "أساسيات اللمس (ساعة)" },
+          { fr: "2 mélodies traditionnelles (1h15)", ar: "لحنان تقليديان (ساعة و15)" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Sam. 19 juil · 15h", ar: "السبت 19 جويلية · 15:00" },
+        startISO: "2026-07-19T15:00:00+01:00",
+        spotsTaken: 7,
+        spotsTotal: 8,
+      },
+    ],
+    accent: "from-[#DDA13A] to-[#DD514D]",
+    language: { fr: ["FR", "AR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-chant-andalou",
+    slug: "chant-andalou-nouba",
+    teacher: t("t-leila"),
+    title: {
+      fr: "Chant andalou · cohorte nouba",
+      ar: "الغناء الأندلسي · فوج النوبة",
+    },
+    subtitle: {
+      fr: "10 semaines pour apprendre une nouba complète, en présentiel à Tlemcen.",
+      ar: "10 أسابيع لتعلّم نوبة كاملة، حضوريًا بتلمسان.",
+    },
+    subject: { fr: "Chant", ar: "غناء" },
+    format: "cohort",
+    level: "intermediate",
+    durationLabel: { fr: "10 semaines · 20h", ar: "10 أسابيع · 20 سا" },
+    priceDzd: 6800,
+    rating: 4.92,
+    reviews: 19,
+    outcomes: [
+      { fr: "Interpréter une nouba complète", ar: "أداء نوبة كاملة" },
+      { fr: "Maîtriser le tab' de l'école tlemcénienne", ar: "إتقان الطّبع لمدرسة تلمسان" },
+    ],
+    includes: [
+      { fr: "10 séances présentielles", ar: "10 جلسات حضورية" },
+      { fr: "Partitions et paroles", ar: "نوتات وكلمات" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme", ar: "البرنامج" },
+        items: [
+          { fr: "Mishaliyat et touchya", ar: "المشاليات والتوشية" },
+          { fr: "Inshad et m'sader", ar: "الإنشاد والمصادر" },
+          { fr: "Khlas final", ar: "الخلاص الختامي" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Sam. 6 sept · 17h", ar: "البداية: السبت 6 سبتمبر · 17:00" },
+        startISO: "2026-09-06T17:00:00+01:00",
+        spotsTaken: 0,
+        spotsTotal: 10,
+      },
+    ],
+    accent: "from-[#DDA13A] to-[#1C3A5E]",
+    language: { fr: ["AR", "FR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-flutter-cohort",
+    slug: "flutter-cohorte-app-meteo",
+    teacher: t("t-bilal"),
+    title: {
+      fr: "Flutter · app météo en 4 semaines",
+      ar: "Flutter · تطبيق طقس في 4 أسابيع",
+    },
+    subtitle: {
+      fr: "Code, débogue et publie une app Flutter sur le Play Store — pas de slides.",
+      ar: "اكتب، صحّح وانشر تطبيق Flutter على Play Store — بلا شرائح.",
+    },
+    subject: { fr: "Programmation Mobile", ar: "برمجة الموبايل" },
+    format: "cohort",
+    level: "beginner",
+    durationLabel: { fr: "4 semaines · 16h", ar: "4 أسابيع · 16 سا" },
+    priceDzd: 8400,
+    rating: 4.79,
+    reviews: 12,
+    outcomes: [
+      { fr: "Maîtriser les widgets Flutter essentiels", ar: "إتقان widgets الأساسية في Flutter" },
+      { fr: "Connecter une API REST avec gestion d'erreurs", ar: "ربط REST API مع إدارة الأخطاء" },
+      { fr: "Publier sur le Play Store de A à Z", ar: "النشر على Play Store من الألف إلى الياء" },
+    ],
+    includes: [
+      { fr: "16 séances live · 60 min", ar: "16 جلسة مباشرة · 60 د" },
+      { fr: "Repo GitHub du projet", ar: "مستودع GitHub للمشروع" },
+      { fr: "Revue de code 1:1 hebdo", ar: "مراجعة كود فردية أسبوعية" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Plan du sprint", ar: "خطّة السبرنت" },
+        items: [
+          { fr: "Setup Flutter + 1er widget", ar: "إعداد Flutter + الـ widget الأول" },
+          { fr: "State management avec Provider", ar: "إدارة الحالة بـ Provider" },
+          { fr: "API + persistance locale", ar: "API + تخزين محلّي" },
+          { fr: "Build APK et publication", ar: "بناء APK والنشر" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Mar. 29 juil · 20h", ar: "البداية: الثلاثاء 29 جويلية · 20:00" },
+        startISO: "2026-07-29T20:00:00+01:00",
+        spotsTaken: 9,
+        spotsTotal: 14,
+      },
+    ],
+    accent: "from-[#3E8FD0] to-[#2E9E78]",
+    language: { fr: ["FR", "EN"], ar: ["AR", "FR", "EN"] },
+  },
+  {
+    id: "c-bem-maths",
+    slug: "bem-maths-revision-finale",
+    teacher: t("t-djamila"),
+    title: {
+      fr: "BEM Maths · révision finale 5 semaines",
+      ar: "رياضيات BEM · مراجعة نهائية 5 أسابيع",
+    },
+    subtitle: {
+      fr: "Cohorte mixte pour la 4e année moyenne — sujets BEM et fiches méthode.",
+      ar: "فوج مختلط للسنة 4 متوسط — مواضيع BEM وبطاقات منهجية.",
+    },
+    subject: { fr: "Mathématiques · BEM", ar: "الرياضيات · BEM" },
+    format: "cohort",
+    level: "intermediate",
+    durationLabel: { fr: "5 semaines · 10h", ar: "5 أسابيع · 10 سا" },
+    priceDzd: 2800,
+    rating: 4.4,
+    reviews: 18,
+    outcomes: [
+      { fr: "Maîtriser fractions, équations et géométrie", ar: "إتقان الكسور والمعادلات والهندسة" },
+      { fr: "Faire 4 sujets BEM en conditions réelles", ar: "إنجاز 4 مواضيع BEM في ظروف حقيقية" },
+    ],
+    includes: [
+      { fr: "10 séances live · 60 min", ar: "10 جلسات مباشرة · 60 د" },
+      { fr: "Annales BEM 2021-2025", ar: "مواضيع BEM 2021-2025" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme", ar: "البرنامج" },
+        items: [
+          { fr: "Calcul numérique et littéral", ar: "الحساب العددي والحرفي" },
+          { fr: "Équations et inéquations", ar: "المعادلات والمتراجحات" },
+          { fr: "Géométrie plane", ar: "الهندسة المستوية" },
+          { fr: "4 sujets BEM corrigés", ar: "4 مواضيع BEM مع التصحيح" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Démarrage : Sam. 6 sept · 14h", ar: "البداية: السبت 6 سبتمبر · 14:00" },
+        startISO: "2026-09-06T14:00:00+01:00",
+        spotsTaken: 3,
+        spotsTotal: 16,
+      },
+    ],
+    accent: "from-[#1C3A5E] to-[#DDA13A]",
+    language: { fr: ["FR", "AR"], ar: ["AR", "FR"] },
+  },
+  {
+    id: "c-react-archived",
+    slug: "react-cohorte-printemps-2025",
+    teacher: t("t-amine"),
+    title: {
+      fr: "React from scratch · cohorte du printemps (archivée)",
+      ar: "React من الصفر · فوج الربيع (مؤرشف)",
+    },
+    subtitle: {
+      fr: "Cohorte clôturée — replays disponibles avec accès à vie pour les inscrits.",
+      ar: "فوج مغلق — الإعادات متاحة مدى الحياة للمسجَّلين.",
+    },
+    subject: { fr: "Programmation Web", ar: "برمجة الويب" },
+    format: "cohort",
+    level: "beginner",
+    durationLabel: { fr: "6 semaines · 18h", ar: "6 أسابيع · 18 سا" },
+    priceDzd: 9800,
+    rating: 4.88,
+    reviews: 26,
+    outcomes: [
+      { fr: "Tout le programme de la cohorte 6 semaines", ar: "كامل برنامج فوج 6 أسابيع" },
+    ],
+    includes: [
+      { fr: "Replays HD à vie", ar: "إعادات HD مدى الحياة" },
+      { fr: "Code source du projet final", ar: "الكود المصدري للمشروع النهائي" },
+    ],
+    syllabus: [
+      {
+        title: { fr: "Programme (archivé)", ar: "البرنامج (مؤرشف)" },
+        items: [
+          { fr: "Voir cohorte courante pour le détail", ar: "راجع الفوج الحالي للتفاصيل" },
+        ],
+      },
+    ],
+    dates: [
+      {
+        id: "d-1",
+        label: { fr: "Cohorte clôturée — 12 mar. 2026", ar: "فوج مغلق — 12 مارس 2026" },
+        startISO: "2026-03-12T20:00:00+01:00",
+        spotsTaken: 16,
+        spotsTotal: 18,
+      },
+    ],
+    accent: "from-[#3E8FD0] to-[#2F6BFF]",
+    language: { fr: ["FR", "EN"], ar: ["AR", "FR", "EN"] },
   },
 ];
 

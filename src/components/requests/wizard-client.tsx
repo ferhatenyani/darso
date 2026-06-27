@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Check, Edit3, Send } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Edit3, Loader2, Send } from "lucide-react";
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -375,10 +375,14 @@ export function RequestWizardClient() {
                     onClick={publish}
                     disabled={isPublishing}
                   >
-                    <Send className="h-4 w-4" />
-                    {isPublishing
-                      ? t("wizard.footer.publishing")
-                      : t("newRequest.footer.publish")}
+                    {isPublishing ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    <span className={isPublishing ? "opacity-0" : ""}>
+                      {t("newRequest.footer.publish")}
+                    </span>
                   </Button>
                 )}
               </div>

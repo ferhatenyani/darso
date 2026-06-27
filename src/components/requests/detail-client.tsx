@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useState, useSyncExternalStore, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
@@ -38,6 +38,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useCurrentUser } from "@/lib/auth";
+import { ensureThread } from "@/lib/mock/chats";
 import {
   getRequestById,
   subscribeRequests,
@@ -64,6 +65,7 @@ export function RequestDetailClient({
   const router = useRouter();
   const { show } = useToast();
   const { user } = useCurrentUser();
+  const [, startMessageTransition] = useTransition();
 
   // Re-derive the request from the live store on every store tick so
   // in-session edits (status flips, content changes) reflect here without
@@ -118,16 +120,27 @@ export function RequestDetailClient({
   }
 
   function handleMessage(app: RequestApplication) {
-    show({
-      title: t("toasts.messageOpening.title"),
-      description: t("toasts.messageOpening.desc"),
+    if (!user) {
+      show({
+        title: t("toasts.messageOpening.title"),
+        description: t("toasts.messageOpening.desc"),
+      });
+      const path = typeof window !== "undefined" ? window.location.pathname : "/";
+      router.push(`/sign-in?next=${encodeURIComponent(path)}` as never);
+      return;
+    }
+    startMessageTransition(() => {
+      const threadId = ensureThread(app.teacher.slug, user.id);
+      if (!threadId) {
+        router.push("/messages" as never);
+        return;
+      }
+      show({
+        title: t("toasts.messageOpening.title"),
+        description: t("toasts.messageOpening.desc"),
+      });
+      router.push(`/messages/${threadId}` as never);
     });
-    // Try to find an existing 1:1 thread with this teacher.
-    // The mock chat module uses `th-<firstName>` as ids — best-effort match
-    // on the teacher slug's first segment; otherwise just open the inbox.
-    const firstName = app.teacher.slug.split("-")[0];
-    const threadId = `th-${firstName}`;
-    router.push(`/messages/${threadId}` as never);
   }
 
   function handleClose() {
@@ -216,7 +229,7 @@ export function RequestDetailClient({
             </h1>
 
             {/* Student mini-card */}
-            <div className="mt-6 flex items-center gap-3 border-s-2 border-accent ps-4">
+            <div className="mt-6 flex items-center gap-3">
               <Avatar className="h-12 w-12 shadow-e1">
                 <AvatarFallback
                   className={cn("bg-gradient-to-br text-sm text-white", student.accent)}

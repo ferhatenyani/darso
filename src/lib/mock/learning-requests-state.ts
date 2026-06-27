@@ -1,4 +1,25 @@
 /**
+ * Backend integration notes
+ *
+ * Endpoints:
+ *   GET    /api/requests                → seeds initial state for getRequests / getRequestsByOwner
+ *   GET    /api/requests/:id            → getRequestById(id)
+ *   POST   /api/requests                → addRequest(input)
+ *   PATCH  /api/requests/:id            → updateRequest(id, patch)
+ *   DELETE /api/requests/:id            → deleteRequest(id)
+ *   (subscribe maps to either SSE/WebSocket OR client-side polling)
+ *
+ * Shape: the backend should return LearningRequest[] matching the type below.
+ * Cache invalidation: every mutation should invalidate the per-account snapshot
+ *   cache (mirror the current pattern — caches are read by useSyncExternalStore
+ *   subscribers, so identity must change on every mutation).
+ *
+ * Identity: accountId is the cookie-derived user id (from @/lib/auth/server).
+ *   In the real backend, the user is read from the auth context; mock stores
+ *   accept it as a parameter for snapshot scoping.
+ */
+
+/**
  * In-memory store for learner-posted requests.
  *
  * Wires the request wizard's Publish button (Batch 5b) AND the

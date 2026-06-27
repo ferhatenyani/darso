@@ -1,16 +1,30 @@
 "use client";
 
+import * as React from "react";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { ThreadList } from "@/components/app/chat/thread-list";
-import { chatThreads } from "@/lib/mock/chats";
+import {
+  getChatThreads,
+  subscribeChats,
+  type ChatThread,
+} from "@/lib/mock/chats";
 import { InboxIllustration } from "./inbox-illustration";
 
 /** Top-level inbox: list visible on mobile, two-pane on desktop with an editorial empty state. */
 export function InboxShell({ activeId }: { activeId?: string }) {
   const t = useTranslations("app.messages");
+
+  // Subscribe to the chat thread store so threads created by `ensureThread`
+  // (student CTAs that route into messaging) appear in the inbox without
+  // a refresh. Snapshot is frozen and referentially stable between ticks.
+  const threads = React.useSyncExternalStore<readonly ChatThread[]>(
+    subscribeChats,
+    getChatThreads,
+    getChatThreads,
+  );
 
   return (
     <section className="container-narrow py-8">
@@ -33,7 +47,7 @@ export function InboxShell({ activeId }: { activeId?: string }) {
       {/* Two-pane shell. Height: fill viewport minus header/footer */}
       <div className="grid h-[min(76vh,820px)] overflow-hidden rounded-[var(--radius-lg)] border border-border bg-background shadow-e1 md:grid-cols-[340px_1fr]">
         <div className="border-b border-border md:border-b-0 md:border-e">
-          <ThreadList threads={chatThreads} activeId={activeId} />
+          <ThreadList threads={threads} activeId={activeId} />
         </div>
         <div className="hidden md:block">
           <EmptyPane />

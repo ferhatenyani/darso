@@ -15,7 +15,7 @@ export function ThreadList({
   threads,
   activeId,
 }: {
-  threads: ChatThread[];
+  threads: readonly ChatThread[];
   activeId?: string;
 }) {
   const t = useTranslations("app.messages");

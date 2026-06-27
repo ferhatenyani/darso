@@ -5,9 +5,17 @@ import { useTranslations } from "next-intl";
 import { CheckCheck, BellRing } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { NotificationRow } from "@/components/app/notifications/notification-row";
-import { appNotifications, type AppNotification } from "@/lib/mock/notifications";
+import type { AppNotification } from "@/lib/mock/notifications";
+import {
+  EMPTY_NOTIFICATIONS,
+  getNotifications,
+  markAllRead,
+  markRead,
+  subscribeNotifications,
+} from "@/lib/mock/notifications-state";
 
 type Filter = "all" | "bookings" | "messages" | "reviews" | "billing";
 
@@ -19,10 +27,24 @@ const filterMap: Record<Filter, AppNotification["type"][] | "all"> = {
   billing: ["billing"],
 };
 
+// SSR fallback for useSyncExternalStore — module state isn't seeded on the
+// server until first read, so render an empty list and let the client
+// hydrate the real one.
+const getServerSnapshot = (): readonly AppNotification[] => EMPTY_NOTIFICATIONS;
+
 export function NotificationsShell() {
   const t = useTranslations("app.notifications");
   const [filter, setFilter] = React.useState<Filter>("all");
-  const [items, setItems] = React.useState<AppNotification[]>(appNotifications);
+
+  // Surface the full seeded catalogue on this page regardless of the
+  // signed-in user (matches the disputes-shell pattern); the bell already
+  // filters per-account for the chrome surface.
+  const getSnapshot = React.useCallback(() => getNotifications(), []);
+  const items = React.useSyncExternalStore<readonly AppNotification[]>(
+    subscribeNotifications,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const filtered = React.useMemo(() => {
     const allow = filterMap[filter];
@@ -37,9 +59,8 @@ export function NotificationsShell() {
     };
   }, [filtered]);
 
-  const markRead = (id: string) =>
-    setItems((arr) => arr.map((n) => (n.id === id ? { ...n, unread: false } : n)));
-  const markAllRead = () => setItems((arr) => arr.map((n) => ({ ...n, unread: false })));
+  const handleMarkRead = React.useCallback((id: string) => markRead(id), []);
+  const handleMarkAllRead = React.useCallback(() => markAllRead(), []);
 
   const unreadCount = filtered.filter((n) => n.unread).length;
 
@@ -60,7 +81,7 @@ export function NotificationsShell() {
               <span className="text-balance">{t("subtitle")}</span>
             </h1>
           </div>
-          <Button onClick={markAllRead} variant="outline" size="sm" disabled={unreadCount === 0}>
+          <Button onClick={handleMarkAllRead} variant="outline" size="sm" disabled={unreadCount === 0}>
             <CheckCheck className="h-4 w-4" />
             {t("markAllRead")}
           </Button>
@@ -76,12 +97,12 @@ export function NotificationsShell() {
           </TabsList>
           <TabsContent value={filter} className="mt-6">
             {filtered.length === 0 ? (
-              <EmptyState />
+              <NotificationsEmpty filter={filter} />
             ) : (
               <div className="space-y-10">
-                <Section title={t("sections.today")} index={1} items={byBucket.today} onMarkRead={markRead} />
-                <Section title={t("sections.week")} index={2} items={byBucket.week} onMarkRead={markRead} />
-                <Section title={t("sections.earlier")} index={3} items={byBucket.earlier} onMarkRead={markRead} />
+                <Section title={t("sections.today")} index={1} items={byBucket.today} onMarkRead={handleMarkRead} />
+                <Section title={t("sections.week")} index={2} items={byBucket.week} onMarkRead={handleMarkRead} />
+                <Section title={t("sections.earlier")} index={3} items={byBucket.earlier} onMarkRead={handleMarkRead} />
               </div>
             )}
           </TabsContent>
@@ -142,20 +163,17 @@ function Section({
   );
 }
 
-function EmptyState() {
+function NotificationsEmpty({ filter }: { filter: Filter }) {
   const t = useTranslations("app.notifications.empty");
+  const tt = useTranslations("app.notifications.tabs");
+  const filterLabel = filter === "all" ? null : tt(filter);
   return (
-    <div className="grid place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-card py-16 text-center">
-      <div className="grid h-12 w-12 place-items-center rounded-full bg-surface text-ink-2">
-        <BellRing className="h-5 w-5" />
-      </div>
-      <h3
-        className="mt-4 font-serif text-xl italic text-foreground"
-        style={{ fontFamily: "ui-serif, Georgia, serif" }}
-      >
-        {t("title")}
-      </h3>
-      <p className="mt-2 max-w-sm text-pretty text-sm text-ink-2">{t("body")}</p>
-    </div>
+    <EmptyState
+      icon={BellRing}
+      tone="success"
+      title={t("title")}
+      description={filterLabel ? t("bodyFiltered", { filter: filterLabel }) : t("body")}
+      secondary={{ label: t("openPreferences"), href: "/account?tab=preferences" }}
+    />
   );
 }

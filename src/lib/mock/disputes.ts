@@ -1,3 +1,7 @@
+// Batch 11 expansion — added a `rejected` (cancelled-by-claimant) sample so
+// every DisputeState in the union has at least one demo card. The other four
+// states (open / awaiting-response / in-mediation / resolved/refunded) were
+// already covered. All disputes are seeded to acc-lina via disputes-state.ts.
 import { featuredTeachers, type LocalizedString, type Teacher } from "./teachers";
 
 export type DisputeState =
@@ -278,6 +282,48 @@ export const disputes: Dispute[] = [
         actorInitials: mediator.initials,
         actorAccent: mediator.accent,
         action: { fr: "Accord trouvé · remboursement 25%", ar: "تمّ التوصّل لاتّفاق · استرداد 25%" },
+      },
+    ],
+    messages: [],
+  },
+  {
+    id: "DSP-2615",
+    state: "rejected",
+    openedAt: isoDaysAgo(18),
+    lastActivityAt: isoDaysAgo(16),
+    counterparty: t("t-nadia"),
+    subject: {
+      course: { fr: "Français · TCF préparation", ar: "الفرنسية · تحضير TCF" },
+      sessionLabel: { fr: "Séance du 8 juin · 19h", ar: "حصة 8 جوان · 19:00" },
+    },
+    title: { fr: "Dossier retiré par l'élève", ar: "سحب الملفّ من قبل الطالبة" },
+    claim: {
+      fr: "Différend résolu directement avec la prof — j'annule mon dossier.",
+      ar: "تمّ حلّ الخلاف مباشرة مع الأستاذة — ألغي الملفّ.",
+    },
+    amountDzd: 1900,
+    timeline: [
+      {
+        id: "tl-1",
+        state: "open",
+        at: isoDaysAgo(18),
+        actor: "student",
+        actorName: lina.name,
+        actorInitials: lina.initials,
+        actorAccent: lina.accent,
+        action: { fr: "Dossier ouvert", ar: "فتح الملفّ" },
+        description: { fr: "Question sur une facturation de séance reportée.", ar: "استفسار حول فوترة حصّة مؤجَّلة." },
+      },
+      {
+        id: "tl-2",
+        state: "rejected",
+        at: isoDaysAgo(16),
+        actor: "student",
+        actorName: lina.name,
+        actorInitials: lina.initials,
+        actorAccent: lina.accent,
+        action: { fr: "Dossier retiré", ar: "تمّ سحب الملفّ" },
+        description: { fr: "Conflit résolu en privé.", ar: "تمّ الحلّ خارج المنصّة." },
       },
     ],
     messages: [],

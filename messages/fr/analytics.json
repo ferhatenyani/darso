@@ -1,0 +1,79 @@
+{
+  "analytics": {
+    "title": "Analytiques",
+    "subtitle": "Ce que les chiffres racontent — sans le bruit.",
+    "scopeTeacher": "Vue enseignant",
+    "scopeAgency": "Vue studio",
+    "indexLabel": "Tableau",
+    "scope": {
+      "teacherShort": "Vous",
+      "agencyShort": "Studio",
+      "teacherFull": "Vos cours uniquement",
+      "agencyFull": "Tout le studio"
+    },
+    "period": {
+      "label": "Période",
+      "ariaLabel": "Choisir la période",
+      "7": "7 jours",
+      "30": "30 jours",
+      "90": "90 jours",
+      "365": "12 mois",
+      "comparePrev": "vs période précédente"
+    },
+    "kpis": {
+      "indexNum": "01",
+      "section": "Indicateurs clés",
+      "sectionTitle": "Quatre chiffres à connaître",
+      "sectionSubtitle": "Comparaison automatique avec la même fenêtre précédente.",
+      "conversionRate": "Taux de conversion",
+      "conversionRateHint": "Visites de profil qui aboutissent à une réservation",
+      "retention": "Rétention",
+      "retentionHint": "Élèves qui reviennent pour un second cours",
+      "refundRate": "Taux de remboursement",
+      "refundRateHint": "Réservations confirmées remboursées",
+      "noShowRate": "Taux d'absence",
+      "noShowRateHint": "Sessions où l'élève ne s'est pas présenté",
+      "deltaUp": "+{value} pts",
+      "deltaDown": "−{value} pts",
+      "deltaFlat": "stable"
+    },
+    "charts": {
+      "indexNum": "02",
+      "section": "Tendances",
+      "sectionTitle": "Sur la durée",
+      "bookingsTitle": "Réservations",
+      "bookingsSuffix": "réservations",
+      "revenueTitle": "Revenus",
+      "revenueSuffix": "DZD",
+      "ariaBookings": "Évolution du nombre de réservations sur la période",
+      "ariaRevenue": "Évolution des revenus en DZD sur la période",
+      "axisStart": "Début",
+      "axisEnd": "Fin",
+      "noData": "Pas encore de données pour cette période."
+    },
+    "topCourses": {
+      "indexNum": "03",
+      "section": "Cours",
+      "sectionTitle": "Meilleurs cours",
+      "sectionSubtitle": "Classés par revenus sur la période.",
+      "th": {
+        "course": "Cours",
+        "bookings": "Réservations",
+        "revenue": "Revenus",
+        "conversion": "Conv."
+      },
+      "empty": "Aucun cours actif sur cette période."
+    },
+    "topSubjects": {
+      "indexNum": "04",
+      "section": "Recherche",
+      "sectionTitle": "Matières les plus cherchées",
+      "sectionSubtitle": "Ce que les élèves tapent — puis ce qu'ils réservent.",
+      "searches": "{count, plural, one {# recherche} other {# recherches}}",
+      "bookings": "{count, plural, one {# réservation} other {# réservations}}",
+      "conversionLabel": "Conv.",
+      "empty": "Aucune recherche enregistrée."
+    },
+    "footnote": "Données indicatives — mises à jour quotidiennement à 04 h."
+  }
+}

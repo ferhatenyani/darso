@@ -7,6 +7,7 @@ import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { DiscoverMenu } from "@/components/nav/discover-menu";
 import { UserMenu } from "@/components/nav/user-menu";
+import { routes } from "@/lib/routes";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
@@ -14,20 +15,20 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <div className="container-narrow flex h-20 items-center">
-        <Link href="/" className="shrink-0 outline-none focus-visible:rounded-md">
+        <Link href={routes.home()} className="shrink-0 outline-none focus-visible:rounded-md">
           <Logo />
         </Link>
 
         <nav className="ms-8 hidden lg:flex items-center gap-1" aria-label="Main">
           <DiscoverMenu />
           <Link
-            href="/teachers"
+            href={routes.teachers()}
             className="inline-flex h-10 items-center rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
           >
             {t("teachers")}
           </Link>
           <Link
-            href="/live"
+            href={routes.live()}
             className="group inline-flex h-10 items-center gap-2 rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
             aria-label={t("liveNowSub")}
           >
@@ -41,7 +42,7 @@ export function SiteHeader() {
 
         <div className="ms-auto flex items-center gap-2">
           <Link
-            href="/search"
+            href={routes.search()}
             aria-label={t("search")}
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-ink-2 transition-colors hover:bg-surface hover:text-foreground"
           >
@@ -49,7 +50,7 @@ export function SiteHeader() {
           </Link>
 
           <Link
-            href="/teach"
+            href={routes.teachLanding()}
             className="hidden md:inline-flex h-10 items-center rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
           >
             {t("becomeTeacher")}

@@ -14,6 +14,8 @@ import {
   Users,
   LogOut,
   UserCog,
+  Landmark,
+  BarChart3,
   ChevronRight,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -27,6 +29,7 @@ import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { currentTeacher } from "@/lib/mock/dashboard";
 import { featuredTeachers } from "@/lib/mock/teachers";
 import { useCurrentUser } from "@/lib/auth";
+import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type NavItem = { href: string; icon: typeof LayoutDashboard; key: string; badge?: number };
@@ -38,38 +41,43 @@ const baseGroups: { key: string; items: NavItem[] }[] = [
   {
     key: "groupOverview",
     items: [
-      { href: "/teach/dashboard", icon: LayoutDashboard, key: "home" },
-      { href: "/teach/profile", icon: UserCog, key: "profile" },
+      { href: routes.teachDashboard(), icon: LayoutDashboard, key: "home" },
+      { href: routes.teachProfile(), icon: UserCog, key: "profile" },
     ],
   },
   {
     key: "groupLibrary",
     items: [
-      { href: "/teach/courses", icon: Library, key: "courses" },
-      { href: "/teach/events", icon: CalendarDays, key: "events" },
-      { href: "/teach/ondemand", icon: PlayCircle, key: "onDemand" },
+      { href: routes.teachCourses(), icon: Library, key: "courses" },
+      { href: routes.teachEvents(), icon: CalendarDays, key: "events" },
+      { href: routes.teachOndemand(), icon: PlayCircle, key: "onDemand" },
     ],
   },
   {
     key: "groupInbox",
     items: [
-      { href: "/teach/requests", icon: Inbox, key: "requests", badge: 3 },
-      { href: "/teach/applications", icon: Send, key: "applications" },
-      { href: "/messages", icon: MessagesSquare, key: "messages" },
+      { href: routes.teachRequests(), icon: Inbox, key: "requests", badge: 3 },
+      { href: routes.teachApplications(), icon: Send, key: "applications" },
+      { href: routes.messages(), icon: MessagesSquare, key: "messages" },
     ],
   },
   {
     key: "groupPerformance",
     items: [
-      { href: "/teach/reviews", icon: Star, key: "reviews" },
-      { href: "/teach/subscription", icon: Wallet, key: "subscription" },
+      { href: routes.teachAnalytics(), icon: BarChart3, key: "analytics" },
+      { href: routes.teachReviews(), icon: Star, key: "reviews" },
+      { href: routes.teachSubscription(), icon: Wallet, key: "subscription" },
+      { href: routes.teachPayouts(), icon: Landmark, key: "payouts" },
     ],
   },
 ];
 
 const AGENCY_GROUP: { key: string; items: NavItem[] } = {
   key: "groupAgency",
-  items: [{ href: "/teach/agency", icon: Users, key: "agency" }],
+  items: [
+    { href: routes.teachAgency(), icon: Users, key: "agency" },
+    { href: routes.teachAgencyAnalytics(), icon: BarChart3, key: "agencyAnalytics" },
+  ],
 };
 
 export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
@@ -97,6 +105,16 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
     if (href === "/teach/dashboard") {
       return pathname === "/teach/dashboard" || pathname === "/teach";
     }
+    // `/teach/agency` would otherwise win over `/teach/agency/analytics` since
+    // `startsWith` matches the prefix; use exact match for parent agency link
+    // and `startsWith` only for the rest.
+    if (href === "/teach/agency") {
+      return pathname === "/teach/agency";
+    }
+    if (href === "/teach/analytics") {
+      // Avoid lighting up Teacher analytics when on /teach/agency/analytics.
+      return pathname === "/teach/analytics";
+    }
     return pathname.startsWith(href);
   };
 
@@ -108,7 +126,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
       )}
     >
       <div className="flex h-16 items-center px-5">
-        <Link href="/teach/dashboard" className="outline-none focus-visible:rounded-md">
+        <Link href={routes.teachDashboard()} className="outline-none focus-visible:rounded-md">
           <Logo />
         </Link>
       </div>
@@ -116,7 +134,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
       {/* Teacher card */}
       <div className="px-3">
         <Link
-          href="/teach/profile"
+          href={routes.teachProfile()}
           className="group relative flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-3 transition-colors hover:bg-surface"
         >
           <Avatar className="h-11 w-11 ring-2 ring-background">
@@ -167,7 +185,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
                   return (
                     <li key={item.href}>
                       <Link
-                        href={item.href}
+                        href={item.href as never /* mixed route literal types */}
                         aria-current={active ? "page" : undefined}
                         className={cn(
                           "relative flex h-10 items-center gap-3 rounded-[var(--radius-md)] px-3 text-[14px] font-medium transition-colors",
@@ -210,7 +228,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
           <button
             type="button"
             onClick={() => void signOut()}
-            className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-md)] px-3 text-sm font-medium text-ink-2 transition-colors hover:bg-surface hover:text-foreground"
+            className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-md)] px-3 text-sm font-medium text-ink-2 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <LogOut className="h-4 w-4 rtl-flip" aria-hidden />
             {t("logout")}

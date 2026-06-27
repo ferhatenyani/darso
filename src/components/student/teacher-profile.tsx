@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Star,
@@ -30,6 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CourseCard } from "@/components/student/course-card";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import { ensureThread } from "@/lib/mock/chats";
 import { coursesForTeacher } from "@/lib/mock/courses";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
 import type { Teacher } from "@/lib/mock/teachers";
@@ -47,6 +48,8 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const router = useRouter();
   const { show } = useToast();
+  const { user } = useCurrentUser();
+  const [, startMessageTransition] = useTransition();
 
   const teacherCourses = coursesForTeacher(teacher.id);
   const teacherReviews = reviewsForTeacher(teacher.id);
@@ -70,14 +73,36 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
     teacherCourses.find((c) => c.format !== "1to1") ?? teacherCourses[0] ?? null;
 
   const handleMessage = () => {
-    show({
-      title: tBooking("toasts.openingConversation.title"),
-      description: tBooking("toasts.openingConversation.desc", {
-        name: teacher.name[lang],
-      }),
-      variant: "default",
+    // Anon-gate mirrors the CheckoutDialog pattern (Batch 4): toast + bounce
+    // through sign-in with `?next=` so the student lands back here after.
+    if (!user) {
+      show({
+        title: tBooking("toasts.signInRequired.title"),
+        description: tBooking("toasts.signInRequired.desc"),
+        variant: "warning",
+      });
+      const path = typeof window !== "undefined" ? window.location.pathname : "/";
+      router.push(`/sign-in?next=${encodeURIComponent(path)}` as never);
+      return;
+    }
+    startMessageTransition(() => {
+      const threadId = ensureThread(teacher.slug, user.id);
+      if (!threadId) {
+        // Defensive — featuredTeachers always carries a slug, but if a
+        // future surface passes an unknown slug we still want to land
+        // the student somewhere useful instead of /messages/.
+        router.push("/messages" as never);
+        return;
+      }
+      show({
+        title: tBooking("toasts.openingConversation.title"),
+        description: tBooking("toasts.openingConversation.desc", {
+          name: teacher.name[lang],
+        }),
+        variant: "default",
+      });
+      router.push(`/messages/${threadId}` as never);
     });
-    router.push(`/messages?to=${teacher.slug}` as never);
   };
 
   return (
@@ -461,9 +486,9 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
 
               <button
                 type="button"
-                className="inline-flex items-center gap-1.5 px-2 text-[12px] text-ink-3 transition-colors hover:text-danger"
+                className="inline-flex items-center gap-1.5 rounded px-2 text-[12px] text-ink-3 transition-colors hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
-                <Flag className="h-3.5 w-3.5" />
+                <Flag className="h-3.5 w-3.5" aria-hidden />
                 {t("reportLabel")}
               </button>
             </div>
@@ -610,6 +635,7 @@ function AvailabilityGrid({
                     onClick={booked ? undefined : () => handlePick(di, h)}
                     className={cn(
                       "border-b border-s border-border px-2 py-2 text-[11px] transition-colors",
+                      "focus-visible:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent",
                       booked
                         ? "cursor-not-allowed bg-surface/40 text-ink-3"
                         : "bg-card text-accent hover:bg-accent-soft/60 cursor-pointer",

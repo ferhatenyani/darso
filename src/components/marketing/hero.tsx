@@ -100,7 +100,7 @@ export function Hero() {
             />
             <button
               type="submit"
-              className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"
+              className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               <span className="hidden sm:inline">{t("searchHint")}</span>
               <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-primary-foreground/25 bg-primary-dark/30 px-1.5 text-[10px] font-semibold text-primary-foreground/90 tabular">

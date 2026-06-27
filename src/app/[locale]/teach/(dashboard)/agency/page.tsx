@@ -41,7 +41,7 @@ export default async function AgencyPage({ params }: Props) {
             <span className="ink-rule" aria-hidden />
             {loc === "ar" ? "وكالتك" : "Votre studio"}
           </p>
-          <h1 className="mt-3 text-[44px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[56px]">
+          <h1 className="mt-3 text-[32px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[44px] md:text-[56px]">
             {agency.name[loc]}
           </h1>
           <p className="mt-2 max-w-xl text-pretty text-[15px] text-ink-2">{t("subtitle")}</p>

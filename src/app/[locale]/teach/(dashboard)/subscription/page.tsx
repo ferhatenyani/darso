@@ -29,7 +29,7 @@ export default async function SubscriptionPage({ params }: Props) {
           <span className="ink-rule" aria-hidden />
           {loc === "ar" ? "الاشتراك" : "Abonnement"}
         </p>
-        <h1 className="mt-3 text-balance text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[52px]">
+        <h1 className="mt-3 text-balance text-[30px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[40px] md:text-[52px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-pretty text-[15px] text-ink-2 sm:text-base">{t("subtitle")}</p>
@@ -43,9 +43,9 @@ export default async function SubscriptionPage({ params }: Props) {
               {t("currentTier")}
             </p>
             <div className="mt-3 flex items-baseline gap-4">
-              <span className="text-[88px] font-semibold leading-none tabular tracking-tighter text-foreground">
+              <span className="text-[64px] font-semibold leading-none tabular tracking-tighter text-foreground sm:text-[88px]">
                 {Math.round(revenueSnapshot.rate * 100)}
-                <span className="text-3xl text-ink-3">%</span>
+                <span className="text-2xl text-ink-3 sm:text-3xl">%</span>
               </span>
               <Badge variant="warning">{revenueSnapshot.currentTierLabel[loc]}</Badge>
             </div>

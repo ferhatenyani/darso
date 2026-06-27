@@ -1,3 +1,6 @@
+// Batch 11 expansion — added more action items (8 total), pending requests
+// (7 total) and extended the revenue trend to 16 data points with more
+// realistic seasonality (Ramadan dip, summer slowdown, autumn pickup).
 import { featuredTeachers } from "./teachers";
 
 export const currentTeacher = featuredTeachers.find((t) => t.id === "t-khalil")!;
@@ -115,11 +118,65 @@ export const recentRequests: JoinRequest[] = [
     sentAt: { fr: "il y a 3 h", ar: "منذ 3 س" },
     status: "pending",
   },
+  // ──────────────────────────────────────────────────────────────────────
+  // Batch 11 — additional pending requests so the teacher inbox feels
+  // active without overflowing.
+  // ──────────────────────────────────────────────────────────────────────
+  {
+    id: "r-7",
+    student: {
+      name: { fr: "Yacine Belhadj", ar: "ياسين بلحاج" },
+      initials: "YB",
+      location: { fr: "Constantine", ar: "قسنطينة" },
+      accent: "from-[#2E9E78] to-[#3E8FD0]",
+    },
+    course: { fr: "Trigonométrie · 1:1", ar: "علم المثلثات · فردي" },
+    excerpt: {
+      fr: "Bonjour, mes parents souhaitent un suivi régulier pour le 2e trimestre. Avez-vous encore des créneaux ?",
+      ar: "السلام، يرغب والداي في متابعة منتظمة للفصل 2. هل لديك أوقات شاغرة؟",
+    },
+    sentAt: { fr: "il y a 6 h", ar: "منذ 6 س" },
+    status: "pending",
+  },
+  {
+    id: "r-8",
+    student: {
+      name: { fr: "Hadjer Mansouri", ar: "هاجر منصوري" },
+      initials: "HM",
+      location: { fr: "Tizi Ouzou", ar: "تيزي وزو" },
+      accent: "from-[#DD514D] to-[#DDA13A]",
+    },
+    course: { fr: "Préparation Bac · simulations", ar: "تحضير الباك · محاكاة" },
+    excerpt: {
+      fr: "Salam, je cherche un prof pour 6 semaines intensives avant le Bac. Mon niveau est 13-14 actuellement.",
+      ar: "السلام، أبحث عن أستاذ لـ 6 أسابيع مكثّفة قبل الباك. مستواي حاليًا 13-14.",
+    },
+    sentAt: { fr: "il y a 9 h", ar: "منذ 9 س" },
+    status: "pending",
+  },
+  {
+    id: "r-9",
+    student: {
+      name: { fr: "Amine Tabet", ar: "أمين تابت" },
+      initials: "AT",
+      location: { fr: "Annaba", ar: "عنابة" },
+      accent: "from-[#1C3A5E] to-[#DDA13A]",
+    },
+    course: { fr: "Math Bac · cohorte", ar: "رياضيات الباك · فوج" },
+    excerpt: {
+      fr: "Bonsoir, est-ce qu'il reste de la place pour rejoindre la cohorte en cours ? Je peux rattraper le retard rapidement.",
+      ar: "مساء الخير، هل ما تزال هناك أماكن للانضمام للفوج الجاري؟ يمكنني تدارك التأخّر سريعًا.",
+    },
+    sentAt: { fr: "il y a 14 h", ar: "منذ 14 س" },
+    status: "pending",
+  },
 ];
 
-/** Mini-trend used by the revenue snapshot (last 12 weeks of DZD earnings) */
+/** Mini-trend used by the revenue snapshot (last 16 weeks of DZD earnings).
+ *  Includes a Ramadan dip and summer slowdown for visual variety. */
 export const revenueTrend: number[] = [
-  82000, 91000, 88000, 102000, 116000, 124000, 119000, 132000, 145000, 138000, 156000, 168000,
+  68000, 74000, 82000, 91000, 88000, 64000, 71000, 102000, 116000, 124000, 119000, 132000, 145000,
+  138000, 156000, 168000,
 ];
 
 export const revenueSnapshot = {
@@ -179,6 +236,31 @@ export const recentDashboardReviews: DashboardReview[] = [
     },
     hasReply: false,
   },
+  // Batch 11 — additional dashboard review rows
+  {
+    id: "rv-4",
+    studentName: { fr: "Manel K.", ar: "منال ك." },
+    initials: "MK",
+    rating: 5,
+    postedAt: { fr: "il y a 2 sem", ar: "منذ أسبوعين" },
+    excerpt: {
+      fr: "Le pack 8 séances vaut chaque dinar. 16 au Bac.",
+      ar: "باقة 8 حصص تستحق كل دينار. 16 في الباك.",
+    },
+    hasReply: true,
+  },
+  {
+    id: "rv-5",
+    studentName: { fr: "Sofiane R.", ar: "سفيان ر." },
+    initials: "SR",
+    rating: 4,
+    postedAt: { fr: "il y a 3 sem", ar: "منذ 3 أسابيع" },
+    excerpt: {
+      fr: "Très clair sur l'analyse, j'aimerais juste une cohorte spéciale géométrie dans l'espace.",
+      ar: "واضح في التحليل، أتمنّى فوجًا مخصّصًا للهندسة في الفضاء.",
+    },
+    hasReply: true,
+  },
 ];
 
 export type ActionItem = {
@@ -213,6 +295,43 @@ export const actionItems: ActionItem[] = [
     done: true,
     href: "/teach/profile",
   },
+  // Batch 11 — additional action items
+  {
+    id: "a-5",
+    label: {
+      fr: "Configurer votre RIB pour recevoir vos paiements mensuels",
+      ar: "أعدّ معلومات حسابك البنكي لتلقّي دفعاتك الشهرية",
+    },
+    done: false,
+    href: "/teach/payouts",
+  },
+  {
+    id: "a-6",
+    label: {
+      fr: "Répondre aux 4 avis sans réponse de ce mois",
+      ar: "ردّ على 4 تقييمات لم يُجَب عنها هذا الشهر",
+    },
+    done: false,
+    href: "/teach/reviews",
+  },
+  {
+    id: "a-7",
+    label: {
+      fr: "Publier un événement « Marathon » avant la rentrée",
+      ar: "انشر فعالية «ماراطون» قبل الموسم الدراسي",
+    },
+    done: false,
+    href: "/teach/events",
+  },
+  {
+    id: "a-8",
+    label: {
+      fr: "Compléter les attestations diplômes (1/2 téléversées)",
+      ar: "أكمل تحميل الشهادات (1/2 مرفوع)",
+    },
+    done: true,
+    href: "/teach/onboarding",
+  },
 ];
 
 export type TeacherCourse = {
@@ -225,6 +344,29 @@ export type TeacherCourse = {
   monthRevenueDzd: number;
   priceDzd: number;
   studentCount: number;
+  // ──────────────────────────────────────────────────────────────────
+  // Wizard-collected fields (Batch 5a → Batch 8 persistence). All
+  // optional so the seeded `teacherCourses` array below stays
+  // backwards-compatible — surfaces that don't render these (the
+  // dashboard listing) keep working unchanged.
+  // ──────────────────────────────────────────────────────────────────
+  /** Long-form course description shown in the wizard's "Details" step
+   *  and editable from the edit form's Content tab. */
+  description?: string;
+  /** Weekly syllabus headings, one per learning week. */
+  weeks?: string[];
+  /** Bulleted learning outcomes ("you'll learn"). */
+  outcomes?: string[];
+  /** Eyebrow category — exams / school / languages. */
+  category?: "exams" | "school" | "languages";
+  /** Primary audience for the course. */
+  audience?: "kids" | "lycee" | "students" | "adults";
+  /** Primary teaching language. */
+  language?: "fr" | "ar" | "en";
+  /** Short marketing summary (≤140 chars) — the wizard "summary" field. */
+  summary?: string;
+  /** Optional active promotional discount percentage. */
+  promoPct?: number;
 };
 
 export const teacherCourses: TeacherCourse[] = [

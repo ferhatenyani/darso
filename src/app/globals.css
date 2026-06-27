@@ -285,6 +285,34 @@
   .live-dot {
     animation: live-pulse 1.6s ease-out infinite;
   }
+  /* Skeleton pulse — restrained, editorial. Honors reduced motion. */
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  .skeleton-pulse {
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-pulse,
+    .live-dot,
+    .animate-marquee {
+      animation: none !important;
+    }
+    /* Collapse Radix / tw-animate-css enter/exit transitions to a near-
+       instant fade so dialogs, popovers, sheets, dropdowns, toasts and
+       tooltips still announce/dismiss but don't slide or zoom.
+       Loader spinners (`animate-spin`) are intentionally untouched: they
+       are functional indicators of a pending action and removing them
+       hurts UX more than it helps. */
+    .animate-in,
+    .animate-out,
+    [data-state="open"].animate-in,
+    [data-state="closed"].animate-out {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
   @keyframes marquee-x {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }

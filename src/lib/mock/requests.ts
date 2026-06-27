@@ -1,3 +1,7 @@
+// Batch 11 expansion — already broad (20+ requests, varied statuses, budgets,
+// wilayas, deadlines, application counts). Pinned a third request to Lina
+// (the demo current user) and added an extra `awarded` example so every
+// status has at least one card on the public browse list.
 import { featuredTeachers, type LocalizedString, type Teacher } from "./teachers";
 
 export type RequestStatus = "open" | "negotiating" | "awarded" | "closed";
@@ -832,6 +836,90 @@ export const learningRequests: LearningRequest[] = [
           ar: "صباح السبت والاثنين والأربعاء",
         },
         createdAtHours: 12,
+      },
+    ],
+  },
+  {
+    id: "r-021",
+    slug: "chimie-bac-coaching-perso",
+    student: mockStudents.lina,
+    title: {
+      fr: "Coaching chimie pour Bac SE — focus pH-mètre et dosages",
+      ar: "كوتشينغ كيمياء للباك علوم تجريبية — تركيز على pH والمعايرة",
+    },
+    body: {
+      fr: "Bonjour, je passe le Bac SE et la chimie acide-base me coûte 3 points. Je cherche un prof patient pour 6 séances de 90 min — focus sur la rédaction des copies et les pièges de calcul. En ligne le weekend.",
+      ar: "السلام، أجتاز الباك علوم تجريبية، والكيمياء حمض-قاعدة تكلّفني 3 نقاط. أبحث عن أستاذ صبور لـ 6 حصص 90 د — تركيز على تحرير الورقة وفخاخ الحساب. عبر الإنترنت في الويك إند.",
+    },
+    subject: { fr: "Chimie", ar: "الكيمياء" },
+    categoryKey: "school",
+    level: { fr: "Terminale · Bac SE", ar: "السنة النهائية · باك علوم" },
+    audience: "lycee",
+    budgetDzd: { min: 1200, max: 1700 },
+    mode: "online",
+    city: { fr: "Constantine", ar: "قسنطينة" },
+    postedAtHours: 18,
+    deadline: { fr: "Cette semaine", ar: "هذا الأسبوع" },
+    status: "open",
+    urgency: "high",
+    applicationCount: 3,
+    ownedByCurrentUser: true,
+    applications: [
+      {
+        id: "a-021-1",
+        teacher: t("t-mounir"),
+        proposalMessage: {
+          fr: "Bonjour Lina, exactement mon créneau. On part de 3 mocks pH-mètre pour repérer tes pièges, puis on remonte la méthode de rédaction sujet par sujet. 6 séances week-end OK pour moi.",
+          ar: "مرحبا لينا، هذا تخصّصي. نبدأ بـ 3 تمارين pH لرصد الفخاخ، ثم نبني طريقة التحرير موضوعًا بموضوع. 6 حصص في الويك إند مناسبة لي.",
+        },
+        proposedRateDzd: 1500,
+        availabilityNote: {
+          fr: "Sam/Dim 10h-12h",
+          ar: "السبت/الأحد 10:00-12:00",
+        },
+        createdAtHours: 14,
+      },
+    ],
+  },
+  {
+    id: "r-022",
+    slug: "fiqh-cours-mensuels",
+    student: mockStudents.amina,
+    title: {
+      fr: "Cours de fiqh malékite mensuels — adulte débutante",
+      ar: "دروس فقه مالكي شهرية — مبتدئة بالغة",
+    },
+    body: {
+      fr: "Je cherche un cheikh patient pour des cours mensuels de fiqh malékite (ahkam du quotidien). Préférence en ligne le vendredi soir. Niveau zéro mais motivée.",
+      ar: "أبحث عن شيخ صبور لدروس فقه مالكي شهرية (أحكام الحياة اليومية). أفضّل عن بُعد مساء الجمعة. لا مستوى لي لكنّي متحمّسة.",
+    },
+    subject: { fr: "Fiqh malékite", ar: "الفقه المالكي" },
+    categoryKey: "religion",
+    level: { fr: "Débutante", ar: "مبتدئة" },
+    audience: "adults",
+    budgetDzd: { min: 1000, max: 1500 },
+    mode: "online",
+    city: { fr: "Béjaïa", ar: "بجاية" },
+    postedAtHours: 50,
+    deadline: { fr: "Pas pressé", ar: "غير مستعجل" },
+    status: "awarded",
+    urgency: "low",
+    applicationCount: 6,
+    applications: [
+      {
+        id: "a-022-1",
+        teacher: t("t-farid"),
+        proposalMessage: {
+          fr: "Salam alaykoum, je propose un programme mensuel sur 6 mois — tahara, salat, zakat, siyam, hajj et mou'amalat. Sources malékites uniquement, en français et arabe. Vendredi 20h OK.",
+          ar: "السلام عليكم، أقترح برنامجًا شهريًا على 6 أشهر — طهارة، صلاة، زكاة، صيام، حج ومعاملات. مصادر مالكية فقط، بالفرنسية والعربية. الجمعة 20:00 مناسب.",
+        },
+        proposedRateDzd: 1300,
+        availabilityNote: {
+          fr: "Ven 20h-21h30",
+          ar: "الجمعة 20:00-21:30",
+        },
+        createdAtHours: 40,
+        isAwarded: true,
       },
     ],
   },

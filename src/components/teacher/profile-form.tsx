@@ -331,7 +331,7 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
                   {s}
                   <button
                     type="button"
-                    className="text-ink-3 hover:text-danger"
+                    className="rounded text-ink-3 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     aria-label={locale === "ar" ? `إزالة ${s}` : `Retirer ${s}`}
                     onClick={() => setSubjectTags((prev) => prev.filter((x) => x !== s))}
                   >

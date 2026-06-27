@@ -1,12 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Wifi, MapPin, ArrowRight, ArrowLeft } from "lucide-react";
+import { Wifi, MapPin, ArrowRight, ArrowLeft, CalendarRange } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { CalendarEvent } from "@/lib/mock/calendar";
 import { cn } from "@/lib/utils";
 
@@ -33,12 +32,14 @@ export function ListView({ events }: { events: CalendarEvent[] }) {
 
   if (upcoming.length === 0) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-dashed border-border bg-card p-10 text-center">
-        <p className="text-sm text-ink-2">{t("list.empty")}</p>
-        <Button asChild variant="outline" size="md" className="mt-4">
-          <Link href="/browse">{t("list.exploreCta")}</Link>
-        </Button>
-      </div>
+      <EmptyState
+        icon={CalendarRange}
+        tone="accent"
+        title={t("list.emptyState.title")}
+        description={t("list.emptyState.body")}
+        primary={{ label: t("list.emptyState.primary"), href: "/browse" }}
+        secondary={{ label: t("list.emptyState.secondary"), href: "/live" }}
+      />
     );
   }
 

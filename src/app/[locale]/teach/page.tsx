@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/nav/site-footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth/server";
+import { routes } from "@/lib/routes";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -21,7 +22,7 @@ export default async function TeachLanding({ params }: Props) {
 
   const user = await getCurrentUser();
   if (user?.role === "teacher") {
-    redirect({ href: "/teach/dashboard", locale });
+    redirect({ href: routes.teachDashboard(), locale });
   }
 
   const t = await getTranslations("teacher.landing");
@@ -52,13 +53,13 @@ export default async function TeachLanding({ params }: Props) {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild variant="primary" size="lg">
-                  <Link href="/sign-up">
+                  <Link href={routes.signUp()}>
                     {t("ctaPrimary")}
                     <Arrow className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/teach/pricing">{t("ctaSecondary")}</Link>
+                  <Link href={routes.teachPricing()}>{t("ctaSecondary")}</Link>
                 </Button>
               </div>
               <p className="mt-5 inline-flex items-center gap-1.5 text-[12px] text-ink-3">
@@ -171,7 +172,7 @@ export default async function TeachLanding({ params }: Props) {
                   </p>
                 </div>
                 <Button asChild variant="accent" size="lg">
-                  <Link href="/sign-up">
+                  <Link href={routes.signUp()}>
                     {t("ctaStripButton")}
                     <Arrow className="h-4 w-4" />
                   </Link>

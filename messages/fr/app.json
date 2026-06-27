@@ -84,7 +84,13 @@
       },
       "list": {
         "empty": "Rien à venir cette semaine. Profitez-en pour explorer.",
-        "exploreCta": "Explorer la marketplace"
+        "exploreCta": "Explorer la marketplace",
+        "emptyState": {
+          "title": "Aucune séance à venir",
+          "body": "Réservez un cours, un live ou un événement — il apparaîtra ici avec un rappel.",
+          "primary": "Découvrir des cours",
+          "secondary": "Voir le calendrier"
+        }
       },
       "week": {
         "headerNote": "Semaine {weekNumber} · Africa/Algiers",
@@ -105,6 +111,7 @@
           "openBooking": "Ouvrir la réservation",
           "cancelBooking": "Annuler la réservation",
           "editBlock": "Modifier la plage",
+          "editBlockHint": "Pour modifier, supprimez puis recréez la plage.",
           "removeBlock": "Supprimer la plage",
           "addBlock": "Bloquer ce créneau"
         },
@@ -116,12 +123,29 @@
           "editComingSoon": {
             "title": "Édition bientôt disponible",
             "desc": "La modification des plages bloquées arrive dans une prochaine mise à jour."
+          },
+          "bookingCancelled": {
+            "title": "Réservation annulée",
+            "desc": "{title} — un remboursement éventuel apparaîtra dans vos paiements."
+          },
+          "blockRemoved": {
+            "title": "Plage supprimée",
+            "desc": "Le créneau est de nouveau disponible à la réservation."
+          },
+          "removeFailed": {
+            "title": "Suppression impossible",
+            "desc": "Cette plage n'a pas pu être supprimée. Réessayez."
           }
         }
       },
       "studentRail": {
         "title": "Réservations à venir",
         "empty": "Aucune séance confirmée. Réservez un cours pour le retrouver ici.",
+        "emptyState": {
+          "title": "Aucune séance confirmée",
+          "body": "Réservez auprès d'un prof — la séance apparaîtra ici avec son rappel.",
+          "primary": "Trouver un prof"
+        },
         "viewAll": "Voir mes paiements"
       }
     },
@@ -202,7 +226,9 @@
       },
       "empty": {
         "title": "Vous êtes à jour",
-        "body": "Aucune notification pour ce filtre."
+        "body": "Tout ce qui arrivera — réservations, messages, paiements — apparaîtra ici.",
+        "bodyFiltered": "Aucune notification dans la catégorie « {filter} ».",
+        "openPreferences": "Régler les préférences"
       },
       "row": {
         "markRead": "Marquer comme lu",
@@ -244,7 +270,8 @@
         "against": "avec {name}",
         "empty": {
           "title": "Aucun dossier",
-          "body": "Vous n'avez aucun litige en cours. C'est plutôt bon signe."
+          "body": "Vous n'avez aucun litige en cours. C'est plutôt bon signe.",
+          "learnMore": "Comprendre la médiation"
         }
       },
       "state": {
@@ -350,6 +377,79 @@
       },
       "recentBookings": {
         "reportProblem": "Signaler un problème"
+      }
+    },
+    "call": {
+      "header": {
+        "eyebrow": "Salle d'apprentissage",
+        "duration": "Durée {time}"
+      },
+      "participants": {
+        "label": "Participants",
+        "you": "Vous",
+        "host": "Hôte",
+        "coHost": "Co-enseignant·e",
+        "student": "Élève",
+        "speaking": "Parle"
+      },
+      "controls": {
+        "mute": "Couper le micro",
+        "unmute": "Réactiver le micro",
+        "camera": "Couper la caméra",
+        "cameraOff": "Réactiver la caméra",
+        "screenShare": "Partager l'écran",
+        "screenShareStop": "Arrêter le partage",
+        "chat": "Conversation",
+        "participants": "Participants",
+        "more": "Plus d'options",
+        "end": "Quitter la salle",
+        "endTooltip": "Mettre fin à votre participation"
+      },
+      "chat": {
+        "title": "Conversation",
+        "tabChat": "Messages",
+        "tabParticipants": "Participants",
+        "placeholder": "Écrivez un message…",
+        "send": "Envoyer",
+        "sent": {
+          "title": "Message envoyé",
+          "desc": "Visible par tous les participants."
+        },
+        "empty": "La conversation s'efface à la fin de la séance."
+      },
+      "end": {
+        "toast": {
+          "title": "Séance terminée",
+          "desc": "Merci. Le résumé arrivera dans vos notifications."
+        }
+      },
+      "generic": {
+        "title": "Salle d'apprentissage",
+        "hint": "Cette salle est une démonstration — aucun flux audio ou vidéo réel n'est diffusé."
+      },
+      "screen": {
+        "label": "Partage d'écran",
+        "placeholder": "Aperçu du tableau partagé"
+      },
+      "leaveConfirm": {
+        "title": "Quitter la salle ?",
+        "desc": "Vous pourrez rejoindre à nouveau tant que la séance n'est pas terminée.",
+        "cancel": "Rester",
+        "confirm": "Quitter"
+      },
+      "mockMessages": {
+        "m1": "Bienvenue — on commence dans deux minutes, le temps que tout le monde se connecte.",
+        "m2": "Bonjour ! Vous m'entendez bien ?",
+        "m3": "Très bien, oui. Je partage le PDF dans la conversation.",
+        "m4": "Merci, je l'ouvre.",
+        "m5": "On reprend à l'exercice 3 de la semaine dernière.",
+        "m6": "Question — pour la dérivée, on garde la notation de Lagrange ?"
+      },
+      "mockNames": {
+        "self": "Vous",
+        "teacher": "Khalil Bensaïd",
+        "coTeacher": "Sara Belkacem",
+        "student": "Yacine R."
       }
     }
   }

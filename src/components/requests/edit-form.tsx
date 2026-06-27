@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -567,7 +567,8 @@ export function RequestEditForm({
                   onClick={handleDelete}
                   disabled={isDeleting || isSaving}
                 >
-                  {isDeleting ? t("edit.deleting") : t("my.actions.delete")}
+                  {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                  <span className={isDeleting ? "opacity-0" : ""}>{t("my.actions.delete")}</span>
                 </Button>
               </div>
               <Button
@@ -577,8 +578,12 @@ export function RequestEditForm({
                 disabled={isSaving || isDeleting}
                 className="sm:ms-auto"
               >
-                <Save className="h-4 w-4" />
-                {isSaving ? t("edit.saving") : t("edit.save")}
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                <span className={isSaving ? "opacity-0" : ""}>{t("edit.save")}</span>
               </Button>
             </footer>
           </div>

@@ -267,6 +267,7 @@ export function TeachersLeaderboard() {
                       className={cn(
                         "hidden lg:grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] text-ink-3 transition-colors",
                         "hover:bg-surface hover:text-foreground",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                       )}
                       aria-label={isOpen ? t("collapseRow") : t("expandRow")}
                       aria-expanded={isOpen}
@@ -274,8 +275,9 @@ export function TeachersLeaderboard() {
                       <ChevronRight
                         className={cn(
                           "h-4 w-4 transition-transform",
-                          isOpen && "rotate-90",
+                          isOpen ? "rotate-90" : "rtl:-scale-x-100",
                         )}
+                        aria-hidden
                       />
                     </button>
 

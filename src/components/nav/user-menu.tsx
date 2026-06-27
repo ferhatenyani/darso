@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCurrentUser } from "@/lib/auth";
+import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -35,10 +36,10 @@ export function UserMenu() {
     return (
       <div className="hidden md:flex items-center gap-1 ms-1">
         <Button asChild variant="ghost" size="md">
-          <Link href="/sign-in">{t("signIn")}</Link>
+          <Link href={routes.signIn()}>{t("signIn")}</Link>
         </Button>
         <Button asChild variant="primary" size="md">
-          <Link href="/sign-up">{t("signUp")}</Link>
+          <Link href={routes.signUp()}>{t("signUp")}</Link>
         </Button>
       </div>
     );
@@ -55,7 +56,7 @@ export function UserMenu() {
         : "T"
       : user.studentInitials ?? user.email.slice(0, 2).toUpperCase();
 
-  const accountHref = user.role === "teacher" ? "/teach/dashboard" : "/account";
+  const accountHref = user.role === "teacher" ? routes.teachDashboard() : routes.account();
   const accountLabel = user.role === "teacher" ? tMenu("dashboard") : tMenu("account");
   const accountIcon =
     user.role === "teacher" ? (

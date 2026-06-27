@@ -38,11 +38,13 @@ import {
   subscribeBookings,
   type Booking,
 } from "@/lib/mock/bookings-state";
+import { getHiddenEventIds, subscribeBlocks } from "@/lib/mock/calendar-state";
 import { cn } from "@/lib/utils";
 import { BlockTimeForm, Legend } from "./block-form";
 
 // Stable empty snapshot for useSyncExternalStore SSR fallback.
 const EMPTY_BOOKINGS: readonly Booking[] = Object.freeze([]);
+const EMPTY_HIDDEN: ReadonlySet<string> = new Set();
 
 function startOfWeek(date: Date) {
   const d = new Date(date);
@@ -78,6 +80,15 @@ export function CalendarShell() {
     () => EMPTY_BOOKINGS,
   );
 
+  // Hidden static event ids — `removeBlock` tags seeded `ev-*` block ids
+  // here so the teacher can dismiss them in-session without us having to
+  // mutate the imported `weekEvents`/`monthEvents` constants.
+  const hiddenEventIds = React.useSyncExternalStore<ReadonlySet<string>>(
+    subscribeBlocks,
+    getHiddenEventIds,
+    () => EMPTY_HIDDEN,
+  );
+
   const bookingEvents = React.useMemo<CalendarEvent[]>(
     () =>
       isStudent
@@ -87,12 +98,14 @@ export function CalendarShell() {
   );
 
   const mergedWeekEvents = React.useMemo(
-    () => [...weekEvents, ...bookingEvents],
-    [bookingEvents],
+    () =>
+      [...weekEvents, ...bookingEvents].filter((e) => !hiddenEventIds.has(e.id)),
+    [bookingEvents, hiddenEventIds],
   );
   const mergedMonthEvents = React.useMemo(
-    () => [...monthEvents, ...bookingEvents],
-    [bookingEvents],
+    () =>
+      [...monthEvents, ...bookingEvents].filter((e) => !hiddenEventIds.has(e.id)),
+    [bookingEvents, hiddenEventIds],
   );
 
   const monthLabel = new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
@@ -284,7 +297,17 @@ function StudentBookingsRail({
       </div>
 
       {upcoming.length === 0 ? (
-        <p className="text-sm text-ink-3">{t("studentRail.empty")}</p>
+        <div className="rounded-[var(--radius-md)] border border-dashed border-border bg-surface/40 px-4 py-5 text-start">
+          <p className="text-[13px] font-semibold text-foreground">
+            {t("studentRail.emptyState.title")}
+          </p>
+          <p className="mt-1 text-[12px] leading-relaxed text-ink-2">
+            {t("studentRail.emptyState.body")}
+          </p>
+          <Button asChild variant="outline" size="sm" className="mt-3">
+            <Link href="/teachers">{t("studentRail.emptyState.primary")}</Link>
+          </Button>
+        </div>
       ) : (
         <ul className="space-y-2">
           {upcoming.map((b) => {

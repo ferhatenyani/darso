@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LayoutDashboard, Library, Inbox, Star, MoreHorizontal, UserCog, CalendarDays, PlayCircle, Send, MessagesSquare, Wallet, Users, LogOut, Eye } from "lucide-react";
+import { LayoutDashboard, Library, Inbox, Star, MoreHorizontal, UserCog, CalendarDays, PlayCircle, Send, MessagesSquare, Wallet, Landmark, BarChart3, Users, LogOut, Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Link, usePathname } from "@/i18n/navigation";
@@ -24,10 +24,15 @@ const baseMoreItems = [
   { href: "/teach/ondemand", icon: PlayCircle, key: "onDemand" },
   { href: "/teach/applications", icon: Send, key: "applications" },
   { href: "/messages", icon: MessagesSquare, key: "messages" },
+  { href: "/teach/analytics", icon: BarChart3, key: "analytics" },
   { href: "/teach/subscription", icon: Wallet, key: "subscription" },
+  { href: "/teach/payouts", icon: Landmark, key: "payouts" },
 ];
 
-const AGENCY_ITEM = { href: "/teach/agency", icon: Users, key: "agency" } as const;
+const AGENCY_ITEMS = [
+  { href: "/teach/agency", icon: Users, key: "agency" },
+  { href: "/teach/agency/analytics", icon: BarChart3, key: "agencyAnalytics" },
+] as const;
 
 export function TeacherMobileBar() {
   const t = useTranslations("teacher.shell");
@@ -40,7 +45,7 @@ export function TeacherMobileBar() {
   // see it in the more-sheet.
   const showAgency = Boolean(findTeacherById(user?.teacherId)?.parentAgencyId);
   const moreItems = React.useMemo(
-    () => (showAgency ? [...baseMoreItems, AGENCY_ITEM] : baseMoreItems),
+    () => (showAgency ? [...baseMoreItems, ...AGENCY_ITEMS] : baseMoreItems),
     [showAgency],
   );
 
