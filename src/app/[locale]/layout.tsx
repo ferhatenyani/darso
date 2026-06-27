@@ -74,7 +74,10 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${plexArabic.variable}`}
     >
-      <body className="min-h-dvh bg-background text-foreground antialiased">
+      <body
+        className="min-h-dvh bg-background text-foreground antialiased"
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider messages={messages} locale={locale} timeZone="Africa/Algiers">
           <div className="flex min-h-dvh flex-col">{children}</div>
         </NextIntlClientProvider>
