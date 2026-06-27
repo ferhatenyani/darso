@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import { CheckoutDialog } from "@/components/booking/checkout-dialog";
 import type { Course } from "@/lib/mock/courses";
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -87,10 +88,21 @@ export function EventDetail({ course }: { course: Course }) {
               </p>
             </div>
             <p className="mt-4 text-[18px] font-bold tabular">{formatPrice(course.priceDzd, locale)}</p>
-            <Button variant="accent" size="lg" className="mt-3 w-full">
-              {t("reserveSpot")}
-              <Arrow className="h-4 w-4" />
-            </Button>
+            <CheckoutDialog
+              kind="event"
+              subjectTitle={course.title}
+              teacherSlug={course.teacher.slug}
+              teacherName={course.teacher.name}
+              priceDzd={course.priceDzd}
+              start={date.startISO}
+              scheduleLabel={date.label}
+              trigger={
+                <Button variant="accent" size="lg" className="mt-3 w-full" disabled={left <= 0}>
+                  {t("reserveSpot")}
+                  <Arrow className="h-4 w-4" />
+                </Button>
+              }
+            />
           </aside>
         </div>
       </section>
@@ -157,10 +169,21 @@ export function EventDetail({ course }: { course: Course }) {
                   </li>
                 ))}
               </ul>
-              <Button variant="primary" size="md" className="mt-5 w-full">
-                {t("reserveSpot")}
-                <Arrow className="h-4 w-4" />
-              </Button>
+              <CheckoutDialog
+                kind="event"
+                subjectTitle={course.title}
+                teacherSlug={course.teacher.slug}
+                teacherName={course.teacher.name}
+                priceDzd={course.priceDzd}
+                start={date.startISO}
+                scheduleLabel={date.label}
+                trigger={
+                  <Button variant="primary" size="md" className="mt-5 w-full" disabled={left <= 0}>
+                    {t("reserveSpot")}
+                    <Arrow className="h-4 w-4" />
+                  </Button>
+                }
+              />
             </div>
           </aside>
         </div>

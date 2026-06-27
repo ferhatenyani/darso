@@ -19,18 +19,22 @@ export function DiscoverMenu() {
   const [open, setOpen] = useState(false);
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
 
+  // NOTE: BrowseClient reads `q`, `subject`, `wilaya`, `mode` (online|in-person|both).
+  // Course-format (1to1/cohort/event/ondemand) and audience filters are internal-only
+  // state inside BrowseClient and not URL-driven, so these links route to /browse
+  // (default view) until URL support is added.
   const formats = [
-    { key: "oneToOne", icon: Users, href: "/browse?mode=1to1" },
-    { key: "cohort", icon: Calendar, href: "/browse?mode=cohort" },
-    { key: "event", icon: PlayCircle, href: "/browse?mode=event" },
-    { key: "onDemand", icon: Library, href: "/browse?mode=ondemand" },
+    { key: "oneToOne", icon: Users, href: "/browse" },
+    { key: "cohort", icon: Calendar, href: "/browse" },
+    { key: "event", icon: PlayCircle, href: "/browse" },
+    { key: "onDemand", icon: Library, href: "/browse" },
   ] as const;
 
   const audiences = [
-    { key: "kids", href: "/browse?audience=kids" },
-    { key: "lycee", href: "/browse?audience=lycee" },
-    { key: "students", href: "/browse?audience=students" },
-    { key: "adults", href: "/browse?audience=adults" },
+    { key: "kids", href: "/browse" },
+    { key: "lycee", href: "/browse" },
+    { key: "students", href: "/browse" },
+    { key: "adults", href: "/browse" },
   ] as const;
 
   return (
@@ -55,6 +59,7 @@ export function DiscoverMenu() {
       <PopoverContent
         align="start"
         sideOffset={10}
+        collisionPadding={16}
         className="w-screen max-w-[880px] p-0 rounded-[var(--radius-2xl)] border-border-strong"
       >
         <div className="grid grid-cols-12">
@@ -130,7 +135,7 @@ export function DiscoverMenu() {
                 return (
                   <li key={cat.key}>
                     <Link
-                      href={`/browse?category=${cat.key}` as never}
+                      href={`/browse?subject=${cat.key}` as never}
                       onClick={() => setOpen(false)}
                       className="group flex items-center gap-3 rounded-[var(--radius-md)] p-2.5 transition-colors hover:bg-surface"
                     >

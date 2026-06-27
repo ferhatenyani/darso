@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowRight,
@@ -15,10 +15,18 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,12 +41,19 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { useCurrentUser } from "@/lib/auth";
 import {
+  deleteRequest,
   getRequestsByOwner,
+  subscribeRequests,
+  updateRequest,
+} from "@/lib/mock/learning-requests-state";
+import {
   type LearningRequest,
   type RequestStatus,
   currentMockUser,
 } from "@/lib/mock/requests";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 import { formatPostedAt, statusVariant, urgencyStripClass } from "./helpers";
 
@@ -55,8 +70,28 @@ export function MyRequestsClient() {
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const router = useRouter();
+  const { show } = useToast();
+  const { user } = useCurrentUser();
 
-  const owned = useMemo(() => getRequestsByOwner(), []);
+  // Subscribe the owner-filtered slice of the store. Falls back to the
+  // demo Lina account id so the seeded "owned" rows still appear when an
+  // unauthenticated visitor lands here (the proxy normally redirects, but
+  // SSR snapshots benefit from a stable getSnapshot).
+  const ownerId = user?.id ?? "acc-lina";
+  const getOwnerSnapshot = useCallback(
+    () => getRequestsByOwner(ownerId),
+    [ownerId],
+  );
+  const owned = useSyncExternalStore(
+    subscribeRequests,
+    getOwnerSnapshot,
+    getOwnerSnapshot,
+  );
+
+  const [deleteCandidate, setDeleteCandidate] = useState<LearningRequest | null>(
+    null,
+  );
 
   // Bucket counts
   const counts = useMemo(() => {
@@ -66,6 +101,69 @@ export function MyRequestsClient() {
     });
     return c;
   }, [owned]);
+
+  function handleClose(r: LearningRequest) {
+    updateRequest(r.id, { status: "closed" });
+    show({
+      title: t("toasts.closed.title"),
+      description: t("toasts.closed.desc"),
+      variant: "warning",
+    });
+  }
+
+  function handleReopen(r: LearningRequest) {
+    updateRequest(r.id, { status: "open" });
+    show({
+      title: t("toasts.reopened.title"),
+      description: t("toasts.reopened.desc"),
+      variant: "success",
+    });
+  }
+
+  function handleEdit(r: LearningRequest) {
+    router.push(`/requests/${r.slug}/edit` as never);
+  }
+
+  function handleShare(r: LearningRequest) {
+    if (typeof window === "undefined") return;
+    const url = `${window.location.origin}/${locale}/requests/${r.slug}`;
+    if (!navigator.clipboard?.writeText) {
+      show({
+        title: t("toasts.linkCopyFailed.title"),
+        description: t("toasts.linkCopyFailed.desc"),
+        variant: "danger",
+      });
+      return;
+    }
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        show({
+          title: t("toasts.linkCopied.title"),
+          description: t("toasts.linkCopied.desc"),
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        show({
+          title: t("toasts.linkCopyFailed.title"),
+          description: t("toasts.linkCopyFailed.desc"),
+          variant: "danger",
+        });
+      });
+  }
+
+  function confirmDelete() {
+    if (!deleteCandidate) return;
+    const id = deleteCandidate.id;
+    deleteRequest(id);
+    setDeleteCandidate(null);
+    show({
+      title: t("toasts.deleted.title"),
+      description: t("toasts.deleted.desc"),
+      variant: "warning",
+    });
+  }
 
   return (
     <>
@@ -146,7 +244,16 @@ export function MyRequestsClient() {
                   <ul className="mt-6 space-y-3">
                     {filtered.map((r, i) => (
                       <li key={r.id}>
-                        <MyRequestRow request={r} index={i + 1} Arrow={Arrow} />
+                        <MyRequestRow
+                          request={r}
+                          index={i + 1}
+                          Arrow={Arrow}
+                          onEdit={() => handleEdit(r)}
+                          onShare={() => handleShare(r)}
+                          onClose={() => handleClose(r)}
+                          onReopen={() => handleReopen(r)}
+                          onDelete={() => setDeleteCandidate(r)}
+                        />
                       </li>
                     ))}
                   </ul>
@@ -156,6 +263,28 @@ export function MyRequestsClient() {
           })}
         </Tabs>
       </section>
+
+      {/* DELETE CONFIRM DIALOG */}
+      <Dialog
+        open={!!deleteCandidate}
+        onOpenChange={(o) => !o && setDeleteCandidate(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("my.deleteDialog.title")}</DialogTitle>
+            <DialogDescription>{t("my.deleteDialog.body")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteCandidate(null)}>
+              {t("my.deleteDialog.cancel")}
+            </Button>
+            <Button variant="danger" onClick={confirmDelete}>
+              <Trash2 className="h-4 w-4" />
+              {t("my.deleteDialog.confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -164,10 +293,20 @@ function MyRequestRow({
   request,
   index,
   Arrow,
+  onEdit,
+  onShare,
+  onClose,
+  onReopen,
+  onDelete,
 }: {
   request: LearningRequest;
   index: number;
   Arrow: typeof ArrowRight;
+  onEdit: () => void;
+  onShare: () => void;
+  onClose: () => void;
+  onReopen: () => void;
+  onDelete: () => void;
 }) {
   const t = useTranslations("requests");
   const locale = useLocale();
@@ -262,27 +401,30 @@ function MyRequestRow({
                   {t("my.actions.view")}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={onEdit}>
                 <Edit3 className="h-4 w-4" />
                 {t("my.actions.edit")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={onShare}>
                 <Share2 className="h-4 w-4" />
                 {t("my.actions.share")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {request.status === "closed" ? (
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={onReopen}>
                   <RotateCcw className="h-4 w-4" />
                   {t("my.actions.reopen")}
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={onClose}>
                   <XIcon className="h-4 w-4" />
                   {t("my.actions.close")}
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem className="text-danger focus:text-danger">
+              <DropdownMenuItem
+                onSelect={onDelete}
+                className="text-danger focus:text-danger"
+              >
                 <Trash2 className="h-4 w-4" />
                 {t("my.actions.delete")}
               </DropdownMenuItem>

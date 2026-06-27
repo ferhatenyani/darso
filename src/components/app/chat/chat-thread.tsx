@@ -21,6 +21,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { ChatThread, ChatMessage } from "@/lib/mock/chats";
 import { currentUser } from "@/lib/mock/chats";
+import { useCurrentUser } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { MessageBubble } from "./message-bubble";
 import { Composer } from "./composer";
 
@@ -71,12 +73,18 @@ function bucketByDay(messages: ChatMessage[], locale: string) {
 export function ChatThreadView({ thread }: Props) {
   const t = useTranslations("app.messages");
   const tc = useTranslations("app.common");
+  const tt = useTranslations("app.chat.toasts");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
   const [localMsgs, setLocalMsgs] = React.useState<ChatMessage[]>(thread.messages);
   const [muted, setMuted] = React.useState(!!thread.muted);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const { user } = useCurrentUser();
+  const { show } = useToast();
+  // Sender id for outbound messages — current account if signed in, else
+  // the legacy "u-self" mock so unauthenticated previews still render.
+  const senderId = user?.id ?? currentUser.id;
 
   React.useEffect(() => {
     setLocalMsgs(thread.messages);
@@ -93,7 +101,7 @@ export function ChatThreadView({ thread }: Props) {
       ...arr,
       {
         id: `local-${Date.now()}`,
-        authorId: currentUser.id,
+        authorId: senderId,
         at: new Date().toISOString(),
         text: { fr: text, ar: text },
         status: "sent",
@@ -153,7 +161,19 @@ export function ChatThreadView({ thread }: Props) {
           </p>
         </div>
 
-        <Button variant="ghost" size="icon" aria-label={t("thread.joinCall")} title={t("thread.joinCall")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={t("thread.joinCall")}
+          title={t("thread.joinCall")}
+          onClick={() =>
+            show({
+              title: tt("videoComingSoon.title"),
+              description: tt("videoComingSoon.desc"),
+              variant: "default",
+            })
+          }
+        >
           <Video className="h-5 w-5" />
         </Button>
         <Sheet>
@@ -242,7 +262,9 @@ export function ChatThreadView({ thread }: Props) {
               <DateSeparator kind={b.label.kind} label={b.label.label} />
               <div className="space-y-2">
                 {b.messages.map((m, i) => {
-                  const mine = m.authorId === currentUser.id;
+                  // Both the legacy "u-self" stamp and the current account id
+                  // count as "mine" so historical bubbles still render correctly.
+                  const mine = m.authorId === senderId || m.authorId === currentUser.id;
                   const prev = b.messages[i - 1];
                   const samePrev =
                     prev && !prev.system && prev.authorId === m.authorId && !m.system;

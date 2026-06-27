@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { EventPopover } from "@/components/app/calendar/event-popover";
 import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/lib/mock/calendar";
 
@@ -150,46 +151,58 @@ function DayPopover({
       ) : (
         <ul className="space-y-2">
           {events.map((ev) => (
-            <li
-              key={ev.id}
-              className={cn(
-                "group relative grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[var(--radius-md)] border border-border bg-background p-2.5",
-              )}
-            >
-              <span
-                aria-hidden
-                className={cn(
-                  "h-full w-[3px] rounded-full",
-                  ev.status === "booked" && "bg-accent",
-                  ev.status === "available" && "bg-border-strong",
-                  ev.status === "blocked" && "bg-ink-3/40",
-                  ev.status === "pending" && "bg-warning",
-                )}
-              />
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">{ev.title[lang]}</p>
-                <p className="mt-0.5 text-xs text-ink-3 tabular">
-                  {Math.floor(ev.startHour).toString().padStart(2, "0")}:
-                  {((ev.startHour % 1) * 60).toString().padStart(2, "0")}
-                  {" — "}
-                  {Math.floor(ev.endHour).toString().padStart(2, "0")}:
-                  {((ev.endHour % 1) * 60).toString().padStart(2, "0")}
-                </p>
-              </div>
-              <Badge
-                variant={
-                  ev.status === "booked"
-                    ? "accent"
-                    : ev.status === "blocked"
-                      ? "default"
-                      : ev.status === "pending"
-                        ? "warning"
-                        : "outline"
-                }
-                className="shrink-0"
-              >
-                {t(`status.${ev.status}`)}
-              </Badge>
+            <li key={ev.id}>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className={cn(
+                      "group relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[var(--radius-md)] border border-border bg-background p-2.5 text-start outline-none transition-colors",
+                      "hover:bg-surface focus-visible:bg-surface",
+                    )}
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "h-full w-[3px] rounded-full",
+                        ev.status === "booked" && "bg-accent",
+                        ev.status === "available" && "bg-border-strong",
+                        ev.status === "blocked" && "bg-ink-3/40",
+                        ev.status === "pending" && "bg-warning",
+                      )}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-foreground">
+                        {ev.title[lang]}
+                      </p>
+                      <p className="mt-0.5 text-xs text-ink-3 tabular">
+                        {Math.floor(ev.startHour).toString().padStart(2, "0")}:
+                        {((ev.startHour % 1) * 60).toString().padStart(2, "0")}
+                        {" — "}
+                        {Math.floor(ev.endHour).toString().padStart(2, "0")}:
+                        {((ev.endHour % 1) * 60).toString().padStart(2, "0")}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        ev.status === "booked"
+                          ? "accent"
+                          : ev.status === "blocked"
+                            ? "default"
+                            : ev.status === "pending"
+                              ? "warning"
+                              : "outline"
+                      }
+                      className="shrink-0"
+                    >
+                      {t(`status.${ev.status}`)}
+                    </Badge>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="start" className="w-80">
+                  <EventPopover event={ev} />
+                </PopoverContent>
+              </Popover>
             </li>
           ))}
         </ul>

@@ -19,6 +19,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { cn, formatPrice } from "@/lib/utils";
@@ -94,100 +101,112 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
     setParam(k, "");
   }
 
+  const chipCluster = (
+    <>
+      {/* Subject */}
+      <FilterChipSelect
+        label={t("browse.filters.subject")}
+        allLabel={t("browse.filters.subjectAll")}
+        value={filters.subject || "all"}
+        onChange={(v) => setParam("subject", v === "all" ? "" : v)}
+        options={SUBJECT_KEYS.map((k) => ({
+          value: k,
+          label: t(`shared.subjects.${k}`),
+        }))}
+      />
+      {/* Mode */}
+      <FilterChipSelect
+        label={t("browse.filters.mode")}
+        allLabel={t("browse.filters.modeAll")}
+        value={filters.mode || "all"}
+        onChange={(v) => setParam("mode", v === "all" ? "" : v)}
+        options={MODE_KEYS.map((k) => ({
+          value: k === "inPerson" ? "in-person" : k,
+          label: t(`shared.modes.${k}`),
+        }))}
+      />
+      {/* Urgency */}
+      <FilterChipSelect
+        label={t("browse.filters.urgency")}
+        allLabel={t("browse.filters.urgencyAll")}
+        value={filters.urgency || "all"}
+        onChange={(v) => setParam("urgency", v === "all" ? "" : v)}
+        options={URGENCY_KEYS.map((k) => ({
+          value: k,
+          label: t(`shared.urgency.${k}`),
+        }))}
+      />
+      {/* Audience */}
+      <FilterChipSelect
+        label={t("browse.filters.audience")}
+        allLabel={t("browse.filters.audienceAll")}
+        value={filters.audience || "all"}
+        onChange={(v) => setParam("audience", v === "all" ? "" : v)}
+        options={AUDIENCE_KEYS.map((k) => ({
+          value: k,
+          label: t(`shared.audience.${k}`),
+        }))}
+      />
+      {/* City */}
+      <FilterChipSelect
+        label={t("browse.filters.city")}
+        allLabel={t("browse.filters.cityAll")}
+        value={filters.city || "all"}
+        onChange={(v) => setParam("city", v === "all" ? "" : v)}
+        options={CITY_KEYS.map((k) => ({
+          value: k,
+          label: t(`shared.cities.${k}`),
+        }))}
+      />
+
+      {/* Budget popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className="group inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background ps-3 pe-3.5 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground data-[active=true]:border-accent data-[active=true]:bg-accent-soft/40 data-[active=true]:text-accent"
+            data-active={filters.budgetMax !== 5000}
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            <span className="font-mono uppercase tracking-wider text-[10.5px]">
+              {t("browse.filters.budget")}
+            </span>
+            <span className="font-semibold tabular">
+              ≤ {formatPrice(filters.budgetMax, locale)}
+            </span>
+          </button>
+        </PopoverTrigger>
+        <PopoverContent align="start" className="w-72 p-4">
+          <Label className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-3">
+            {t("browse.filters.budget")}
+          </Label>
+          <Slider
+            className="mt-3"
+            min={500}
+            max={5000}
+            step={100}
+            value={[filters.budgetMax]}
+            onValueChange={(v) =>
+              setParam("budgetMax", v[0] === 5000 ? "" : String(v[0]))
+            }
+            ariaLabel={t("browse.filters.budget")}
+            format={(n) => formatPrice(n, locale)}
+          />
+        </PopoverContent>
+      </Popover>
+    </>
+  );
+
+  // Count of chips currently set (excludes budget which has its own indicator)
+  const chipSetCount = (
+    ["subject", "mode", "urgency", "audience", "city"] as const
+  ).filter((k) => filters[k]).length;
+
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-end gap-2">
-        {/* Subject */}
-        <FilterChipSelect
-          label={t("browse.filters.subject")}
-          allLabel={t("browse.filters.subjectAll")}
-          value={filters.subject || "all"}
-          onChange={(v) => setParam("subject", v === "all" ? "" : v)}
-          options={SUBJECT_KEYS.map((k) => ({
-            value: k,
-            label: t(`shared.subjects.${k}`),
-          }))}
-        />
-        {/* Mode */}
-        <FilterChipSelect
-          label={t("browse.filters.mode")}
-          allLabel={t("browse.filters.modeAll")}
-          value={filters.mode || "all"}
-          onChange={(v) => setParam("mode", v === "all" ? "" : v)}
-          options={MODE_KEYS.map((k) => ({
-            value: k === "inPerson" ? "in-person" : k,
-            label: t(`shared.modes.${k}`),
-          }))}
-        />
-        {/* Urgency */}
-        <FilterChipSelect
-          label={t("browse.filters.urgency")}
-          allLabel={t("browse.filters.urgencyAll")}
-          value={filters.urgency || "all"}
-          onChange={(v) => setParam("urgency", v === "all" ? "" : v)}
-          options={URGENCY_KEYS.map((k) => ({
-            value: k,
-            label: t(`shared.urgency.${k}`),
-          }))}
-        />
-        {/* Audience */}
-        <FilterChipSelect
-          label={t("browse.filters.audience")}
-          allLabel={t("browse.filters.audienceAll")}
-          value={filters.audience || "all"}
-          onChange={(v) => setParam("audience", v === "all" ? "" : v)}
-          options={AUDIENCE_KEYS.map((k) => ({
-            value: k,
-            label: t(`shared.audience.${k}`),
-          }))}
-        />
-        {/* City */}
-        <FilterChipSelect
-          label={t("browse.filters.city")}
-          allLabel={t("browse.filters.cityAll")}
-          value={filters.city || "all"}
-          onChange={(v) => setParam("city", v === "all" ? "" : v)}
-          options={CITY_KEYS.map((k) => ({
-            value: k,
-            label: t(`shared.cities.${k}`),
-          }))}
-        />
-
-        {/* Budget popover */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              className="group inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background ps-3 pe-3.5 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground data-[active=true]:border-accent data-[active=true]:bg-accent-soft/40 data-[active=true]:text-accent"
-              data-active={filters.budgetMax !== 5000}
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-              <span className="font-mono uppercase tracking-wider text-[10.5px]">
-                {t("browse.filters.budget")}
-              </span>
-              <span className="font-semibold tabular">
-                ≤ {formatPrice(filters.budgetMax, locale)}
-              </span>
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-72 p-4">
-            <Label className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-3">
-              {t("browse.filters.budget")}
-            </Label>
-            <Slider
-              className="mt-3"
-              min={500}
-              max={5000}
-              step={100}
-              value={[filters.budgetMax]}
-              onValueChange={(v) =>
-                setParam("budgetMax", v[0] === 5000 ? "" : String(v[0]))
-              }
-              ariaLabel={t("browse.filters.budget")}
-              format={(n) => formatPrice(n, locale)}
-            />
-          </PopoverContent>
-        </Popover>
+      {/* Desktop / tablet — chips inline */}
+      <div className="hidden flex-wrap items-end gap-2 sm:flex">
+        {chipCluster}
 
         {/* Sort */}
         <div className="ms-auto inline-flex items-center gap-2">
@@ -210,6 +229,52 @@ export function FilterBar({ matchedCount }: { matchedCount: number }) {
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* Mobile — collapse chips into a Sheet, keep sort outside */}
+      <div className="flex items-center gap-2 sm:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-3 text-[12px] font-medium text-ink-2 transition-colors hover:border-border-strong hover:text-foreground"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+              <span className="font-mono uppercase tracking-wider text-[10.5px]">
+                {t("browse.filters.subject")}
+              </span>
+              {chipSetCount > 0 && (
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[10.5px] font-semibold tabular text-accent-foreground">
+                  {chipSetCount}
+                </span>
+              )}
+            </button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto p-5">
+            <SheetHeader className="text-start">
+              <SheetTitle className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-3">
+                {t("browse.filters.applyCount", { count: matchedCount })}
+              </SheetTitle>
+            </SheetHeader>
+            <div className="mt-4 flex flex-wrap gap-2">{chipCluster}</div>
+          </SheetContent>
+        </Sheet>
+
+        <Select
+          value={filters.sort}
+          onValueChange={(v) => setParam("sort", v === "newest" ? "" : v)}
+        >
+          <SelectTrigger size="sm" className="h-9 min-w-0 flex-1 bg-background">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_KEYS.map((k) => (
+              <SelectItem key={k} value={k}>
+                {t(`browse.sort.${k}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Active filter chips + result count */}

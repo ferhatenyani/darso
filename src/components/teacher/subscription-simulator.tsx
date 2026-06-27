@@ -25,9 +25,9 @@ export function SubscriptionSimulator({ locale, tiers }: { locale: "fr" | "ar"; 
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr]">
         <div className="p-6 lg:p-8">
-          {/* tier ticks */}
+          {/* tier ticks — labels show only for active tick on narrow widths to avoid overlap */}
           <div className="relative mb-3 h-8">
-            {tiers.map((tt, i) => {
+            {tiers.map((tt) => {
               const pct = (tt.thresholdDzd / max) * 100;
               const active = tier.id === tt.id;
               return (
@@ -47,6 +47,8 @@ export function SubscriptionSimulator({ locale, tiers }: { locale: "fr" | "ar"; 
                     className={cn(
                       "absolute top-3 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap font-mono text-[10px] tabular",
                       active ? "font-semibold text-foreground" : "text-ink-3",
+                      // On narrow widths show only the active tick label; reveal the rest from sm up
+                      !active && "hidden sm:inline",
                     )}
                   >
                     {Math.round(tt.rate * 100)}%

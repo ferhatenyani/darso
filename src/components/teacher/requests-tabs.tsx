@@ -20,21 +20,54 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { studentRequests, type StudentRequest } from "@/lib/mock/dashboard";
+import { useToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 type Status = "pending" | "accepted" | "rejected";
 
+// Pick the first known student-side teacher slug as a safe fallback for the
+// "View profile" link on accepted/rejected rows. (Audit line 237: previously
+// hard-coded to /teachers/student, which 404'd.)
+const FALLBACK_PROFILE_SLUG = "khalil-bensaid";
+
 export function RequestsTabs({ locale }: { locale: "fr" | "ar" }) {
   const t = useTranslations("teacher.requests");
+  const tt = useTranslations("teacher.requests.toasts");
+  const { show } = useToast();
+  const [requests, setRequests] = React.useState<StudentRequest[]>(studentRequests);
   const [confirm, setConfirm] = React.useState<{ open: boolean; type: "accept" | "reject"; req?: StudentRequest }>({
     open: false,
     type: "accept",
   });
 
   const counts = {
-    pending: studentRequests.filter((r) => r.status === "pending").length,
-    accepted: studentRequests.filter((r) => r.status === "accepted").length,
-    rejected: studentRequests.filter((r) => r.status === "rejected").length,
+    pending: requests.filter((r) => r.status === "pending").length,
+    accepted: requests.filter((r) => r.status === "accepted").length,
+    rejected: requests.filter((r) => r.status === "rejected").length,
+  };
+
+  const handleConfirm = () => {
+    const req = confirm.req;
+    if (!req) {
+      setConfirm((c) => ({ ...c, open: false }));
+      return;
+    }
+    if (confirm.type === "accept") {
+      setRequests((prev) => prev.map((r) => (r.id === req.id ? { ...r, status: "accepted" } : r)));
+      show({
+        title: tt("accepted.title"),
+        description: tt("accepted.desc", { name: req.student.name[locale] }),
+        variant: "success",
+      });
+    } else {
+      setRequests((prev) => prev.map((r) => (r.id === req.id ? { ...r, status: "rejected" } : r)));
+      show({
+        title: tt("rejected.title"),
+        description: tt("rejected.desc", { name: req.student.name[locale] }),
+        variant: "warning",
+      });
+    }
+    setConfirm((c) => ({ ...c, open: false }));
   };
 
   return (
@@ -62,6 +95,7 @@ export function RequestsTabs({ locale }: { locale: "fr" | "ar" }) {
             <List
               locale={locale}
               status={status}
+              requests={requests}
               onAccept={(req) => setConfirm({ open: true, type: "accept", req })}
               onReject={(req) => setConfirm({ open: true, type: "reject", req })}
             />
@@ -91,7 +125,7 @@ export function RequestsTabs({ locale }: { locale: "fr" | "ar" }) {
             </Button>
             <Button
               variant={confirm.type === "accept" ? "primary" : "danger"}
-              onClick={() => setConfirm((c) => ({ ...c, open: false }))}
+              onClick={handleConfirm}
             >
               {confirm.type === "accept" ? t("confirm.acceptCta") : t("confirm.rejectCta")}
             </Button>
@@ -105,16 +139,18 @@ export function RequestsTabs({ locale }: { locale: "fr" | "ar" }) {
 function List({
   locale,
   status,
+  requests,
   onAccept,
   onReject,
 }: {
   locale: "fr" | "ar";
   status: Status;
+  requests: StudentRequest[];
   onAccept: (r: StudentRequest) => void;
   onReject: (r: StudentRequest) => void;
 }) {
   const t = useTranslations("teacher.requests");
-  const items = studentRequests.filter((r) => r.status === status);
+  const items = requests.filter((r) => r.status === status);
 
   if (items.length === 0) {
     return (
@@ -174,7 +210,7 @@ function List({
             </div>
           ) : (
             <Button asChild size="sm" variant="ghost">
-              <Link href={`/teachers/${"student"}`}>{t("viewProfile")}</Link>
+              <Link href={`/teachers/${FALLBACK_PROFILE_SLUG}`}>{t("viewProfile")}</Link>
             </Button>
           )}
         </li>

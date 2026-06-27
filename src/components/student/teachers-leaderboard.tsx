@@ -119,7 +119,7 @@ export function TeachersLeaderboard() {
                 {t("filterSubjectAny")}
               </span>
               <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger size="sm" className="min-w-44">
+                <SelectTrigger size="sm" className="min-w-0 flex-1 sm:min-w-44 sm:flex-none">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -133,7 +133,7 @@ export function TeachersLeaderboard() {
               </Select>
             </div>
             <Select value={wilaya} onValueChange={setWilaya}>
-              <SelectTrigger size="sm" className="min-w-44">
+              <SelectTrigger size="sm" className="min-w-0 flex-1 sm:min-w-44 sm:flex-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

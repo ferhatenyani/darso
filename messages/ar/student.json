@@ -227,6 +227,7 @@
       "navPayments": "المدفوعات",
       "navSecurity": "الأمان",
       "navDanger": "الحساب",
+      "signOut": "تسجيل الخروج",
       "memberSince": "عضو منذ {date}",
       "memberSinceValue": "مارس 2024",
       "verifiedLine": "هوية موثّقة · بريد مؤكَّد",
@@ -328,6 +329,79 @@
         "deleteDialogTitle": "حذف الحساب نهائيًا؟",
         "deleteDialogBody": "هذا الإجراء نهائي. اكتب احذف للتأكيد.",
         "deleteWordPlaceholder": "اكتب احذف"
+      },
+      "toasts": {
+        "profileSaved": {
+          "title": "تمّ تحديث الملف",
+          "desc": "بياناتك العامّة ظاهرة فورًا."
+        },
+        "profileDiscarded": {
+          "title": "تمّ إلغاء التعديلات",
+          "desc": "تمّت العودة إلى آخر نسخة محفوظة."
+        },
+        "preferencesSaved": {
+          "title": "تمّ حفظ التفضيلات",
+          "desc": "اللغة والعملة والإشعارات محدّثة."
+        },
+        "paymentAdded": {
+          "title": "تمّت إضافة وسيلة الدفع",
+          "desc": "{brand} •••• {last4} جاهزة للاستخدام."
+        },
+        "paymentInvalid": {
+          "title": "بطاقة غير صالحة",
+          "desc": "تأكَّد من آخر 4 أرقام وتاريخ الانتهاء (شش/سس)."
+        },
+        "invoiceDownloaded": {
+          "title": "تمّ تحميل الفاتورة",
+          "desc": "إيصال «{item}» أُرسل إلى مجلّد التنزيلات."
+        },
+        "passwordChanged": {
+          "title": "تمّ تغيير كلمة المرور",
+          "desc": "تمّ تسجيل الخروج من بقيّة أجهزتك."
+        },
+        "passwordMismatch": {
+          "title": "كلمتا المرور غير متطابقتين",
+          "desc": "يجب أن تتطابق كلمة المرور الجديدة مع التأكيد."
+        },
+        "passwordTooShort": {
+          "title": "كلمة المرور قصيرة جدًا",
+          "desc": "اختر 6 أحرف على الأقلّ."
+        },
+        "twoFaEnabled": {
+          "title": "تمّ تفعيل التحقّق بخطوتين",
+          "desc": "سيصلك رمز SMS في كلّ تسجيل دخول جديد."
+        },
+        "twoFaDisabled": {
+          "title": "تمّ تعطيل التحقّق بخطوتين",
+          "desc": "يمكنك إعادة تفعيله في أيّ وقت."
+        },
+        "sessionRevoked": {
+          "title": "تمّ إغلاق الجلسة",
+          "desc": "تمّ تسجيل خروج {device}."
+        },
+        "sessionsAllRevoked": {
+          "title": "{count, plural, one {تمّ إغلاق جلسة واحدة} other {تمّ إغلاق # جلسات}}",
+          "desc": "هذا الجهاز فقط لا يزال متّصلًا."
+        },
+        "sessionsNoneRevoked": {
+          "title": "لا توجد جلسات لإغلاقها",
+          "desc": "هذا الجهاز هو الوحيد النشط حاليًا."
+        },
+        "sessionsEmptyHint": "لا توجد أجهزة أخرى متّصلة.",
+        "accountDeleteRequested": {
+          "title": "تمّ طلب الحذف",
+          "desc": "ستصلك رسالة تأكيد بالبريد بعد دقائق."
+        },
+        "addPaymentDialog": {
+          "title": "إضافة وسيلة دفع",
+          "desc": "بطاقة Visa أو MasterCard أو CIB. تُحفظ بأمان.",
+          "brand": "نوع البطاقة",
+          "last4": "آخر 4 أرقام",
+          "last4Hint": "للتعرّف على البطاقة في القائمة.",
+          "expiry": "تاريخ الانتهاء",
+          "cancel": "إلغاء",
+          "submit": "إضافة البطاقة"
+        }
       }
     },
     "onboarding": {
@@ -351,7 +425,7 @@
       "step2": {
         "title": "ما الذي يهمّك؟",
         "subtitle": "اختر 3 مواضيع على الأقلّ — نستعملها في التوصيات.",
-        "minHint": "{selected} / 3 كحدّ أدنى"
+        "minHint": "اختر 3 مواضيع على الأقلّ (اخترتَ {selected})"
       },
       "step3": {
         "title": "مستواك وفئتك.",

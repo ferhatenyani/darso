@@ -30,6 +30,9 @@ const loaders: Record<string, () => Promise<Record<string, unknown>>> = {
   // Auth pages
   "fr/auth": () => import("../../messages/fr/auth.json").then((m) => m.default),
   "ar/auth": () => import("../../messages/ar/auth.json").then((m) => m.default),
+  // Booking funnel (checkout dialog, reserve toasts, /account writebacks)
+  "fr/booking": () => import("../../messages/fr/booking.json").then((m) => m.default),
+  "ar/booking": () => import("../../messages/ar/booking.json").then((m) => m.default),
 };
 
 async function loadMessages(locale: string): Promise<Record<string, unknown>> {

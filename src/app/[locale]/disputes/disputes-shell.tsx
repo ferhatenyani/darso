@@ -2,14 +2,21 @@
 
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, ArrowLeft, Scale } from "lucide-react";
+import { ArrowRight, ArrowLeft, Plus, Scale } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { StateBadge } from "@/components/app/disputes/state-badge";
-import { disputes, type Dispute } from "@/lib/mock/disputes";
+import { DisputeOpenDialog } from "@/components/disputes/dispute-open-dialog";
+import {
+  getDisputes,
+  subscribeDisputes,
+  EMPTY_DISPUTES,
+} from "@/lib/mock/disputes-state";
+import type { Dispute } from "@/lib/mock/disputes";
+import { useCurrentUser } from "@/lib/auth";
 import { cn, formatPrice } from "@/lib/utils";
 
 type Filter = "open" | "resolved" | "all";
@@ -20,12 +27,19 @@ function partition(d: Dispute, f: Filter) {
   return ["resolved", "refunded", "rejected"].includes(d.state);
 }
 
+// SSR fallback for useSyncExternalStore — module state isn't seeded on the
+// server until first read, so render an empty list and let the client
+// hydrate the real one.
+const getServerSnapshot = (): readonly Dispute[] => EMPTY_DISPUTES;
+
 export function DisputesShell() {
   const t = useTranslations("app.disputes");
+  const tOpen = useTranslations("app.disputes.open");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const [tab, setTab] = React.useState<Filter>("open");
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const { user } = useCurrentUser();
 
   const fmtShort = new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
     day: "numeric",
@@ -33,21 +47,61 @@ export function DisputesShell() {
   });
   const fmtRel = new Intl.RelativeTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", { numeric: "auto" });
 
+  // Live-subscribe to the dispute store. We surface ALL disputes here (no
+  // account filter) so the seeded mock catalogue still renders for any
+  // signed-in viewer — newly opened disputes are tagged with the current
+  // user id, so they always appear too.
+  const getSnapshot = React.useCallback(() => getDisputes(), []);
+  const disputes = React.useSyncExternalStore<readonly Dispute[]>(
+    subscribeDisputes,
+    getSnapshot,
+    getServerSnapshot,
+  );
+
   const filtered = disputes.filter((d) => partition(d, tab));
+
+  // Controlled open state so the primary CTA opens the same dialog instance
+  // (we don't need React.cloneElement here — the button is right next to it).
+  const [openDialog, setOpenDialog] = React.useState(false);
+  // Avoid an unused-locals warning when we later branch on the hook return
+  // for anonymous gating — the dialog itself short-circuits anonymous
+  // visitors when its trigger fires, but the standalone primary CTA owns
+  // its own open state and needs the same guard.
+  void user;
 
   return (
     <section className="container-narrow py-10">
-      <header className="mb-8">
-        <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-ink-3">
-          <span className="ink-rule" aria-hidden />
-          <span>{t("title")}</span>
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-ink-3">
+            <span className="ink-rule" aria-hidden />
+            <span>{t("title")}</span>
+          </div>
+          <h1
+            className="mt-3 max-w-3xl font-serif text-4xl text-foreground sm:text-5xl"
+            style={{ fontFamily: "ui-serif, Georgia, serif" }}
+          >
+            <span className="text-balance">{t("subtitle")}</span>
+          </h1>
         </div>
-        <h1
-          className="mt-3 max-w-3xl font-serif text-4xl text-foreground sm:text-5xl"
-          style={{ fontFamily: "ui-serif, Georgia, serif" }}
-        >
-          <span className="text-balance">{t("subtitle")}</span>
-        </h1>
+
+        {/* "+ Start a dispute" primary CTA. Uses the shared dialog in
+            controlled mode so the button copy lives entirely in the shell. */}
+        <DisputeOpenDialog
+          open={openDialog}
+          onOpenChange={setOpenDialog}
+          trigger={
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              className="self-start sm:self-end"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="ms-1">{tOpen("cta")}</span>
+            </Button>
+          }
+        />
       </header>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as Filter)}>

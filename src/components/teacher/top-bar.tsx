@@ -16,15 +16,18 @@ export function TeacherTopBar() {
   const [open, setOpen] = React.useState(false);
 
   const title = React.useMemo(() => {
-    if (pathname === "/teach" || pathname.endsWith("/teach")) return tnav("home");
+    if (pathname === "/teach/dashboard" || pathname.endsWith("/teach/dashboard")) return tnav("home");
     if (pathname.includes("/teach/profile")) return tnav("profile");
     if (pathname.includes("/teach/courses/new")) return tnav("courses");
     if (pathname.includes("/teach/courses")) return tnav("courses");
     if (pathname.includes("/teach/events")) return tnav("events");
+    if (pathname.includes("/teach/applications")) return tnav("applications");
+    if (pathname.includes("/teach/ondemand")) return tnav("onDemand");
     if (pathname.includes("/teach/requests")) return tnav("requests");
     if (pathname.includes("/teach/reviews")) return tnav("reviews");
     if (pathname.includes("/teach/subscription")) return tnav("subscription");
     if (pathname.includes("/teach/agency")) return tnav("agency");
+    if (pathname.includes("/messages")) return tnav("messages");
     return tnav("home");
   }, [pathname, tnav]);
 
@@ -44,7 +47,7 @@ export function TeacherTopBar() {
           <TeacherSidebar inSheet />
         </SheetContent>
       </Sheet>
-      <Link href="/teach" className="lg:hidden">
+      <Link href="/teach/dashboard" className="lg:hidden">
         <Logo mark />
       </Link>
       <h1 className="ms-1 truncate text-sm font-semibold text-foreground">{title}</h1>

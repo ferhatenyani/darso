@@ -1,0 +1,55 @@
+{
+  "booking": {
+    "checkout": {
+      "title": "Confirmer la réservation",
+      "subtitle": "Vérifiez les détails avant de payer. Vous pouvez annuler jusqu'à 24 h avant la séance.",
+      "withTeacher": "avec {name}",
+      "methodLabel": "Méthode de paiement",
+      "addMethod": "Ajouter une méthode",
+      "totalLabel": "Total dû",
+      "confirm": "Confirmer et payer",
+      "confirming": "Confirmation…",
+      "cancel": "Annuler",
+      "secureNote": "Paiement sécurisé — capture après confirmation du professeur.",
+      "signedOutHint": "Connectez-vous pour réserver."
+    },
+    "kind": {
+      "1to1": "1-à-1",
+      "course": "Cours",
+      "event": "Atelier",
+      "live": "Live"
+    },
+    "methods": {
+      "edahabia": "Edahabia",
+      "cib": "CIB",
+      "postalMandate": "Mandat postal",
+      "baridiMob": "BaridiMob"
+    },
+    "payments": {
+      "recentLabel": "Réservations récentes",
+      "statusConfirmed": "Confirmée"
+    },
+    "toasts": {
+      "bookingConfirmed": {
+        "title": "Réservation confirmée",
+        "desc": "{subject} — vous la retrouverez dans votre calendrier et dans vos paiements."
+      },
+      "bookingFailed": {
+        "title": "Réservation impossible",
+        "desc": "Une erreur s'est produite — réessayez ou changez de méthode de paiement."
+      },
+      "signInRequired": {
+        "title": "Connexion requise",
+        "desc": "Connectez-vous pour réserver cette séance."
+      },
+      "joiningLive": {
+        "title": "Entrée dans la salle live…",
+        "desc": "{title}"
+      },
+      "openingConversation": {
+        "title": "Ouverture de la conversation",
+        "desc": "Vers {name}"
+      }
+    }
+  }
+}

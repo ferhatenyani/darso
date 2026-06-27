@@ -4,19 +4,30 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Clock, Users, ArrowRight, ArrowLeft } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { CheckoutDialog } from "@/components/booking/checkout-dialog";
 import { upcomingSessions, type Session } from "@/lib/mock/sessions";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 
 export function LivePage() {
   const t = useTranslations("student.live");
+  const tBooking = useTranslations("booking");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const { show } = useToast();
   const [tab, setTab] = useState<"now" | "soon" | "today" | "tomorrow">("now");
+
+  const handleJoinLive = (sessionTitle: string) => {
+    show({
+      title: tBooking("toasts.joiningLive.title"),
+      description: tBooking("toasts.joiningLive.desc", { title: sessionTitle }),
+      variant: "default",
+    });
+  };
 
   const filterByTab = (s: Session) => {
     if (tab === "now") return s.state === "live";
@@ -72,11 +83,11 @@ export function LivePage() {
                       <li
                         key={s.id}
                         className={cn(
-                          "grid grid-cols-[80px_1fr_auto] items-center gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors",
+                          "grid grid-cols-[64px_1fr] items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors sm:grid-cols-[80px_1fr_auto] sm:items-center sm:gap-4",
                           isLive && "border-danger/30 bg-gradient-to-r from-danger/[0.04] to-transparent",
                         )}
                       >
-                        <div className="grid h-16 w-16 grid-rows-2 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface text-center">
+                        <div className="grid h-14 w-14 grid-rows-2 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface text-center sm:h-16 sm:w-16">
                           <div
                             className={cn(
                               "flex items-center justify-center text-[10px] font-semibold uppercase tracking-wider",
@@ -117,16 +128,36 @@ export function LivePage() {
                             </span>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-1">
+                        <div className="col-span-2 mt-2 flex items-center justify-between gap-2 border-t border-border pt-3 sm:col-span-1 sm:mt-0 sm:flex-col sm:items-end sm:gap-1 sm:border-t-0 sm:pt-0">
                           <span className="text-[13px] font-semibold tabular text-foreground">
                             {formatPrice(s.priceDzd, locale)}
                           </span>
-                          <Button asChild size="sm" variant={isLive ? "danger" : "primary"}>
-                            <Link href={`/courses/${s.id}` as never}>
-                              {isLive ? t("joinNow") : t("reserve")}
+                          {isLive ? (
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="danger"
+                              onClick={() => handleJoinLive(s.title[lang])}
+                            >
+                              {t("joinNow")}
                               <Arrow className="h-3.5 w-3.5" />
-                            </Link>
-                          </Button>
+                            </Button>
+                          ) : (
+                            <CheckoutDialog
+                              kind="live"
+                              subjectTitle={s.title}
+                              teacherSlug={s.teacher.slug}
+                              teacherName={s.teacher.name}
+                              priceDzd={s.priceDzd}
+                              scheduleLabel={s.startsAt}
+                              trigger={
+                                <Button type="button" size="sm" variant="primary">
+                                  {t("reserve")}
+                                  <Arrow className="h-3.5 w-3.5" />
+                                </Button>
+                              }
+                            />
+                          )}
                         </div>
                       </li>
                     );

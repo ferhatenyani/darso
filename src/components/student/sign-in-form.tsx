@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Mail, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Lock, AlertCircle } from "lucide-react";
 
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,34 +13,55 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { demoAccounts } from "@/lib/mock/students";
+import { signInWithAccountId, signInWithEmail } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-export function SignInForm() {
+/**
+ * Map the public demo-account entries (which carry email + role) to the
+ * mock auth account ids. The Lina / Khalil rows are the in-catalog demos;
+ * any agency entry is filtered out as part of the agency rip.
+ */
+const DEMO_ACCOUNT_MAP: Record<string, string> = {
+  "demo-student": "acc-lina",
+  "demo-teacher": "acc-khalil",
+};
+
+export function SignInForm({ next }: { next?: string }) {
   const t = useTranslations("auth.signIn");
   const tCommon = useTranslations("auth.common");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  // Only show the in-catalog demos — drops `demo-agency` per agency RIP.
+  const visibleDemos = demoAccounts.filter((d) => DEMO_ACCOUNT_MAP[d.id]);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      router.push("/account" as never);
-    }, 700);
+    setError(null);
+    startTransition(async () => {
+      const result = await signInWithEmail(email, next);
+      // server action redirects on success; only returns on error
+      if (result && result.ok === false) {
+        setError(t("errorUnknownEmail"));
+      }
+    });
   }
 
-  function signInAs(email: string) {
-    setEmail(email);
-    setPassword("demo-darso-2026");
-    setSubmitting(true);
-    setTimeout(() => router.push("/account" as never), 400);
+  function signInAs(accountId: string) {
+    setError(null);
+    startTransition(async () => {
+      const result = await signInWithAccountId(accountId, next);
+      if (result && result.ok === false) {
+        setError(t("errorUnknownEmail"));
+      }
+    });
   }
 
   return (
@@ -92,7 +113,10 @@ export function SignInForm() {
                   placeholder={t("emailPlaceholder")}
                   className="ps-9"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError(null);
+                  }}
                 />
               </div>
             </div>
@@ -134,9 +158,19 @@ export function SignInForm() {
               </Label>
             </div>
 
-            <Button type="submit" size="lg" disabled={submitting} className="w-full">
-              {submitting ? tCommon("loading") : t("submit")}
-              {!submitting && <Arrow className="h-4 w-4" />}
+            {error && (
+              <p
+                role="alert"
+                className="flex items-start gap-2 rounded-[var(--radius-md)] border border-danger/30 bg-danger/[0.06] px-3 py-2.5 text-[12.5px] text-danger"
+              >
+                <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span>{error}</span>
+              </p>
+            )}
+
+            <Button type="submit" size="lg" disabled={pending} className="w-full">
+              {pending ? tCommon("loading") : t("submit")}
+              {!pending && <Arrow className="h-4 w-4" />}
             </Button>
           </form>
 
@@ -161,34 +195,38 @@ export function SignInForm() {
               </span>
             </div>
             <ul className="grid gap-2">
-              {demoAccounts.map((a, i) => (
-                <li key={a.id}>
-                  <button
-                    type="button"
-                    onClick={() => signInAs(a.email)}
-                    className={cn(
-                      "group flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-border bg-card p-2.5 text-start transition-all",
-                      "hover:border-accent hover:shadow-e1",
-                    )}
-                  >
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
-                      № {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <Avatar className="h-9 w-9">
-                      <AvatarFallback className={cn("bg-gradient-to-br text-xs text-white", a.accent)}>
-                        {a.initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-semibold text-foreground">
-                        {a.name[lang]}
-                      </p>
-                      <p className="truncate text-[11.5px] text-ink-3">{a.hint[lang]}</p>
-                    </div>
-                    <Arrow className="h-4 w-4 text-ink-3 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                  </button>
-                </li>
-              ))}
+              {visibleDemos.map((a, i) => {
+                const accountId = DEMO_ACCOUNT_MAP[a.id];
+                return (
+                  <li key={a.id}>
+                    <button
+                      type="button"
+                      onClick={() => signInAs(accountId)}
+                      disabled={pending}
+                      className={cn(
+                        "group flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-border bg-card p-2.5 text-start transition-all",
+                        "hover:border-accent hover:shadow-e1 disabled:opacity-60",
+                      )}
+                    >
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
+                        № {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <Avatar className="h-9 w-9">
+                        <AvatarFallback className={cn("bg-gradient-to-br text-xs text-white", a.accent)}>
+                          {a.initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[13px] font-semibold text-foreground">
+                          {a.name[lang]}
+                        </p>
+                        <p className="truncate text-[11.5px] text-ink-3">{a.hint[lang]}</p>
+                      </div>
+                      <Arrow className="h-4 w-4 text-ink-3 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 

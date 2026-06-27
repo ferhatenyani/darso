@@ -25,15 +25,20 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { currentTeacher } from "@/lib/mock/dashboard";
+import { featuredTeachers } from "@/lib/mock/teachers";
+import { useCurrentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 type NavItem = { href: string; icon: typeof LayoutDashboard; key: string; badge?: number };
 
-const groups: { key: string; items: NavItem[] }[] = [
+// Base groups always shown to every signed-in teacher. The Agency group is
+// appended conditionally inside the component based on the teacher's
+// `parentAgencyId` so solo teachers never see a misleading studio link.
+const baseGroups: { key: string; items: NavItem[] }[] = [
   {
     key: "groupOverview",
     items: [
-      { href: "/teach", icon: LayoutDashboard, key: "home" },
+      { href: "/teach/dashboard", icon: LayoutDashboard, key: "home" },
       { href: "/teach/profile", icon: UserCog, key: "profile" },
     ],
   },
@@ -60,19 +65,38 @@ const groups: { key: string; items: NavItem[] }[] = [
       { href: "/teach/subscription", icon: Wallet, key: "subscription" },
     ],
   },
-  {
-    key: "groupAgency",
-    items: [{ href: "/teach/agency", icon: Users, key: "agency" }],
-  },
 ];
+
+const AGENCY_GROUP: { key: string; items: NavItem[] } = {
+  key: "groupAgency",
+  items: [{ href: "/teach/agency", icon: Users, key: "agency" }],
+};
 
 export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
   const t = useTranslations("teacher.shell");
   const locale = useLocale() as "fr" | "ar";
   const pathname = usePathname();
+  const { user, signOut } = useCurrentUser();
+
+  // Derive the displayed teacher from the current account; fall back to the
+  // legacy mock for anonymous previews.
+  const sessionTeacher =
+    user?.teacherId ? featuredTeachers.find((t) => t.id === user.teacherId) : null;
+  const teacher = sessionTeacher ?? currentTeacher;
+
+  // Only render the Agency group when the signed-in teacher actually
+  // belongs to a studio. Solo teachers (and the anonymous preview) see no
+  // /teach/agency link in the nav.
+  const showAgency = Boolean(sessionTeacher?.parentAgencyId);
+  const groups = React.useMemo(
+    () => (showAgency ? [...baseGroups, AGENCY_GROUP] : baseGroups),
+    [showAgency],
+  );
 
   const isActive = (href: string) => {
-    if (href === "/teach") return pathname === "/teach";
+    if (href === "/teach/dashboard") {
+      return pathname === "/teach/dashboard" || pathname === "/teach";
+    }
     return pathname.startsWith(href);
   };
 
@@ -84,7 +108,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
       )}
     >
       <div className="flex h-16 items-center px-5">
-        <Link href="/teach" className="outline-none focus-visible:rounded-md">
+        <Link href="/teach/dashboard" className="outline-none focus-visible:rounded-md">
           <Logo />
         </Link>
       </div>
@@ -97,24 +121,24 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
         >
           <Avatar className="h-11 w-11 ring-2 ring-background">
             <AvatarFallback
-              className={cn("text-[13px] text-primary-foreground", `bg-gradient-to-br ${currentTeacher.accent}`)}
+              className={cn("text-[13px] text-primary-foreground", `bg-gradient-to-br ${teacher.accent}`)}
             >
-              {currentTeacher.initials}
+              {teacher.initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="truncate text-sm font-semibold text-foreground">{currentTeacher.name[locale]}</span>
+              <span className="truncate text-sm font-semibold text-foreground">{teacher.name[locale]}</span>
             </div>
             <div className="mt-0.5 flex items-center gap-1.5">
-              {currentTeacher.topRated && (
+              {teacher.topRated && (
                 <Badge variant="warning" className="h-[18px] px-1.5 text-[10px] leading-3">
                   {t("topRated")}
                 </Badge>
               )}
               <span className="truncate text-[11px] text-ink-3 tabular">
                 {t("responseLabel")}{" "}
-                {t("responseHours", { hours: currentTeacher.responseHours })}
+                {t("responseHours", { hours: teacher.responseHours })}
               </span>
             </div>
           </div>
@@ -185,6 +209,7 @@ export function TeacherSidebar({ inSheet = false }: { inSheet?: boolean }) {
           <LanguageSwitcher />
           <button
             type="button"
+            onClick={() => void signOut()}
             className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-md)] px-3 text-sm font-medium text-ink-2 transition-colors hover:bg-surface hover:text-foreground"
           >
             <LogOut className="h-4 w-4 rtl-flip" aria-hidden />

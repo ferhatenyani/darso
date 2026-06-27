@@ -22,7 +22,6 @@ export function SiteFooter() {
       items: [
         { label: t("links.becomeTeacher"), href: "/teach" },
         { label: t("links.pricing"), href: "/teach/pricing" },
-        { label: t("links.agency"), href: "/teach/agency" },
         { label: t("links.teacherResources"), href: "/teach/resources" },
       ],
     },
@@ -49,7 +48,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="container-narrow py-14">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div className="space-y-4">
             <Logo />
             <p className="max-w-xs text-sm leading-relaxed text-ink-2">{t("tagline")}</p>

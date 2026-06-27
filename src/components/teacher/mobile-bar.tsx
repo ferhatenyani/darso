@@ -7,32 +7,47 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader, SheetBody } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { useCurrentUser } from "@/lib/auth";
+import { findTeacherById } from "@/lib/mock/teachers";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { href: "/teach", icon: LayoutDashboard, key: "home" },
+  { href: "/teach/dashboard", icon: LayoutDashboard, key: "home" },
   { href: "/teach/courses", icon: Library, key: "courses" },
   { href: "/teach/requests", icon: Inbox, key: "requests", badge: 3 },
   { href: "/teach/reviews", icon: Star, key: "reviews" },
 ];
 
-const moreItems = [
+const baseMoreItems = [
   { href: "/teach/profile", icon: UserCog, key: "profile" },
   { href: "/teach/events", icon: CalendarDays, key: "events" },
   { href: "/teach/ondemand", icon: PlayCircle, key: "onDemand" },
   { href: "/teach/applications", icon: Send, key: "applications" },
   { href: "/messages", icon: MessagesSquare, key: "messages" },
   { href: "/teach/subscription", icon: Wallet, key: "subscription" },
-  { href: "/teach/agency", icon: Users, key: "agency" },
 ];
+
+const AGENCY_ITEM = { href: "/teach/agency", icon: Users, key: "agency" } as const;
 
 export function TeacherMobileBar() {
   const t = useTranslations("teacher.shell");
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
+  const { user, signOut } = useCurrentUser();
+
+  // Only surface the Agency entry when the signed-in teacher actually
+  // belongs to a studio. Solo teachers (and the anonymous preview) never
+  // see it in the more-sheet.
+  const showAgency = Boolean(findTeacherById(user?.teacherId)?.parentAgencyId);
+  const moreItems = React.useMemo(
+    () => (showAgency ? [...baseMoreItems, AGENCY_ITEM] : baseMoreItems),
+    [showAgency],
+  );
 
   const isActive = (href: string) => {
-    if (href === "/teach") return pathname === "/teach";
+    if (href === "/teach/dashboard") {
+      return pathname === "/teach/dashboard" || pathname === "/teach";
+    }
     return pathname.startsWith(href);
   };
 
@@ -116,6 +131,10 @@ export function TeacherMobileBar() {
               </div>
               <button
                 type="button"
+                onClick={() => {
+                  setOpen(false);
+                  void signOut();
+                }}
                 className="mt-3 flex w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border bg-background px-3 py-2.5 text-sm font-medium text-ink-2 hover:bg-surface"
               >
                 <LogOut className="h-4 w-4 rtl-flip" aria-hidden />

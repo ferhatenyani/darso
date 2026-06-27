@@ -42,6 +42,18 @@ type SortKey = "relevance" | "priceAsc" | "priceDesc" | "rating" | "newest" | "r
 type ModeKey = "online" | "in-person" | "both";
 type Tab = "all" | "teachers" | "courses";
 
+/**
+ * Derive the canonical mode from two independent switch booleans.
+ * Falls back to "both" when both are off so the result set isn't accidentally
+ * emptied — users can still narrow by other filters.
+ */
+function deriveMode(online: boolean, inPerson: boolean): ModeKey {
+  if (online && inPerson) return "both";
+  if (online) return "online";
+  if (inPerson) return "in-person";
+  return "both";
+}
+
 export function BrowseClient({
   initialQuery,
   initialSubject,
@@ -67,7 +79,9 @@ export function BrowseClient({
   const [subject, setSubject] = useState(initialSubject);
   const [wilaya, setWilaya] = useState(initialWilaya);
   const [mode, setMode] = useState<ModeKey>(initialMode);
-  const [priceRange, setPriceRange] = useState<[number, number]>([500, 4000]);
+  // Single DZD scale shared by teacher hourly rate AND course price.
+  // Slider is 0–20 000 so both bands (teachers ~500–5 000, courses ~1 400–9 800) fit.
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000]);
   const [minRating, setMinRating] = useState<"any" | "5" | "4.5" | "4">("any");
   const [level, setLevel] = useState<CourseLevel | "any">("any");
   const [formats, setFormats] = useState<Record<string, boolean>>({
@@ -125,7 +139,7 @@ export function BrowseClient({
             c.teacher.name[lang].toLowerCase().includes(q);
           if (!hit) return false;
         }
-        if (c.priceDzd < priceRange[0] || c.priceDzd > priceRange[1] * 4) return false;
+        if (c.priceDzd < priceRange[0] || c.priceDzd > priceRange[1]) return false;
         return true;
       })
       .sort((a, b) => {
@@ -144,12 +158,26 @@ export function BrowseClient({
         : filteredTeachers.length + filteredCourses.length;
 
   // ---- URL state sync --------------------------------------------------
+  // Apply-button pattern: every filter (query, subject, wilaya, mode, rating,
+  // level, formats, price) is pushed to the URL when the user clicks Apply
+  // (or hits Enter in the search box). Nothing syncs on each keystroke.
   function commit() {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     if (subject !== "any") params.set("subject", subject);
     if (wilaya !== "any") params.set("wilaya", wilaya);
     if (mode !== "both") params.set("mode", mode);
+    if (minRating !== "any") params.set("rating", minRating);
+    if (level !== "any") params.set("level", level);
+    // Only serialise formats if at least one is disabled (default = all on).
+    const formatKeys = ["cohort", "event", "1to1", "ondemand"] as const;
+    const disabled = formatKeys.filter((f) => !formats[f]);
+    if (disabled.length > 0) {
+      const enabled = formatKeys.filter((f) => formats[f]);
+      params.set("formats", enabled.join(","));
+    }
+    if (priceRange[0] !== 0) params.set("priceMin", String(priceRange[0]));
+    if (priceRange[1] !== 20000) params.set("priceMax", String(priceRange[1]));
     const qs = params.toString();
     router.replace(`${pathname}${qs ? `?${qs}` : ""}` as never);
   }
@@ -205,14 +233,18 @@ export function BrowseClient({
             label={t("filterModeOnline")}
             icon={<Wifi className="h-3.5 w-3.5" />}
             checked={mode === "online" || mode === "both"}
-            onChange={(v) => setMode(v ? (mode === "in-person" ? "both" : "online") : mode === "both" ? "in-person" : "online")}
+            onChange={(v) =>
+              setMode(deriveMode(v, mode === "in-person" || mode === "both"))
+            }
           />
           <ModeRow
             id="mode-inperson"
             label={t("filterModeInPerson")}
             icon={<MapPin className="h-3.5 w-3.5" />}
             checked={mode === "in-person" || mode === "both"}
-            onChange={(v) => setMode(v ? (mode === "online" ? "both" : "in-person") : mode === "both" ? "online" : "in-person")}
+            onChange={(v) =>
+              setMode(deriveMode(mode === "online" || mode === "both", v))
+            }
           />
         </div>
       </fieldset>
@@ -226,8 +258,8 @@ export function BrowseClient({
         </div>
         <Slider
           min={0}
-          max={5000}
-          step={100}
+          max={20000}
+          step={500}
           value={priceRange}
           onValueChange={(v) => setPriceRange([v[0]!, v[1]!])}
           ariaLabel={t("filterPrice")}
@@ -297,7 +329,7 @@ export function BrowseClient({
             setSubject("any");
             setWilaya("any");
             setMode("both");
-            setPriceRange([500, 4000]);
+            setPriceRange([0, 20000]);
             setMinRating("any");
             setLevel("any");
             setFormats({ cohort: true, event: true, "1to1": true, ondemand: true });

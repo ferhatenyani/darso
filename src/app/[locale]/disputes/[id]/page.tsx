@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-import { SiteHeader } from "@/components/nav/site-header";
-import { SiteFooter } from "@/components/nav/site-footer";
+import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { DisputeDetail } from "./dispute-detail";
-import { findDispute } from "@/lib/mock/disputes";
+import { getDisputeById } from "@/lib/mock/disputes-state";
 
 export default async function DisputeDetailPage({
   params,
@@ -14,18 +13,17 @@ export default async function DisputeDetailPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const dispute = findDispute(id);
+  // Read from the in-session store so disputes opened via the
+  // "+ Start a dispute" flow (Batch 5c) resolve here as well as the
+  // seeded catalogue.
+  const dispute = getDisputeById(id);
   if (!dispute) {
     notFound();
   }
 
   return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">
-        <DisputeDetail dispute={dispute} />
-      </main>
-      <SiteFooter />
-    </>
+    <DashboardShell>
+      <DisputeDetail dispute={dispute} />
+    </DashboardShell>
   );
 }

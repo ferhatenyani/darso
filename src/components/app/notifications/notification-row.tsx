@@ -23,6 +23,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { cn, formatPrice } from "@/lib/utils";
+import { useToast } from "@/lib/toast";
 import type { AppNotification, NotificationType } from "@/lib/mock/notifications";
 
 const iconFor: Record<NotificationType, React.ComponentType<{ className?: string }>> = {
@@ -54,11 +55,14 @@ export function NotificationRow({
 }) {
   const t = useTranslations("app.notifications");
   const tc = useTranslations("app.common");
+  const tt = useTranslations("app.notifications.toasts");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const Icon = iconFor[n.type];
   const accent = accentFor[n.type];
+  const { show } = useToast();
+  const typeLabel = t(`type.${n.type}`);
 
   return (
     <li
@@ -149,7 +153,17 @@ export function NotificationRow({
           {n.unread && (
             <DropdownMenuItem onSelect={() => onMarkRead?.(n.id)}>{t("row.markRead")}</DropdownMenuItem>
           )}
-          <DropdownMenuItem>{t("row.muteType")}</DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() =>
+              show({
+                title: tt("muted.title"),
+                description: tt("muted.desc", { type: typeLabel }),
+                variant: "success",
+              })
+            }
+          >
+            {t("row.muteType")}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </li>

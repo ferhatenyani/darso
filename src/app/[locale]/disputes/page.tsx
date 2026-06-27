@@ -1,6 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { SiteHeader } from "@/components/nav/site-header";
-import { SiteFooter } from "@/components/nav/site-footer";
+import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { DisputesShell } from "./disputes-shell";
 
 export default async function DisputesPage({
@@ -12,12 +11,8 @@ export default async function DisputesPage({
   setRequestLocale(locale);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">
-        <DisputesShell />
-      </main>
-      <SiteFooter />
-    </>
+    <DashboardShell>
+      <DisputesShell />
+    </DashboardShell>
   );
 }

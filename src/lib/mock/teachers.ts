@@ -21,6 +21,11 @@ export type Teacher = {
   topRated?: boolean;
   idVerified: boolean;
   contactVerified: boolean;
+  /**
+   * When set, the teacher belongs to a studio/agency; gates the studio-members
+   * surface and any agency-only affordances. Optional — most teachers are solo.
+   */
+  parentAgencyId?: string;
   /** Tailwind classes for the avatar gradient (consistent palette per teacher) */
   accent: string;
 };
@@ -72,6 +77,9 @@ export const featuredTeachers: Teacher[] = [
     topRated: true,
     idVerified: true,
     contactVerified: true,
+    // Affiliated to Studio Numidia (the mock agency in src/lib/mock/agency.ts)
+    // so the Studio Members surface is testable when signed in as this teacher.
+    parentAgencyId: "ag-numidia",
     accent: "from-[#2E9E78] to-[#3E8FD0]",
   },
   {
@@ -169,3 +177,7 @@ export const featuredTeachers: Teacher[] = [
     accent: "from-[#2F6BFF] to-[#1C3A5E]",
   },
 ];
+
+/** Lookup a teacher record by id. Returns undefined when not found. */
+export const findTeacherById = (id: string | null | undefined) =>
+  id ? featuredTeachers.find((t) => t.id === id) : undefined;

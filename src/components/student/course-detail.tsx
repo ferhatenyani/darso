@@ -16,7 +16,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -30,17 +30,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { CheckoutDialog } from "@/components/booking/checkout-dialog";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
 import type { Course } from "@/lib/mock/courses";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 
 export function CourseDetail({ course }: { course: Course }) {
   const t = useTranslations("student.course");
   const tHome = useTranslations("home.teachers");
+  const tBooking = useTranslations("booking");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
+  const router = useRouter();
+  const { show } = useToast();
+
+  const handleAskQuestion = () => {
+    show({
+      title: tBooking("toasts.openingConversation.title"),
+      description: tBooking("toasts.openingConversation.desc", {
+        name: course.teacher.name[lang],
+      }),
+      variant: "default",
+    });
+    router.push(`/messages?to=${course.teacher.slug}` as never);
+  };
 
   const [pickedDate, setPickedDate] = useState<string>(course.dates[0]?.id ?? "");
   const [copied, setCopied] = useState(false);
@@ -184,10 +200,21 @@ export function CourseDetail({ course }: { course: Course }) {
                 </div>
               </div>
 
-              <Button variant="accent" size="lg" className="mt-1">
-                {full ? t("reserveFull") : t("reserve")}
-                <Arrow className="h-4 w-4" />
-              </Button>
+              <CheckoutDialog
+                kind="course"
+                subjectTitle={course.title}
+                teacherSlug={course.teacher.slug}
+                teacherName={course.teacher.name}
+                priceDzd={course.priceDzd}
+                start={current.startISO}
+                scheduleLabel={current.label}
+                trigger={
+                  <Button variant="accent" size="lg" className="mt-1" disabled={full}>
+                    {full ? t("reserveFull") : t("reserve")}
+                    <Arrow className="h-4 w-4" />
+                  </Button>
+                }
+              />
               <p className="flex items-start gap-1.5 text-[11px] text-white/65">
                 <ShieldCheck className="mt-0.5 h-3 w-3" />
                 {t("secureNote")}
@@ -291,14 +318,36 @@ export function CourseDetail({ course }: { course: Course }) {
                           <span>{dFull ? t("datesSpotsFull") : t("datesSpotsLeft", { left })}</span>
                         </p>
                       </div>
-                      <Button
-                        type="button"
-                        variant={d.id === pickedDate ? "primary" : "outline"}
-                        size="md"
-                        onClick={() => setPickedDate(d.id)}
-                      >
-                        {d.id === pickedDate ? t("reserve") : t("datesPick")}
-                      </Button>
+                      {d.id === pickedDate ? (
+                        <CheckoutDialog
+                          kind="course"
+                          subjectTitle={course.title}
+                          teacherSlug={course.teacher.slug}
+                          teacherName={course.teacher.name}
+                          priceDzd={course.priceDzd}
+                          start={d.startISO}
+                          scheduleLabel={d.label}
+                          trigger={
+                            <Button
+                              type="button"
+                              variant="primary"
+                              size="md"
+                              disabled={dFull}
+                            >
+                              {t("reserve")}
+                            </Button>
+                          }
+                        />
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="md"
+                          onClick={() => setPickedDate(d.id)}
+                        >
+                          {t("datesPick")}
+                        </Button>
+                      )}
                     </li>
                   );
                 })}
@@ -382,7 +431,12 @@ export function CourseDetail({ course }: { course: Course }) {
                     <Share2 className="h-4 w-4" />
                     {copied ? t("shareCopied") : t("shareCopy")}
                   </Button>
-                  <Button type="button" variant="ghost" size="sm">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleAskQuestion}
+                  >
                     {t("askQuestion")}
                   </Button>
                 </div>

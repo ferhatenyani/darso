@@ -61,7 +61,7 @@ export function Hero() {
           </div>
 
           {/* Editorial headline */}
-          <h1 className="mt-7 text-[40px] font-bold leading-[0.96] tracking-[-0.025em] text-foreground sm:text-[56px] md:text-[64px] lg:text-[68px] xl:text-[78px]">
+          <h1 className="mt-7 text-[34px] font-bold leading-[0.96] tracking-[-0.025em] text-foreground sm:text-[44px] md:text-[64px] lg:text-[68px] xl:text-[78px]">
             <span className="block">{t("titleLead")}</span>
             <span className="block font-light italic text-ink-2 tracking-tight">
               {t("titleAccent")}
@@ -126,14 +126,26 @@ export function Hero() {
 
           {/* Top-rated avatar row */}
           <div className="mt-10 flex items-center gap-4">
-            <div className="flex items-center -space-x-2 rtl:space-x-reverse">
-              {topRated.map((tch) => (
-                <Avatar key={tch.id} className="h-9 w-9 ring-2 ring-background">
-                  <AvatarFallback className={cn("bg-gradient-to-br text-xs text-white", tch.accent)}>
-                    {tch.initials}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
+            <div className="flex flex-nowrap items-center -space-x-2 rtl:space-x-reverse">
+              {topRated.map((tch, i) => {
+                // Below `sm`, drop the trailing avatar so the row never
+                // wraps to two lines on 360px viewports. The first five are
+                // always visible; the sixth only appears from `sm` up.
+                const isOverflow = i === topRated.length - 1 && topRated.length > 5;
+                return (
+                  <Avatar
+                    key={tch.id}
+                    className={cn(
+                      "h-9 w-9 ring-2 ring-background",
+                      isOverflow && "hidden sm:inline-flex",
+                    )}
+                  >
+                    <AvatarFallback className={cn("bg-gradient-to-br text-xs text-white", tch.accent)}>
+                      {tch.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                );
+              })}
             </div>
             <div className="flex items-baseline gap-2">
               <Sparkles className="h-4 w-4 text-warning" aria-hidden />

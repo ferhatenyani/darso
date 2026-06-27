@@ -227,6 +227,7 @@
       "navPayments": "Paiements",
       "navSecurity": "Sécurité",
       "navDanger": "Compte",
+      "signOut": "Se déconnecter",
       "memberSince": "Membre depuis {date}",
       "memberSinceValue": "mars 2024",
       "verifiedLine": "Identité vérifiée · e-mail confirmé",
@@ -328,6 +329,79 @@
         "deleteDialogTitle": "Supprimer définitivement votre compte ?",
         "deleteDialogBody": "Cette action ne peut pas être annulée. Tapez SUPPRIMER pour confirmer.",
         "deleteWordPlaceholder": "Tapez SUPPRIMER"
+      },
+      "toasts": {
+        "profileSaved": {
+          "title": "Profil mis à jour",
+          "desc": "Vos informations publiques sont visibles immédiatement."
+        },
+        "profileDiscarded": {
+          "title": "Modifications annulées",
+          "desc": "On revient à la dernière version enregistrée."
+        },
+        "preferencesSaved": {
+          "title": "Préférences enregistrées",
+          "desc": "Langue, devise et notifications mises à jour."
+        },
+        "paymentAdded": {
+          "title": "Moyen de paiement ajouté",
+          "desc": "{brand} •••• {last4} est prêt à l'emploi."
+        },
+        "paymentInvalid": {
+          "title": "Carte invalide",
+          "desc": "Vérifiez les 4 derniers chiffres et la date d'expiration (MM/AA)."
+        },
+        "invoiceDownloaded": {
+          "title": "Facture téléchargée",
+          "desc": "Reçu pour « {item} » envoyé dans vos téléchargements."
+        },
+        "passwordChanged": {
+          "title": "Mot de passe modifié",
+          "desc": "Vos autres appareils ont été déconnectés."
+        },
+        "passwordMismatch": {
+          "title": "Les mots de passe ne correspondent pas",
+          "desc": "Le nouveau mot de passe et la confirmation doivent être identiques."
+        },
+        "passwordTooShort": {
+          "title": "Mot de passe trop court",
+          "desc": "Choisissez au moins 6 caractères."
+        },
+        "twoFaEnabled": {
+          "title": "2FA activée",
+          "desc": "Vous recevrez un code SMS à chaque nouvelle connexion."
+        },
+        "twoFaDisabled": {
+          "title": "2FA désactivée",
+          "desc": "Vous pouvez la réactiver à tout moment."
+        },
+        "sessionRevoked": {
+          "title": "Session fermée",
+          "desc": "{device} a été déconnecté."
+        },
+        "sessionsAllRevoked": {
+          "title": "{count, plural, one {# session fermée} other {# sessions fermées}}",
+          "desc": "Seul cet appareil reste connecté."
+        },
+        "sessionsNoneRevoked": {
+          "title": "Aucune session à fermer",
+          "desc": "Seul cet appareil est actif actuellement."
+        },
+        "sessionsEmptyHint": "Aucun autre appareil connecté.",
+        "accountDeleteRequested": {
+          "title": "Suppression demandée",
+          "desc": "Vous recevrez un e-mail de confirmation dans quelques minutes."
+        },
+        "addPaymentDialog": {
+          "title": "Ajouter un moyen de paiement",
+          "desc": "Carte Visa, MasterCard ou CIB. Stockée de manière sécurisée.",
+          "brand": "Type de carte",
+          "last4": "4 derniers chiffres",
+          "last4Hint": "Pour identifier votre carte dans la liste.",
+          "expiry": "Date d'expiration",
+          "cancel": "Annuler",
+          "submit": "Ajouter la carte"
+        }
       }
     },
     "onboarding": {
@@ -351,7 +425,7 @@
       "step2": {
         "title": "Qu'est-ce qui vous intéresse ?",
         "subtitle": "Choisissez au moins 3 sujets — on s'en sert pour vos recommandations.",
-        "minHint": "{selected} / 3 minimum"
+        "minHint": "Choisissez au moins 3 sujets (vous en avez {selected})"
       },
       "step3": {
         "title": "Votre niveau et votre public.",

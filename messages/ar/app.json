@@ -67,6 +67,16 @@
         "submit": "تأكيد الفترة",
         "openSheet": "حجز فترة غير متاحة"
       },
+      "toasts": {
+        "blockAdded": {
+          "title": "تم حجز الفترة",
+          "desc": "أنت غير متاح من {from} إلى {to}."
+        },
+        "invalid": {
+          "title": "فترة غير صالحة",
+          "desc": "يجب أن يكون وقت البداية قبل وقت النهاية."
+        }
+      },
       "month": {
         "events": "{n, plural, zero {لا أحداث} one {حدث واحد} two {حدثان} few {# أحداث} many {# حدثًا} other {# حدث}}",
         "popoverTitle": "{day}",
@@ -84,6 +94,35 @@
       "popover": {
         "join": "الانضمام إلى الدرس",
         "details": "التفاصيل"
+      },
+      "event": {
+        "kind": {
+          "booking": "حصّة محجوزة",
+          "availability": "وقت متاح",
+          "blocked": "غير متاح"
+        },
+        "actions": {
+          "openBooking": "فتح الحجز",
+          "cancelBooking": "إلغاء الحجز",
+          "editBlock": "تعديل الفترة",
+          "removeBlock": "حذف الفترة",
+          "addBlock": "حجز هذا الوقت"
+        },
+        "toasts": {
+          "cancelComingSoon": {
+            "title": "الإلغاء قريبًا",
+            "desc": "إدارة الإلغاءات ستتوفّر في تحديث قادم."
+          },
+          "editComingSoon": {
+            "title": "التعديل قريبًا",
+            "desc": "تعديل الفترات المحجوزة سيتوفّر في تحديث قادم."
+          }
+        }
+      },
+      "studentRail": {
+        "title": "الحجوزات القادمة",
+        "empty": "لا حصص مؤكّدة. احجز درسًا لتجده هنا.",
+        "viewAll": "عرض دفعاتي"
       }
     },
     "messages": {
@@ -137,6 +176,14 @@
         "event": "ورشة"
       }
     },
+    "chat": {
+      "toasts": {
+        "videoComingSoon": {
+          "title": "مكالمات الفيديو قريبًا",
+          "desc": "مكالمات الفيديو ستتوفّر في تحديث قادم."
+        }
+      }
+    },
     "notifications": {
       "title": "الإشعارات",
       "subtitle": "تابعي دروسك ورسائلك ودفعاتك — دون ضجيج.",
@@ -175,6 +222,12 @@
         "minutes": "منذ {n} د",
         "hours": "منذ {n} س",
         "days": "منذ {n} ي"
+      },
+      "toasts": {
+        "muted": {
+          "title": "تم كتم النوع",
+          "desc": "إشعارات «{type}» صامتة الآن."
+        }
       }
     },
     "disputes": {
@@ -244,6 +297,59 @@
       "composer": {
         "placeholder": "ردّ على هذا الملفّ…",
         "send": "إرسال"
+      },
+      "toasts": {
+        "mediationSent": {
+          "title": "تم إرسال طلب الوساطة",
+          "desc": "سينضمّ وسيط درسو إلى الملفّ خلال 24 ساعة."
+        },
+        "mediationEmpty": {
+          "title": "الرسالة مطلوبة",
+          "desc": "أضف كلمة قبل إرسال الطلب."
+        },
+        "refundProposalSent": {
+          "title": "تم إرسال اقتراح الاسترداد",
+          "desc": "تقترح {pct}% ({amount}). سيتمّ إشعار الطرف الآخر."
+        },
+        "proposalLabel": "اقتراح حالي: {pct}% ({amount})"
+      },
+      "open": {
+        "cta": "فتح ملفّ",
+        "title": "فتح ملفّ نزاع",
+        "subtitle": "صِف المشكلة — سيقرأ وسيط درسو ملفّك خلال 24 ساعة. كن دقيقًا وموجزًا.",
+        "subjectLabel": "الموضوع المعنيّ",
+        "subjectOther": "أخرى — غير مرتبط بحجز",
+        "reasonLabel": "السبب",
+        "reasons": {
+          "teacherNoShow": "غياب الأستاذ أو تأخّره",
+          "qualityIssue": "مشكلة في الجودة",
+          "paymentIssue": "مشكلة في الدفع",
+          "other": "أخرى"
+        },
+        "descriptionLabel": "الوصف",
+        "descriptionPlaceholder": "اشرح ما حدث ومتى وما الذي تنتظره (20 حرفًا على الأقلّ).",
+        "attachmentsLabel": "المرفقات",
+        "attachmentsHint": "اسحب ملفّاتك إلى هنا — قريبًا.",
+        "cancel": "إلغاء",
+        "submit": "فتح الملفّ",
+        "submitting": "جارٍ الإرسال…",
+        "toasts": {
+          "opened": {
+            "title": "تم فتح الملفّ",
+            "desc": "تم تسجيل ملفّك {id}. تتمّ إعادة توجيهك إليه."
+          },
+          "signInRequired": {
+            "title": "تسجيل الدخول مطلوب",
+            "desc": "سجّل الدخول لفتح ملفّ نزاع."
+          },
+          "descriptionTooShort": {
+            "title": "الوصف قصير جدًّا",
+            "desc": "أضف {min} حرفًا على الأقلّ كي يفهم الوسيط السياق."
+          }
+        }
+      },
+      "recentBookings": {
+        "reportProblem": "الإبلاغ عن مشكلة"
       }
     }
   }

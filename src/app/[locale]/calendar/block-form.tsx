@@ -15,14 +15,24 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { addBlock } from "@/lib/mock/calendar-state";
+import { useToast } from "@/lib/toast";
 
 const HOURS = Array.from({ length: 14 }).map((_, i) => {
   const h = 8 + i;
   return `${String(h).padStart(2, "0")}:00`;
 });
 
+function parseHHMM(s: string): number {
+  const [h, m] = s.split(":").map((x) => Number.parseInt(x, 10));
+  if (Number.isNaN(h) || Number.isNaN(m)) return Number.NaN;
+  return h * 60 + m;
+}
+
 export function BlockTimeForm() {
   const t = useTranslations("app.calendar.block");
+  const tt = useTranslations("app.calendar.toasts");
+  const { show } = useToast();
   const [from, setFrom] = React.useState("18:00");
   const [to, setTo] = React.useState("20:00");
   const [reason, setReason] = React.useState("");
@@ -33,6 +43,23 @@ export function BlockTimeForm() {
       className="grid gap-4"
       onSubmit={(e) => {
         e.preventDefault();
+        const fromMin = parseHHMM(from);
+        const toMin = parseHHMM(to);
+        if (Number.isNaN(fromMin) || Number.isNaN(toMin) || fromMin >= toMin) {
+          show({
+            title: tt("invalid.title"),
+            description: tt("invalid.desc"),
+            variant: "danger",
+          });
+          return;
+        }
+        addBlock({ start: from, end: to, reason: reason.trim() || undefined, recurring });
+        show({
+          title: tt("blockAdded.title"),
+          description: tt("blockAdded.desc", { from, to }),
+          variant: "success",
+        });
+        setReason("");
       }}
     >
       <div className="grid grid-cols-2 gap-3">

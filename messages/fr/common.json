@@ -26,6 +26,13 @@
     "language": "Langue",
     "search": "Rechercher",
     "searchPlaceholder": "Que voulez-vous apprendre ?",
+    "userMenu": {
+      "openLabel": "Ouvrir le menu utilisateur",
+      "account": "Mon compte",
+      "dashboard": "Tableau de bord",
+      "signOut": "Se déconnecter",
+      "teacherTagline": "Espace enseignant"
+    },
     "discover": {
       "subjects": "Par matière",
       "format": "Par format",
@@ -61,7 +68,7 @@
       "searchHintKey": "Entrée",
       "searchHintTail": "pour chercher",
       "topRatedLabel": "Top Rated ce mois",
-      "popularChips": ["Math Bac", "Anglais IELTS", "Coran", "Python", "Piano"],
+      "popularChips": ["Maths", "IELTS", "Physique", "Coran", "Piano"],
       "ticker": {
         "joinPrefix": "EN DIRECT",
         "dot": "·"
@@ -200,7 +207,6 @@
         "howItWorksLearn": "Comment réserver",
         "becomeTeacher": "Devenir professeur",
         "pricing": "Tarifs & abonnement",
-        "agency": "Lancer une agence",
         "teacherResources": "Ressources pédagogiques",
         "about": "À propos",
         "press": "Presse",
@@ -220,19 +226,64 @@
       "madeIn": "Conçu à Alger ✦ pour toute l'Algérie"
     }
   },
+  "comingSoon": {
+    "badge": "Bientôt disponible",
+    "etaLabel": "Date prévue",
+    "backHome": "Retour à l'accueil",
+    "browse": "Explorer la marketplace",
+    "relatedTitle": "En attendant, découvrez"
+  },
   "search": {
     "wilayas": {
       "any": "Toute l'Algérie",
-      "alger": "Alger",
-      "oran": "Oran",
-      "constantine": "Constantine",
-      "annaba": "Annaba",
-      "blida": "Blida",
-      "setif": "Sétif",
+      "adrar": "Adrar",
+      "chlef": "Chlef",
+      "laghouat": "Laghouat",
+      "oumElBouaghi": "Oum El Bouaghi",
       "batna": "Batna",
+      "bejaia": "Béjaïa",
+      "biskra": "Biskra",
+      "bechar": "Béchar",
+      "blida": "Blida",
+      "bouira": "Bouira",
+      "tamanrasset": "Tamanrasset",
+      "tebessa": "Tébessa",
       "tlemcen": "Tlemcen",
+      "tiaret": "Tiaret",
       "tiziOuzou": "Tizi Ouzou",
-      "bejaia": "Béjaïa"
+      "alger": "Alger",
+      "djelfa": "Djelfa",
+      "jijel": "Jijel",
+      "setif": "Sétif",
+      "saida": "Saïda",
+      "skikda": "Skikda",
+      "sidiBelAbbes": "Sidi Bel Abbès",
+      "annaba": "Annaba",
+      "guelma": "Guelma",
+      "constantine": "Constantine",
+      "medea": "Médéa",
+      "mostaganem": "Mostaganem",
+      "msila": "M'Sila",
+      "mascara": "Mascara",
+      "ouargla": "Ouargla",
+      "oran": "Oran",
+      "elBayadh": "El Bayadh",
+      "illizi": "Illizi",
+      "bordjBouArreridj": "Bordj Bou Arreridj",
+      "boumerdes": "Boumerdès",
+      "elTarf": "El Tarf",
+      "tindouf": "Tindouf",
+      "tissemsilt": "Tissemsilt",
+      "elOued": "El Oued",
+      "khenchela": "Khenchela",
+      "soukAhras": "Souk Ahras",
+      "tipaza": "Tipaza",
+      "mila": "Mila",
+      "ainDefla": "Aïn Defla",
+      "naama": "Naâma",
+      "ainTemouchent": "Aïn Témouchent",
+      "ghardaia": "Ghardaïa",
+      "relizane": "Relizane"
     }
   }
 }

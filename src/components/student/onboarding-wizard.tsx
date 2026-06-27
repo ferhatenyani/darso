@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
@@ -33,6 +33,22 @@ import { wilayaKeys } from "@/lib/mock/categories";
 import { cn } from "@/lib/utils";
 
 const TOTAL = 4;
+const ONBOARDING_COOKIE = "darso_onboarding_complete";
+
+/**
+ * Reads a cookie value by name on the client. Returns null when the cookie
+ * is absent OR when invoked on the server (no `document`). Kept inline to
+ * avoid pulling a runtime cookie dep just for one read.
+ */
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const prefix = `${name}=`;
+  for (const cookie of document.cookie.split(";")) {
+    const c = cookie.trim();
+    if (c.startsWith(prefix)) return decodeURIComponent(c.slice(prefix.length));
+  }
+  return null;
+}
 
 export function OnboardingWizard() {
   const t = useTranslations("student.onboarding");
@@ -51,12 +67,31 @@ export function OnboardingWizard() {
   const [wilaya, setWilaya] = useState<string>("constantine");
   const [mode, setMode] = useState<"online" | "in-person" | "both">("both");
 
+  // When the wizard has already been completed in a previous session,
+  // skip it on mount and route straight to /browse. Cookie is mock-only;
+  // resets if the user clears cookies. Read in an effect to avoid SSR
+  // hydration mismatch (document is server-undefined).
+  useEffect(() => {
+    if (readCookie(ONBOARDING_COOKIE) === "1") {
+      router.replace("/browse" as never);
+    }
+  }, [router]);
+
   const progress = (step / TOTAL) * 100;
+
+  function markComplete() {
+    if (typeof document === "undefined") return;
+    // Persist for 1 year, top-level path, SameSite=Lax (mirrors how
+    // mock-auth cookies are scoped). No Secure flag — dev runs over http.
+    const oneYear = 60 * 60 * 24 * 365;
+    document.cookie = `${ONBOARDING_COOKIE}=1; Max-Age=${oneYear}; Path=/; SameSite=Lax`;
+  }
 
   function next() {
     if (step < TOTAL) {
       setStep(step + 1);
     } else {
+      markComplete();
       router.push("/browse" as never);
     }
   }
@@ -272,8 +307,14 @@ function Step2({ interests, setInterests }: { interests: string[]; setInterests:
       <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-ink-2">{t("subtitle")}</p>
 
       <div className="mt-3 inline-flex items-center gap-2 text-[12px] text-ink-3">
-        <span className="tabular text-foreground font-semibold">{interests.length}</span>
-        <span>{t("minHint", { selected: interests.length })}</span>
+        <span
+          className={cn(
+            "tabular font-semibold",
+            interests.length >= 3 ? "text-success" : "text-foreground",
+          )}
+        >
+          {t("minHint", { selected: interests.length })}
+        </span>
       </div>
 
       <ul className="mt-7 grid gap-2 sm:grid-cols-2 md:grid-cols-3">

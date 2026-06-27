@@ -3,10 +3,10 @@ import { Search } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/brand/logo";
-import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { DiscoverMenu } from "@/components/nav/discover-menu";
+import { UserMenu } from "@/components/nav/user-menu";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
@@ -59,14 +59,7 @@ export function SiteHeader() {
 
           <LanguageSwitcher />
 
-          <div className="hidden md:flex items-center gap-1 ms-1">
-            <Button asChild variant="ghost" size="md">
-              <Link href="/sign-in">{t("signIn")}</Link>
-            </Button>
-            <Button asChild variant="primary" size="md">
-              <Link href="/sign-up">{t("signUp")}</Link>
-            </Button>
-          </div>
+          <UserMenu />
           <MobileNav />
         </div>
       </div>

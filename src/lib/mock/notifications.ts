@@ -68,7 +68,7 @@ export const appNotifications: AppNotification[] = [
     amountDzd: 1500,
     title: { fr: "Paiement reçu · 1 500 DA", ar: "دفعة مستلمة · 1 500 دج" },
     body: { fr: "Reçu envoyé sur votre email — séance Math du 14.", ar: "تم إرسال الإيصال — حصة الرياضيات في 14." },
-    href: "/billing",
+    href: "/teach/subscription",
     hrefLabel: { fr: "Voir le reçu", ar: "عرض الإيصال" },
   },
   {
@@ -104,7 +104,7 @@ export const appNotifications: AppNotification[] = [
     unread: false,
     title: { fr: "Nouveautés · paiement par CIB", ar: "جديد · الدفع عبر CIB" },
     body: { fr: "Les cartes CIB et Edahabia sont désormais acceptées.", ar: "أصبحت بطاقات CIB و الذهبية مقبولة." },
-    href: "/billing",
+    href: "/teach/subscription",
     hrefLabel: { fr: "En savoir plus", ar: "المزيد" },
   },
   {
@@ -141,7 +141,7 @@ export const appNotifications: AppNotification[] = [
     amountDzd: 3600,
     title: { fr: "Remboursement effectué · 3 600 DA", ar: "تمّ الاسترداد · 3 600 دج" },
     body: { fr: "Le remboursement de la séance annulée a été crédité.", ar: "تمّ تحويل مبلغ الحصة الملغاة." },
-    href: "/billing",
+    href: "/teach/subscription",
     hrefLabel: { fr: "Détails", ar: "التفاصيل" },
   },
   {
@@ -151,10 +151,10 @@ export const appNotifications: AppNotification[] = [
     at: isoDaysAgo(12),
     unread: false,
     teacher: t("t-khalil"),
-    title: { fr: "Khalil a laissé un avis sur vous", ar: "ترك خليل تقييمًا عنك" },
-    body: { fr: "« Élève rigoureuse, progrès clair en 4 séances. »", ar: "«طالبة منضبطة، تقدّم واضح في 4 حصص.»" },
-    href: "/account/reviews",
-    hrefLabel: { fr: "Lire l'avis", ar: "قراءة التقييم" },
+    title: { fr: "Khalil a répondu à votre avis", ar: "ردّ خليل على تقييمك" },
+    body: { fr: "« Merci beaucoup Lina, hâte de continuer ensemble la prépa Bac. »", ar: "«شكرًا جزيلًا لينا، نتطلّع لمواصلة تحضير الباك معًا.»" },
+    href: "/teachers/khalil-bensaid",
+    hrefLabel: { fr: "Voir l'avis", ar: "عرض التقييم" },
   },
   {
     id: "n-11",
@@ -164,7 +164,7 @@ export const appNotifications: AppNotification[] = [
     unread: false,
     title: { fr: "Vérifiez votre numéro de téléphone", ar: "أكّد رقم هاتفك" },
     body: { fr: "Une vérification ajoute un badge à votre profil.", ar: "التحقق يضيف شارة إلى حسابك." },
-    href: "/account/verify",
+    href: "/account/onboarding",
     hrefLabel: { fr: "Vérifier", ar: "التحقق" },
   },
   {

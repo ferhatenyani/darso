@@ -2,10 +2,21 @@
 
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, Sliders, Plus, CalendarRange } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Sliders,
+  Plus,
+  CalendarRange,
+  Wifi,
+  MapPin,
+  CalendarClock,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Sheet,
   SheetContent,
@@ -18,8 +29,20 @@ import {
 import { WeekView } from "@/components/app/calendar/week-view";
 import { MonthView } from "@/components/app/calendar/month-view";
 import { ListView } from "@/components/app/calendar/list-view";
-import { weekEvents, monthEvents } from "@/lib/mock/calendar";
+import { EventPopover } from "@/components/app/calendar/event-popover";
+import { Link } from "@/i18n/navigation";
+import { weekEvents, monthEvents, type CalendarEvent } from "@/lib/mock/calendar";
+import { useCurrentUser } from "@/lib/auth";
+import {
+  getBookingsForAccount,
+  subscribeBookings,
+  type Booking,
+} from "@/lib/mock/bookings-state";
+import { cn } from "@/lib/utils";
 import { BlockTimeForm, Legend } from "./block-form";
+
+// Stable empty snapshot for useSyncExternalStore SSR fallback.
+const EMPTY_BOOKINGS: readonly Booking[] = Object.freeze([]);
 
 function startOfWeek(date: Date) {
   const d = new Date(date);
@@ -34,11 +57,42 @@ export function CalendarShell() {
   const locale = useLocale();
   const [tab, setTab] = React.useState<"week" | "month" | "list">("week");
   const [anchor, setAnchor] = React.useState<Date>(() => new Date());
+  const { user } = useCurrentUser();
+  const isStudent = user?.role !== "teacher";
 
   const weekStart = React.useMemo(() => startOfWeek(anchor).toISOString().slice(0, 10), [anchor]);
   const month = React.useMemo(
     () => `${anchor.getFullYear()}-${String(anchor.getMonth() + 1).padStart(2, "0")}`,
     [anchor],
+  );
+
+  // Subscribe to student-side bookings; teachers see availability blocks only.
+  const accountId = user?.id ?? null;
+  const getSnapshot = React.useCallback(
+    () => (isStudent ? getBookingsForAccount(accountId) : EMPTY_BOOKINGS),
+    [accountId, isStudent],
+  );
+  const sessionBookings = React.useSyncExternalStore<readonly Booking[]>(
+    subscribeBookings,
+    getSnapshot,
+    () => EMPTY_BOOKINGS,
+  );
+
+  const bookingEvents = React.useMemo<CalendarEvent[]>(
+    () =>
+      isStudent
+        ? bookingsToCalendarEvents(sessionBookings)
+        : [],
+    [isStudent, sessionBookings],
+  );
+
+  const mergedWeekEvents = React.useMemo(
+    () => [...weekEvents, ...bookingEvents],
+    [bookingEvents],
+  );
+  const mergedMonthEvents = React.useMemo(
+    () => [...monthEvents, ...bookingEvents],
+    [bookingEvents],
   );
 
   const monthLabel = new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
@@ -102,23 +156,25 @@ export function CalendarShell() {
           >
             <RightChevron className="h-4 w-4" />
           </Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="primary" size="sm" className="lg:hidden">
-                <Plus className="h-4 w-4" />
-                {t("block.openSheet")}
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="max-h-[88dvh] rounded-t-[var(--radius-2xl)]">
-              <SheetHeader>
-                <SheetTitle>{t("block.title")}</SheetTitle>
-                <SheetDescription>{t("block.subtitle")}</SheetDescription>
-              </SheetHeader>
-              <SheetBody>
-                <BlockTimeForm />
-              </SheetBody>
-            </SheetContent>
-          </Sheet>
+          {!isStudent && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="primary" size="sm" className="lg:hidden">
+                  <Plus className="h-4 w-4" />
+                  {t("block.openSheet")}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="max-h-[88dvh] rounded-t-[var(--radius-2xl)]">
+                <SheetHeader>
+                  <SheetTitle>{t("block.title")}</SheetTitle>
+                  <SheetDescription>{t("block.subtitle")}</SheetDescription>
+                </SheetHeader>
+                <SheetBody>
+                  <BlockTimeForm />
+                </SheetBody>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </header>
 
@@ -141,13 +197,13 @@ export function CalendarShell() {
               <TabsTrigger value="list">{t("tabs.list")}</TabsTrigger>
             </TabsList>
             <TabsContent value="week" className="mt-4">
-              <WeekView events={weekEvents} weekStart={weekStart} />
+              <WeekView events={mergedWeekEvents} weekStart={weekStart} />
             </TabsContent>
             <TabsContent value="month" className="mt-4">
-              <MonthView events={monthEvents} month={month} />
+              <MonthView events={mergedMonthEvents} month={month} />
             </TabsContent>
             <TabsContent value="list" className="mt-4">
-              <ListView events={weekEvents} />
+              <ListView events={mergedWeekEvents} />
             </TabsContent>
           </Tabs>
         </div>
@@ -162,16 +218,150 @@ export function CalendarShell() {
             <Legend />
           </div>
 
-          <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-e1">
-            <h2 className="mb-1 font-serif text-lg" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
-              <span className="italic text-accent">·</span> {t("block.title")}
-            </h2>
-            <p className="mb-4 text-xs text-ink-3">{t("block.subtitle")}</p>
-            <BlockTimeForm />
-          </div>
+          {isStudent ? (
+            <StudentBookingsRail
+              bookings={sessionBookings}
+              bookingEvents={bookingEvents}
+            />
+          ) : (
+            <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-e1">
+              <h2 className="mb-1 font-serif text-lg" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
+                <span className="italic text-accent">·</span> {t("block.title")}
+              </h2>
+              <p className="mb-4 text-xs text-ink-3">{t("block.subtitle")}</p>
+              <BlockTimeForm />
+            </div>
+          )}
         </aside>
       </div>
     </section>
+  );
+}
+
+/**
+ * Right-rail card for students: lists their confirmed bookings (sorted
+ * earliest first), with each row opening the shared EventPopover for full
+ * details and actions. Empty state nudges back to the marketplace.
+ */
+function StudentBookingsRail({
+  bookings,
+  bookingEvents,
+}: {
+  bookings: readonly Booking[];
+  bookingEvents: CalendarEvent[];
+}) {
+  const t = useTranslations("app.calendar");
+  const locale = useLocale();
+  const lang = locale === "ar" ? "ar" : "fr";
+
+  // Pair confirmed bookings to their projected CalendarEvent (by id) so the
+  // popover gets the same shape as week/month-view cells.
+  const eventById = React.useMemo(() => {
+    const m = new Map<string, CalendarEvent>();
+    for (const ev of bookingEvents) m.set(ev.id, ev);
+    return m;
+  }, [bookingEvents]);
+
+  // Confirmed-only, soonest-first; bookings without a start sort to the bottom.
+  const upcoming = React.useMemo(
+    () =>
+      bookings
+        .filter((b) => b.status === "confirmed")
+        .slice()
+        .sort((a, b) => {
+          const at = a.start ? new Date(a.start).getTime() : Number.POSITIVE_INFINITY;
+          const bt = b.start ? new Date(b.start).getTime() : Number.POSITIVE_INFINITY;
+          return at - bt;
+        }),
+    [bookings],
+  );
+
+  return (
+    <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-e1">
+      <div className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
+        <CalendarClock className="h-3.5 w-3.5" />
+        {t("studentRail.title")}
+      </div>
+
+      {upcoming.length === 0 ? (
+        <p className="text-sm text-ink-3">{t("studentRail.empty")}</p>
+      ) : (
+        <ul className="space-y-2">
+          {upcoming.map((b) => {
+            const ev = eventById.get(b.id);
+            const start = b.start ? new Date(b.start) : null;
+            const dateLabel = start
+              ? new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(start)
+              : null;
+
+            const KindIcon =
+              b.kind === "1to1" || b.kind === "course" || b.kind === "live"
+                ? Wifi
+                : MapPin;
+
+            const row = (
+              <button
+                type="button"
+                className={cn(
+                  "group flex w-full items-start gap-3 rounded-[var(--radius-md)] border border-border bg-background p-3 text-start outline-none transition-colors",
+                  "hover:bg-surface focus-visible:bg-surface",
+                )}
+              >
+                <span
+                  aria-hidden
+                  className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent"
+                >
+                  <KindIcon className="h-3.5 w-3.5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Badge variant="accent" className="text-[10px]">
+                      {t(`format.${b.kind === "course" ? "cohort" : b.kind === "event" ? "event" : "1to1"}`)}
+                    </Badge>
+                  </div>
+                  <p className="mt-1 truncate text-sm font-medium text-foreground">
+                    {b.subjectTitle[lang]}
+                  </p>
+                  {dateLabel && (
+                    <p className="mt-0.5 text-[11px] text-ink-3 tabular">{dateLabel}</p>
+                  )}
+                  <p className="mt-0.5 truncate text-[11px] text-ink-3">
+                    {b.teacherName[lang]}
+                  </p>
+                </div>
+              </button>
+            );
+
+            // If we have a projected CalendarEvent for this booking, wrap in
+            // a popover that surfaces the shared EventPopover details.
+            return (
+              <li key={b.id}>
+                {ev ? (
+                  <Popover>
+                    <PopoverTrigger asChild>{row}</PopoverTrigger>
+                    <PopoverContent align="start" className="w-80">
+                      <EventPopover event={ev} />
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  row
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <Button asChild variant="ghost" size="sm" className="mt-3 w-full">
+        <Link href="/account?tab=payments">{t("studentRail.viewAll")}</Link>
+      </Button>
+    </div>
   );
 }
 
@@ -180,4 +370,33 @@ function weekNumber(date: Date) {
   const start = new Date(s.getFullYear(), 0, 1);
   const diff = (s.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
   return Math.ceil((diff + start.getDay() + 1) / 7);
+}
+
+/**
+ * Project student bookings onto the calendar event shape. Bookings with no
+ * start time fall back to "today @ 18:00" so the entry still surfaces (the
+ * student gets a confirmation visible somewhere in the week view).
+ */
+function bookingsToCalendarEvents(bookings: readonly Booking[]): CalendarEvent[] {
+  return bookings
+    .filter((b) => b.status === "confirmed")
+    .map<CalendarEvent>((b) => {
+      const start = b.start ? new Date(b.start) : new Date();
+      const end = b.end ? new Date(b.end) : new Date(start.getTime() + 60 * 60 * 1000);
+      const date = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, "0")}-${String(start.getDate()).padStart(2, "0")}`;
+      const startHour = start.getHours() + start.getMinutes() / 60;
+      const endHour = end.getHours() + end.getMinutes() / 60;
+      const format: CalendarEvent["format"] =
+        b.kind === "1to1" ? "1to1" : b.kind === "course" ? "cohort" : "event";
+      return {
+        id: b.id,
+        date,
+        startHour,
+        endHour,
+        status: "booked",
+        mode: "online",
+        title: b.subjectTitle,
+        format,
+      };
+    });
 }

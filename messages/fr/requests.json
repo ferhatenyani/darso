@@ -186,7 +186,8 @@
         "cityLabel": "Wilaya (pour le présentiel)",
         "cityPlaceholder": "Choisis une wilaya",
         "deadlineLabel": "Échéance",
-        "deadlineHint": "Pour des dates précises, discute-le ensuite avec le prof."
+        "deadlineHint": "Pour des dates précises, discute-le ensuite avec le prof.",
+        "errorCity": "Choisis une wilaya pour les cours en présentiel"
       },
       "step4": {
         "label": "Budget & visibilité",
@@ -196,7 +197,8 @@
         "budgetHint": "Min – Max",
         "urgencyLabel": "À quel point c'est urgent ?",
         "anonLabel": "Publier de manière anonyme",
-        "anonHint": "Ton nom et ton avatar restent cachés jusqu'à ce que tu acceptes une candidature."
+        "anonHint": "Ton nom et ton avatar restent cachés jusqu'à ce que tu acceptes une candidature.",
+        "errorBudget": "Vérifie que le min est positif et que le max est ≥ au min"
       },
       "step5": {
         "label": "Vérification",
@@ -208,6 +210,40 @@
         "sectionBudget": "Budget & priorité",
         "editStep": "Modifier",
         "summaryEmpty": "—"
+      }
+    },
+    "wizard": {
+      "footer": {
+        "publishing": "Publication…"
+      },
+      "toasts": {
+        "published": {
+          "title": "Demande publiée",
+          "desc": "Les profs concernés viennent de la voir — les premières propositions arrivent souvent en moins de 24 h."
+        },
+        "missingFields": {
+          "title": "Quelques champs manquent",
+          "desc": "Vérifie le titre, la matière, la description et le mode avant de publier."
+        }
+      }
+    },
+    "edit": {
+      "title": "Modifier ta demande",
+      "subtitle": "Mets à jour les détails — les profs verront la version la plus récente.",
+      "eyebrow": "Édition",
+      "indexLabel": "FICHE",
+      "backToDetail": "Retour au détail",
+      "save": "Enregistrer les changements",
+      "saving": "Enregistrement…",
+      "cancel": "Annuler",
+      "deleting": "Suppression…",
+      "deleteConfirm": "Supprimer définitivement cette demande ? Les candidatures associées seront retirées de ton tableau.",
+      "ownerNote": "Tu peux relire les champs et essayer, mais seules les modifications par le propriétaire sont enregistrées dans cette démo.",
+      "toasts": {
+        "saved": {
+          "title": "Demande mise à jour",
+          "desc": "Les modifications sont visibles immédiatement par les profs."
+        }
       }
     },
     "detail": {
@@ -255,8 +291,13 @@
       "discussion": {
         "title": "Échanges avec les profs",
         "empty": {
-          "title": "La discussion ouvrira après ton choix",
-          "body": "Une fois une candidature acceptée, tu pourras échanger ici avec le prof retenu."
+          "title": "Lance la conversation",
+          "body": "Écris un premier message — les profs ayant candidaté pourront répondre ici. La discussion privée avec le prof retenu démarre après ton choix."
+        },
+        "composer": {
+          "placeholder": "Écris un message à la communauté…",
+          "send": "Envoyer",
+          "you": "Toi"
         }
       },
       "timeline": {
@@ -333,6 +374,46 @@
           "body": "Change d'onglet ou poste une nouvelle demande."
         },
         "primary": "Poster une demande"
+      },
+      "deleteDialog": {
+        "title": "Supprimer cette demande ?",
+        "body": "Cette action est définitive. Les candidatures reçues seront aussi retirées de ton tableau.",
+        "cancel": "Annuler",
+        "confirm": "Oui, supprimer"
+      }
+    },
+    "toasts": {
+      "messageOpening": {
+        "title": "Ouverture de la conversation…",
+        "desc": "On t'amène à la messagerie."
+      },
+      "applicationAccepted": {
+        "title": "Candidature acceptée",
+        "desc": "{teacher} reçoit ta décision. Les autres candidatures sont mises en pause."
+      },
+      "closed": {
+        "title": "Demande fermée",
+        "desc": "Tu peux la rouvrir à tout moment."
+      },
+      "reopened": {
+        "title": "Demande rouverte",
+        "desc": "Elle est de nouveau visible par les professeurs."
+      },
+      "deleted": {
+        "title": "Demande supprimée",
+        "desc": "Elle n'apparaît plus dans ton tableau."
+      },
+      "linkCopied": {
+        "title": "Lien copié",
+        "desc": "Tu peux le coller dans un groupe ou une discussion."
+      },
+      "linkCopyFailed": {
+        "title": "Copie impossible",
+        "desc": "Ton navigateur a bloqué l'accès au presse-papier."
+      },
+      "messagePosted": {
+        "title": "Message envoyé",
+        "desc": "Visible par les profs ayant candidaté."
       }
     }
   }

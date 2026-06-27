@@ -1,6 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { SiteHeader } from "@/components/nav/site-header";
-import { SiteFooter } from "@/components/nav/site-footer";
+import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { NotificationsShell } from "./notifications-shell";
 
 export default async function NotificationsPage({
@@ -12,12 +11,8 @@ export default async function NotificationsPage({
   setRequestLocale(locale);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">
-        <NotificationsShell />
-      </main>
-      <SiteFooter />
-    </>
+    <DashboardShell>
+      <NotificationsShell />
+    </DashboardShell>
   );
 }

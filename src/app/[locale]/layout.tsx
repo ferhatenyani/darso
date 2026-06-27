@@ -5,6 +5,9 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { routing, localeMeta, type Locale } from "@/i18n/routing";
+import { CurrentUserProvider, signOutAction } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth/server";
+import { ToastHost } from "@/lib/toast";
 import "../globals.css";
 
 const inter = Inter({
@@ -66,6 +69,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   const meta = localeMeta[locale as Locale];
+  const currentUser = await getCurrentUser();
 
   return (
     <html
@@ -79,7 +83,11 @@ export default async function LocaleLayout({
         suppressHydrationWarning
       >
         <NextIntlClientProvider messages={messages} locale={locale} timeZone="Africa/Algiers">
-          <div className="flex min-h-dvh flex-col">{children}</div>
+          <CurrentUserProvider initialUser={currentUser} signOut={signOutAction}>
+            <ToastHost>
+              <div className="flex min-h-dvh flex-col">{children}</div>
+            </ToastHost>
+          </CurrentUserProvider>
         </NextIntlClientProvider>
       </body>
     </html>

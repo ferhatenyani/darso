@@ -45,7 +45,7 @@ export function CategoriesGrid() {
           <div className="grid gap-2 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-6">
             {/* Big hero category — spans 4 cols × 2 rows on lg */}
             <Link
-              href={`/browse?category=${hero!.key}` as never}
+              href={`/browse?subject=${hero!.key}` as never}
               className="group relative col-span-full sm:col-span-2 sm:row-span-2 lg:col-span-4 lg:row-span-2 flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card p-6 transition-shadow hover:shadow-e2"
             >
               <div
@@ -84,7 +84,7 @@ export function CategoriesGrid() {
             {rest.map((cat, i) => (
               <Link
                 key={cat.key}
-                href={`/browse?category=${cat.key}` as never}
+                href={`/browse?subject=${cat.key}` as never}
                 className="group relative flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors hover:border-accent/40"
               >
                 <span className="absolute end-3 top-3 text-[10px] font-semibold tabular text-ink-3">

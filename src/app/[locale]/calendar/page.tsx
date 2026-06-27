@@ -1,6 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { SiteHeader } from "@/components/nav/site-header";
-import { SiteFooter } from "@/components/nav/site-footer";
+import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { CalendarShell } from "./calendar-shell";
 
 export default async function CalendarPage({
@@ -12,12 +11,8 @@ export default async function CalendarPage({
   setRequestLocale(locale);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">
-        <CalendarShell />
-      </main>
-      <SiteFooter />
-    </>
+    <DashboardShell>
+      <CalendarShell />
+    </DashboardShell>
   );
 }

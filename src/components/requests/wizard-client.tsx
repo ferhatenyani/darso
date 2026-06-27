@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight, Check, Edit3, Send } from "lucide-react";
 
@@ -20,6 +20,16 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useCurrentUser } from "@/lib/auth";
+import { addRequest } from "@/lib/mock/learning-requests-state";
+import {
+  REQUEST_AUDIENCE_LABELS,
+  REQUEST_CITY_LABELS,
+  REQUEST_DEADLINE_LABELS,
+  REQUEST_LEVEL_LABELS,
+  REQUEST_SUBJECT_LABELS,
+} from "@/lib/mock/request-labels";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 
 const SUBJECT_KEYS = [
@@ -88,9 +98,12 @@ export function RequestWizardClient() {
   const t = useTranslations("requests");
   const router = useRouter();
   const locale = useLocale();
+  const { user } = useCurrentUser();
+  const { show } = useToast();
   const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isPublishing, startPublishing] = useTransition();
 
   const stepLabels = useMemo(
     () => [
@@ -118,6 +131,15 @@ export function RequestWizardClient() {
       if (!draft.body.trim() || draft.body.trim().length < 10)
         e.body = t("newRequest.step2.errorBody");
     }
+    if (s === 3) {
+      // City is required whenever in-person is on the table.
+      if ((draft.mode === "in-person" || draft.mode === "both") && !draft.city)
+        e.city = t("newRequest.step3.errorCity");
+    }
+    if (s === 4) {
+      if (draft.budgetMin <= 0 || draft.budgetMax < draft.budgetMin)
+        e.budget = t("newRequest.step4.errorBudget");
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -129,12 +151,85 @@ export function RequestWizardClient() {
   function back() {
     setStep((s) => Math.max(1, s - 1));
   }
+  // Skip mirrors Next's validation so users can't tab past a step that has
+  // required state (e.g. the description on step 2, city when in-person).
   function skip() {
+    if (!validate(step)) return;
     setStep((s) => Math.min(TOTAL_STEPS, s + 1));
   }
   function publish() {
-    // mock: route to a known existing slug for preview
-    router.push("/requests/math-bac-revision-intensive" as never);
+    // Required fields per Batch 5b: subject, description (body), format (mode).
+    // mode has a sensible default ("both") so it's always set; subject + body
+    // are the real gates.
+    const missing: string[] = [];
+    if (!draft.title.trim()) missing.push("title");
+    if (!draft.subject) missing.push("subject");
+    if (!draft.body.trim() || draft.body.trim().length < 10) missing.push("body");
+    if (!draft.mode) missing.push("mode");
+    if (missing.length > 0) {
+      show({
+        title: t("wizard.toasts.missingFields.title"),
+        description: t("wizard.toasts.missingFields.desc"),
+        variant: "danger",
+      });
+      // Jump back to the earliest step that is missing data so the user
+      // sees the offending field.
+      if (missing.includes("title") || missing.includes("subject")) setStep(1);
+      else if (missing.includes("body")) setStep(2);
+      else if (missing.includes("mode")) setStep(3);
+      return;
+    }
+    if (!user) {
+      // Proxy should have caught this; defensive fallback.
+      router.push("/sign-in" as never);
+      return;
+    }
+
+    const subjectLabel = REQUEST_SUBJECT_LABELS[draft.subject] ?? {
+      fr: draft.subject,
+      ar: draft.subject,
+    };
+    const cityLabel = draft.city
+      ? REQUEST_CITY_LABELS[draft.city] ?? { fr: draft.city, ar: draft.city }
+      : { fr: "—", ar: "—" };
+    const levelLabel = REQUEST_LEVEL_LABELS[draft.level] ?? {
+      fr: draft.level,
+      ar: draft.level,
+    };
+    const audience = (
+      draft.audience && AUDIENCES.includes(draft.audience as (typeof AUDIENCES)[number])
+        ? draft.audience
+        : "adults"
+    ) as (typeof AUDIENCES)[number];
+    const deadlineLabel = REQUEST_DEADLINE_LABELS[draft.deadline] ?? {
+      fr: draft.deadline,
+      ar: draft.deadline,
+    };
+
+    startPublishing(() => {
+      const created = addRequest({
+        title: { fr: draft.title, ar: draft.title },
+        subject: subjectLabel,
+        body: { fr: draft.body, ar: draft.body },
+        categoryKey: draft.subject,
+        level: levelLabel,
+        audience,
+        budgetDzd: { min: draft.budgetMin, max: draft.budgetMax },
+        mode: draft.mode,
+        city: cityLabel,
+        deadline: deadlineLabel,
+        urgency: draft.urgency,
+        anonymous: draft.anonymous,
+        ownedBy: user.id,
+        status: "open",
+      });
+      show({
+        title: t("wizard.toasts.published.title"),
+        description: t("wizard.toasts.published.desc"),
+        variant: "success",
+      });
+      router.push(`/requests/${created.slug}` as never);
+    });
   }
 
   return (
@@ -235,10 +330,10 @@ export function RequestWizardClient() {
               />
             )}
             {step === 3 && (
-              <Step3 draft={draft} update={update} />
+              <Step3 draft={draft} update={update} errors={errors} />
             )}
             {step === 4 && (
-              <Step4 draft={draft} update={update} />
+              <Step4 draft={draft} update={update} errors={errors} />
             )}
             {step === 5 && (
               <Step5 draft={draft} onJump={setStep} />
@@ -274,9 +369,16 @@ export function RequestWizardClient() {
                     )}
                   </Button>
                 ) : (
-                  <Button variant="success" size="lg" onClick={publish}>
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={publish}
+                    disabled={isPublishing}
+                  >
                     <Send className="h-4 w-4" />
-                    {t("newRequest.footer.publish")}
+                    {isPublishing
+                      ? t("wizard.footer.publishing")
+                      : t("newRequest.footer.publish")}
                   </Button>
                 )}
               </div>
@@ -478,9 +580,11 @@ function Step2({
 function Step3({
   draft,
   update,
+  errors,
 }: {
   draft: Draft;
   update: <K extends keyof Draft>(k: K, v: Draft[K]) => void;
+  errors: Record<string, string>;
 }) {
   const t = useTranslations("requests");
   return (
@@ -521,7 +625,7 @@ function Step3({
           ))}
         </RadioGroup>
       </Field>
-      <Field label={t("newRequest.step3.cityLabel")} htmlFor="city">
+      <Field label={t("newRequest.step3.cityLabel")} htmlFor="city" error={errors.city}>
         <Select value={draft.city} onValueChange={(v) => update("city", v)}>
           <SelectTrigger id="city">
             <SelectValue placeholder={t("newRequest.step3.cityPlaceholder")} />
@@ -567,9 +671,11 @@ function Step3({
 function Step4({
   draft,
   update,
+  errors,
 }: {
   draft: Draft;
   update: <K extends keyof Draft>(k: K, v: Draft[K]) => void;
+  errors: Record<string, string>;
 }) {
   const t = useTranslations("requests");
   const locale = useLocale();
@@ -585,6 +691,7 @@ function Step4({
       <Field
         label={t("newRequest.step4.budgetLabel")}
         hint={t("newRequest.step4.budgetHint")}
+        error={errors.budget}
       >
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3 font-mono">

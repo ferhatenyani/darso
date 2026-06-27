@@ -67,6 +67,16 @@
         "submit": "Bloquer cette plage",
         "openSheet": "Bloquer une plage"
       },
+      "toasts": {
+        "blockAdded": {
+          "title": "Plage bloquée",
+          "desc": "Vous êtes indisponible de {from} à {to}."
+        },
+        "invalid": {
+          "title": "Plage invalide",
+          "desc": "L'heure de début doit précéder l'heure de fin."
+        }
+      },
       "month": {
         "events": "{n, plural, one {# événement} other {# événements}}",
         "popoverTitle": "{day}",
@@ -84,6 +94,35 @@
       "popover": {
         "join": "Rejoindre le cours",
         "details": "Détails"
+      },
+      "event": {
+        "kind": {
+          "booking": "Séance réservée",
+          "availability": "Plage libre",
+          "blocked": "Indisponible"
+        },
+        "actions": {
+          "openBooking": "Ouvrir la réservation",
+          "cancelBooking": "Annuler la réservation",
+          "editBlock": "Modifier la plage",
+          "removeBlock": "Supprimer la plage",
+          "addBlock": "Bloquer ce créneau"
+        },
+        "toasts": {
+          "cancelComingSoon": {
+            "title": "Annulation bientôt disponible",
+            "desc": "La gestion des annulations arrive dans une prochaine mise à jour."
+          },
+          "editComingSoon": {
+            "title": "Édition bientôt disponible",
+            "desc": "La modification des plages bloquées arrive dans une prochaine mise à jour."
+          }
+        }
+      },
+      "studentRail": {
+        "title": "Réservations à venir",
+        "empty": "Aucune séance confirmée. Réservez un cours pour le retrouver ici.",
+        "viewAll": "Voir mes paiements"
       }
     },
     "messages": {
@@ -137,6 +176,14 @@
         "event": "Atelier"
       }
     },
+    "chat": {
+      "toasts": {
+        "videoComingSoon": {
+          "title": "Appels vidéo bientôt",
+          "desc": "Les appels vidéo arrivent dans une prochaine mise à jour."
+        }
+      }
+    },
     "notifications": {
       "title": "Notifications",
       "subtitle": "Suivez vos cours, vos messages et vos paiements — sans bruit inutile.",
@@ -175,6 +222,12 @@
         "minutes": "il y a {n} min",
         "hours": "il y a {n} h",
         "days": "il y a {n} j"
+      },
+      "toasts": {
+        "muted": {
+          "title": "Type mis en sourdine",
+          "desc": "Les notifications « {type} » sont désormais silencieuses."
+        }
       }
     },
     "disputes": {
@@ -244,6 +297,59 @@
       "composer": {
         "placeholder": "Répondre à ce dossier…",
         "send": "Envoyer"
+      },
+      "toasts": {
+        "mediationSent": {
+          "title": "Demande de médiation envoyée",
+          "desc": "Un médiateur darso rejoindra le dossier sous 24 h."
+        },
+        "mediationEmpty": {
+          "title": "Message requis",
+          "desc": "Ajoutez un mot avant d'envoyer la demande."
+        },
+        "refundProposalSent": {
+          "title": "Proposition de remboursement envoyée",
+          "desc": "Vous proposez {pct}% ({amount}). L'autre partie sera notifiée."
+        },
+        "proposalLabel": "Proposition en cours : {pct}% ({amount})"
+      },
+      "open": {
+        "cta": "Ouvrir un dossier",
+        "title": "Ouvrir un dossier de litige",
+        "subtitle": "Décrivez le problème — un médiateur darso lira votre dossier sous 24 h. Restez factuel et concis.",
+        "subjectLabel": "Sujet concerné",
+        "subjectOther": "Autre — pas lié à une réservation",
+        "reasonLabel": "Motif",
+        "reasons": {
+          "teacherNoShow": "Prof absent ou en retard",
+          "qualityIssue": "Problème de qualité",
+          "paymentIssue": "Problème de paiement",
+          "other": "Autre"
+        },
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Expliquez ce qui s'est passé, quand, et ce que vous attendez comme suite (minimum 20 caractères).",
+        "attachmentsLabel": "Pièces jointes",
+        "attachmentsHint": "Glissez vos fichiers ici — bientôt disponible.",
+        "cancel": "Annuler",
+        "submit": "Ouvrir le dossier",
+        "submitting": "Envoi…",
+        "toasts": {
+          "opened": {
+            "title": "Dossier ouvert",
+            "desc": "Votre dossier {id} est enregistré. Vous y êtes redirigé."
+          },
+          "signInRequired": {
+            "title": "Connexion requise",
+            "desc": "Connectez-vous pour ouvrir un dossier de litige."
+          },
+          "descriptionTooShort": {
+            "title": "Description trop courte",
+            "desc": "Ajoutez au moins {min} caractères pour que le médiateur comprenne le contexte."
+          }
+        }
+      },
+      "recentBookings": {
+        "reportProblem": "Signaler un problème"
       }
     }
   }

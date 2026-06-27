@@ -22,19 +22,37 @@ import {
 import { StateBadge } from "@/components/app/disputes/state-badge";
 import { Timeline } from "@/components/app/disputes/timeline";
 import { MessageBubble } from "@/components/app/chat/message-bubble";
-import { currentUser, type ChatMessage } from "@/lib/mock/chats";
+import type { ChatMessage } from "@/lib/mock/chats";
 import type { Dispute, DisputeMessage } from "@/lib/mock/disputes";
+import { useCurrentUser } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 
 export function DisputeDetail({ dispute }: { dispute: Dispute }) {
   const t = useTranslations("app.disputes");
   const tc = useTranslations("app.common");
+  const tt = useTranslations("app.disputes.toasts");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
   const [refundPct, setRefundPct] = React.useState<number[]>([dispute.refundProposedPct ?? 50]);
+  const [proposedPct, setProposedPct] = React.useState<number | undefined>(dispute.refundProposedPct);
   const [response, setResponse] = React.useState("");
   const [messages, setMessages] = React.useState<DisputeMessage[]>(dispute.messages);
+  const [mediationOpen, setMediationOpen] = React.useState(false);
+  const [mediationText, setMediationText] = React.useState("");
+  const { user } = useCurrentUser();
+  const { show } = useToast();
+
+  // Identity for outbound dispute messages. The DisputeMessage `authorId`
+  // is a constrained enum that means "the viewer", so we always stamp
+  // "u-self" — but the name/initials hydrate from the current account so the
+  // bubble shows the right person.
+  const selfName: { fr: string; ar: string } = user?.studentName
+    ? { fr: user.studentName, ar: user.studentName }
+    : { fr: "Lina M.", ar: "لينا م." };
+  const selfInitials = user?.studentInitials ?? "LM";
+  const selfAccent = "from-[#2F6BFF] to-[#3E8FD0]";
 
   const fmtDay = new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
     day: "numeric",
@@ -42,22 +60,46 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
     year: "numeric",
   });
 
+  const buildSelfMessage = (text: string): DisputeMessage => ({
+    id: `local-${Date.now()}`,
+    authorId: "u-self" as const,
+    authorName: selfName,
+    authorInitials: selfInitials,
+    authorAccent: selfAccent,
+    at: new Date().toISOString(),
+    text: { fr: text, ar: text },
+  });
+
   const submitResponse = () => {
     const v = response.trim();
     if (!v) return;
-    setMessages((arr) => [
-      ...arr,
-      {
-        id: `local-${Date.now()}`,
-        authorId: "u-self",
-        authorName: { fr: "Lina M.", ar: "لينا م." },
-        authorInitials: "LM",
-        authorAccent: "from-[#2F6BFF] to-[#3E8FD0]",
-        at: new Date().toISOString(),
-        text: { fr: v, ar: v },
-      },
-    ]);
+    setMessages((arr) => [...arr, buildSelfMessage(v)]);
     setResponse("");
+  };
+
+  const submitMediation = () => {
+    const v = mediationText.trim();
+    if (!v) {
+      show({ title: tt("mediationEmpty.title"), description: tt("mediationEmpty.desc"), variant: "danger" });
+      return;
+    }
+    setMessages((arr) => [...arr, buildSelfMessage(v)]);
+    setMediationText("");
+    setMediationOpen(false);
+    show({ title: tt("mediationSent.title"), description: tt("mediationSent.desc"), variant: "success" });
+  };
+
+  const submitRefundProposal = () => {
+    const pct = refundPct[0];
+    setProposedPct(pct);
+    show({
+      title: tt("refundProposalSent.title"),
+      description: tt("refundProposalSent.desc", {
+        pct,
+        amount: formatPrice(Math.round((dispute.amountDzd * pct) / 100), locale),
+      }),
+      variant: "success",
+    });
   };
 
   return (
@@ -105,7 +147,7 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-white text-xs">
-              LM
+              {selfInitials}
             </AvatarFallback>
           </Avatar>
           <div>
@@ -162,12 +204,13 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
                     at: m.at,
                     text: m.text,
                   };
+                  const isMine = m.authorId === "u-self";
                   return (
                     <MessageBubble
                       key={m.id}
                       message={chatMsg}
-                      mine={m.authorId === currentUser.id}
-                      showAuthor={m.authorId !== currentUser.id}
+                      mine={isMine}
+                      showAuthor={!isMine}
                     />
                   );
                 })}
@@ -201,7 +244,7 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
                 <li className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
                     <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-white text-xs">
-                      LM
+                      {selfInitials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
@@ -245,7 +288,7 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
               </h3>
 
               {(dispute.state === "open" || dispute.state === "awaiting-response") && (
-                <Dialog>
+                <Dialog open={mediationOpen} onOpenChange={setMediationOpen}>
                   <DialogTrigger asChild>
                     <Button variant="primary" size="md" className="w-full">
                       <Shield className="h-4 w-4" />
@@ -257,11 +300,31 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
                       <DialogTitle>{t("actions.mediation.dialogTitle")}</DialogTitle>
                       <DialogDescription>{t("actions.mediation.dialogBody")}</DialogDescription>
                     </DialogHeader>
+                    <div className="grid gap-2 py-2">
+                      <Textarea
+                        value={mediationText}
+                        onChange={(e) => setMediationText(e.target.value)}
+                        placeholder={t("composer.placeholder")}
+                        rows={4}
+                      />
+                    </div>
                     <DialogFooter>
-                      <Button variant="outline" size="md">
+                      <Button
+                        variant="outline"
+                        size="md"
+                        onClick={() => {
+                          setMediationText("");
+                          setMediationOpen(false);
+                        }}
+                      >
                         {tc("cancel")}
                       </Button>
-                      <Button variant="primary" size="md">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={submitMediation}
+                        disabled={!mediationText.trim()}
+                      >
                         {t("actions.mediation.submit")}
                       </Button>
                     </DialogFooter>
@@ -288,8 +351,16 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
                         }
                       />
                     </div>
+                    {proposedPct !== undefined && (
+                      <p className="mt-2 text-[11px] text-ink-3 tabular">
+                        {tt("proposalLabel", {
+                          pct: proposedPct,
+                          amount: formatPrice(Math.round((dispute.amountDzd * proposedPct) / 100), locale),
+                        })}
+                      </p>
+                    )}
                   </div>
-                  <Button variant="success" size="md">
+                  <Button variant="success" size="md" onClick={submitRefundProposal}>
                     <Check className="h-4 w-4" />
                     {t("actions.resolve.submit")}
                   </Button>

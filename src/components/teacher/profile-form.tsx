@@ -18,11 +18,23 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { FileInput } from "@/components/ui/file-input";
+import {
+  Toast,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast";
 import { currentTeacher, topRatedCriteria } from "@/lib/mock/dashboard";
+import { wilayaKeys } from "@/lib/wilayas";
 import { cn } from "@/lib/utils";
+
+const HOURLY_MIN = 500;
+const HOURLY_MAX = 5000;
 
 export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
   const t = useTranslations("teacher.profile");
+  const tWilayas = useTranslations("search.wilayas");
   const [hourly, setHourly] = React.useState(currentTeacher.hourlyRate);
   const [discount, setDiscount] = React.useState(false);
   const [instantBook, setInstantBook] = React.useState(true);
@@ -30,8 +42,27 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
   const [avatar, setAvatar] = React.useState<File[]>([]);
   const [cover, setCover] = React.useState<File[]>([]);
   const [diploma, setDiploma] = React.useState<File[]>([]);
+  const [diplomaToastOpen, setDiplomaToastOpen] = React.useState(false);
+
+  const initialSubjects = React.useMemo(
+    () =>
+      locale === "ar"
+        ? ["الرياضيات", "التحليل", "الجبر", "الهندسة", "الإحصاء"]
+        : ["Mathématiques", "Analyse", "Algèbre", "Géométrie", "Statistiques"],
+    [locale],
+  );
+  const [subjectTags, setSubjectTags] = React.useState<string[]>(initialSubjects);
+  React.useEffect(() => {
+    setSubjectTags(initialSubjects);
+  }, [initialSubjects]);
+
+  function clampHourly(n: number) {
+    if (Number.isNaN(n)) return HOURLY_MIN;
+    return Math.min(HOURLY_MAX, Math.max(HOURLY_MIN, Math.round(n)));
+  }
 
   return (
+    <ToastProvider swipeDirection={locale === "ar" ? "left" : "right"}>
     <Tabs defaultValue="profile">
       <TabsList className="flex h-auto flex-wrap gap-1 bg-surface p-1">
         <TabsTrigger value="profile">{t("tabs.profile")}</TabsTrigger>
@@ -75,11 +106,13 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="alger">{locale === "ar" ? "الجزائر العاصمة" : "Alger"}</SelectItem>
-                    <SelectItem value="oran">{locale === "ar" ? "وهران" : "Oran"}</SelectItem>
-                    <SelectItem value="constantine">{locale === "ar" ? "قسنطينة" : "Constantine"}</SelectItem>
-                    <SelectItem value="annaba">{locale === "ar" ? "عنابة" : "Annaba"}</SelectItem>
-                    <SelectItem value="setif">{locale === "ar" ? "سطيف" : "Sétif"}</SelectItem>
+                    {wilayaKeys
+                      .filter((w) => w !== "any")
+                      .map((w) => (
+                        <SelectItem key={w} value={w}>
+                          {tWilayas(w as never)}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -168,6 +201,21 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
               onValueChange={setDiploma}
               label={t("verification.diploma")}
             />
+            <div className="mt-3 flex justify-end">
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                disabled={diploma.length === 0}
+                onClick={() => {
+                  setDiplomaToastOpen(false);
+                  // re-open on next tick so the same toast can be re-triggered
+                  requestAnimationFrame(() => setDiplomaToastOpen(true));
+                }}
+              >
+                {t("verification.diplomaSubmit")}
+              </Button>
+            </div>
           </div>
         </div>
       </TabsContent>
@@ -183,15 +231,26 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
                   <Input
                     id="hourly"
                     type="number"
+                    min={HOURLY_MIN}
+                    max={HOURLY_MAX}
+                    step={100}
                     value={hourly}
                     onChange={(e) => setHourly(Number(e.target.value))}
+                    onBlur={(e) => setHourly(clampHourly(Number(e.target.value)))}
                     className="w-32"
                   />
                   <span className="text-[12px] font-medium tabular text-ink-3">DZD</span>
                 </div>
                 <p className="mt-1 text-[11px] text-ink-3">{t("pricing.hourlyHint")}</p>
               </div>
-              <Slider min={500} max={5000} step={100} value={[hourly]} onValueChange={(v) => setHourly(v[0])} ariaLabel={t("pricing.hourly")} />
+              <Slider
+                min={HOURLY_MIN}
+                max={HOURLY_MAX}
+                step={100}
+                value={[clampHourly(hourly)]}
+                onValueChange={(v) => setHourly(v[0])}
+                ariaLabel={t("pricing.hourly")}
+              />
             </div>
 
             <div className="space-y-3">
@@ -267,13 +326,17 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
           <div>
             <p className="mb-3 text-sm font-semibold text-foreground">{t("languages.subjectsTitle")}</p>
             <div className="flex flex-wrap gap-2">
-              {(locale === "ar"
-                ? ["الرياضيات", "التحليل", "الجبر", "الهندسة", "الإحصاء"]
-                : ["Mathématiques", "Analyse", "Algèbre", "Géométrie", "Statistiques"]
-              ).map((s) => (
+              {subjectTags.map((s) => (
                 <span key={s} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[12px] text-ink-2">
                   {s}
-                  <button type="button" className="text-ink-3 hover:text-danger" aria-label="remove">×</button>
+                  <button
+                    type="button"
+                    className="text-ink-3 hover:text-danger"
+                    aria-label={locale === "ar" ? `إزالة ${s}` : `Retirer ${s}`}
+                    onClick={() => setSubjectTags((prev) => prev.filter((x) => x !== s))}
+                  >
+                    ×
+                  </button>
                 </span>
               ))}
             </div>
@@ -349,6 +412,20 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
         </div>
       </TabsContent>
     </Tabs>
+
+    <Toast
+      open={diplomaToastOpen}
+      onOpenChange={setDiplomaToastOpen}
+      variant="success"
+      duration={4000}
+    >
+      <div className="flex-1">
+        <ToastTitle>{t("verification.diplomaToastTitle")}</ToastTitle>
+        <ToastDescription>{t("verification.diplomaToastDesc")}</ToastDescription>
+      </div>
+    </Toast>
+    <ToastViewport />
+    </ToastProvider>
   );
 }
 

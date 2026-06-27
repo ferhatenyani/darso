@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Plus, FilePlus, Sparkles } from "lucide-react";
@@ -9,7 +9,11 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { FilterBar } from "./filter-bar";
 import { RequestCard } from "./request-card";
-import { learningRequests, type LearningRequest } from "@/lib/mock/requests";
+import {
+  getRequests,
+  subscribeRequests,
+} from "@/lib/mock/learning-requests-state";
+import type { LearningRequest } from "@/lib/mock/requests";
 import { sortRequests } from "./helpers";
 
 // City key → matching city display string (FR uses accents)
@@ -33,6 +37,15 @@ export function RequestsBrowseClient() {
 
   const lang = locale === "ar" ? "ar" : "fr";
 
+  // Subscribe to the in-session store so newly-published requests appear
+  // without a refresh. The store seeds from `learningRequests` at first
+  // read so the initial paint matches the previous static behavior.
+  const allRequests = useSyncExternalStore(
+    subscribeRequests,
+    getRequests,
+    getRequests,
+  );
+
   const subjectKey = sp.get("subject") ?? "";
   const mode = sp.get("mode") ?? "";
   const urgency = sp.get("urgency") ?? "";
@@ -42,7 +55,7 @@ export function RequestsBrowseClient() {
   const sort = sp.get("sort") ?? "newest";
 
   const filtered = useMemo(() => {
-    let list = [...learningRequests];
+    let list = [...allRequests];
     if (subjectKey) list = list.filter((r) => r.categoryKey === subjectKey);
     if (mode) list = list.filter((r) => r.mode === mode);
     if (urgency) list = list.filter((r) => r.urgency === urgency);
@@ -53,10 +66,10 @@ export function RequestsBrowseClient() {
     }
     if (budgetMax < 5000) list = list.filter((r) => r.budgetDzd.min <= budgetMax);
     return sortRequests(list, sort);
-  }, [subjectKey, mode, urgency, audience, cityKey, budgetMax, sort, lang]);
+  }, [allRequests, subjectKey, mode, urgency, audience, cityKey, budgetMax, sort, lang]);
 
-  const total = learningRequests.length;
-  const openCount = learningRequests.filter((r) => r.status === "open").length;
+  const total = allRequests.length;
+  const openCount = allRequests.filter((r) => r.status === "open").length;
   const spotlight = filtered[0];
   const rest = filtered.slice(1);
 
@@ -89,7 +102,7 @@ export function RequestsBrowseClient() {
                 {t("browse.eyebrow")}
               </p>
             </div>
-            <h1 className="mt-5 text-balance text-[40px] font-bold leading-[0.95] tracking-tight text-foreground sm:text-[52px] md:text-[60px]">
+            <h1 className="mt-5 text-balance text-[32px] font-bold leading-[0.95] tracking-tight text-foreground sm:text-[44px] md:text-[60px]">
               {t("browse.title")}
             </h1>
             <p className="mt-5 max-w-xl text-pretty text-[15px] leading-relaxed text-ink-2">
@@ -168,7 +181,7 @@ export function RequestsBrowseClient() {
                 </div>
               )}
               <div className="lg:col-span-4">
-                <SidebarIndex />
+                <SidebarIndex requests={allRequests} />
               </div>
             </div>
 
@@ -227,9 +240,13 @@ function FeaturedSpotlight({
   );
 }
 
-function SidebarIndex() {
+function SidebarIndex({
+  requests,
+}: {
+  requests: readonly LearningRequest[];
+}) {
   const t = useTranslations("requests");
-  const recent = learningRequests
+  const recent = [...requests]
     .filter((r) => r.status === "open")
     .sort((a, b) => a.postedAtHours - b.postedAtHours)
     .slice(0, 6);
@@ -266,7 +283,7 @@ function RecentLine({
   request,
   idx,
 }: {
-  request: (typeof learningRequests)[number];
+  request: LearningRequest;
   idx: number;
 }) {
   const locale = useLocale();
@@ -308,7 +325,7 @@ function EmptyState() {
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-2 sm:flex-row">
         <Button asChild variant="outline">
-          <Link href="/requests">{t("browse.empty.primary")}</Link>
+          <Link href="/requests/new">{t("browse.empty.primary")}</Link>
         </Button>
         <Button asChild variant="primary">
           <Link href="/requests/new">{t("browse.empty.secondary")}</Link>

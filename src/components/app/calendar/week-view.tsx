@@ -5,6 +5,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Wifi, MapPin } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { EventPopover } from "@/components/app/calendar/event-popover";
 import { cn } from "@/lib/utils";
 import { dayStartHour, dayEndHour, type CalendarEvent } from "@/lib/mock/calendar";
 
@@ -80,90 +83,94 @@ export function WeekView({ events, weekStart }: WeekViewProps) {
         </span>
       </div>
 
-      {/* Distinctive weekday header: big number + tiny day label */}
-      <div className="grid grid-cols-[68px_repeat(7,minmax(0,1fr))] border-b border-border bg-background">
-        <div aria-hidden className="border-e border-border bg-surface/40" />
-        {days.map((d, i) => {
-          const isToday = d.iso === todayIso;
-          const dayNum = d.date.getDate();
-          return (
-            <div
-              key={d.iso}
-              className={cn(
-                "relative border-e border-border last:border-e-0 px-3 py-3 text-start",
-                isToday && "bg-accent-soft/40",
-              )}
-            >
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
-                {weekdaysShort[i]}
-              </span>
-              <span
-                className={cn(
-                  "block font-serif text-[28px] leading-[1.1] tabular",
-                  isToday ? "text-accent italic" : "text-foreground",
-                )}
-                style={{ fontFamily: "ui-serif, Georgia, serif" }}
-              >
-                {dayNum}
-              </span>
-              {isToday && (
-                <span
-                  aria-hidden
-                  className="absolute inset-x-3 bottom-1 block h-[2px] bg-accent"
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <ScrollArea className="w-full">
+        <div className="min-w-[640px]">
+          {/* Distinctive weekday header: big number + tiny day label */}
+          <div className="grid grid-cols-[68px_repeat(7,minmax(0,1fr))] border-b border-border bg-background">
+            <div aria-hidden className="border-e border-border bg-surface/40" />
+            {days.map((d, i) => {
+              const isToday = d.iso === todayIso;
+              const dayNum = d.date.getDate();
+              return (
+                <div
+                  key={d.iso}
+                  className={cn(
+                    "relative border-e border-border last:border-e-0 px-3 py-3 text-start",
+                    isToday && "bg-accent-soft/40",
+                  )}
+                >
+                  <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+                    {weekdaysShort[i]}
+                  </span>
+                  <span
+                    className={cn(
+                      "block font-serif text-[28px] leading-[1.1] tabular",
+                      isToday ? "text-accent italic" : "text-foreground",
+                    )}
+                    style={{ fontFamily: "ui-serif, Georgia, serif" }}
+                  >
+                    {dayNum}
+                  </span>
+                  {isToday && (
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-3 bottom-1 block h-[2px] bg-accent"
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
-      {/* Grid body */}
-      <div className="relative grid grid-cols-[68px_repeat(7,minmax(0,1fr))]">
-        {/* Hour axis */}
-        <div className="border-e border-border bg-surface/40">
-          {hours.map((h) => (
-            <div
-              key={h}
-              style={{ height: ROW_PX }}
-              className="flex items-start justify-end pe-2 pt-1.5 text-[10px] font-medium text-ink-3 tabular"
-            >
-              {hourLabel(h, locale)}
-            </div>
-          ))}
-        </div>
-
-        {/* Day columns */}
-        {days.map((d) => {
-          const dayEvents = byDay.get(d.iso) ?? [];
-          const isToday = d.iso === todayIso;
-          return (
-            <div
-              key={d.iso}
-              className={cn(
-                "relative border-e border-border last:border-e-0",
-                isToday && "bg-accent-soft/15",
-              )}
-              style={{ height: totalHeight }}
-            >
-              {/* hour separators */}
-              {hours.map((h, i) => (
+          {/* Grid body */}
+          <div className="relative grid grid-cols-[68px_repeat(7,minmax(0,1fr))]">
+            {/* Hour axis */}
+            <div className="border-e border-border bg-surface/40">
+              {hours.map((h) => (
                 <div
                   key={h}
-                  className={cn(
-                    "absolute inset-x-0 border-t border-border/60",
-                    i === 0 && "border-transparent",
-                  )}
-                  style={{ top: i * ROW_PX, height: ROW_PX }}
-                />
-              ))}
-              {/* events */}
-              {dayEvents.map((ev) => (
-                <EventBlock key={ev.id} event={ev} rowPx={ROW_PX} />
+                  style={{ height: ROW_PX }}
+                  className="flex items-start justify-end pe-2 pt-1.5 text-[10px] font-medium text-ink-3 tabular"
+                >
+                  {hourLabel(h, locale)}
+                </div>
               ))}
             </div>
-          );
-        })}
-      </div>
+
+            {/* Day columns */}
+            {days.map((d) => {
+              const dayEvents = byDay.get(d.iso) ?? [];
+              const isToday = d.iso === todayIso;
+              return (
+                <div
+                  key={d.iso}
+                  className={cn(
+                    "relative border-e border-border last:border-e-0",
+                    isToday && "bg-accent-soft/15",
+                  )}
+                  style={{ height: totalHeight }}
+                >
+                  {/* hour separators */}
+                  {hours.map((h, i) => (
+                    <div
+                      key={h}
+                      className={cn(
+                        "absolute inset-x-0 border-t border-border/60",
+                        i === 0 && "border-transparent",
+                      )}
+                      style={{ top: i * ROW_PX, height: ROW_PX }}
+                    />
+                  ))}
+                  {/* events */}
+                  {dayEvents.map((ev) => (
+                    <EventBlock key={ev.id} event={ev} rowPx={ROW_PX} />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 }
@@ -182,58 +189,64 @@ function EventBlock({ event, rowPx }: { event: CalendarEvent; rowPx: number }) {
   const Mode = event.mode === "online" ? Wifi : MapPin;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      style={{ top, height }}
-      className={cn(
-        "absolute inset-x-1 overflow-hidden rounded-[var(--radius-sm)] px-2 py-1.5 text-start transition-shadow focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_var(--ring-soft)]",
-        // Booked — accent card
-        event.status === "booked" &&
-          "bg-card border border-accent/30 shadow-e1 hover:shadow-e2 [&_.bar]:bg-accent",
-        // Pending — warning card
-        isPending &&
-          "bg-card border border-warning/40 shadow-e1 hover:shadow-e2 [&_.bar]:bg-warning",
-        // Available — dashed outline only
-        isAvailable &&
-          "bg-background border border-dashed border-border-strong/70 text-ink-3 hover:border-accent/60 [&_.bar]:bg-border-strong",
-        // Blocked — neutral muted, diagonal hatch via bg-dots
-        isBlocked &&
-          "bg-surface border border-border text-ink-3 bg-dots [&_.bar]:bg-ink-3/40",
-      )}
-    >
-      {/* Marker-rule indicator on the start side */}
-      <span className="bar absolute inset-y-0 start-0 w-[3px]" aria-hidden />
-
-      <div className="flex items-start gap-2 ps-2">
-        {event.teacher && !isAvailable && !isBlocked && (
-          <Avatar className="h-6 w-6 shrink-0">
-            <AvatarFallback className={cn("bg-gradient-to-br text-[10px] text-white", event.teacher.accent)}>
-              {event.teacher.initials}
-            </AvatarFallback>
-          </Avatar>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[12px] font-semibold leading-snug text-foreground">
-            {event.title[lang]}
-          </p>
-          <p className="mt-0.5 flex items-center gap-1.5 text-[10px] text-ink-3 tabular">
-            <Mode className="h-3 w-3" aria-hidden />
-            <span>
-              {Math.floor(event.startHour).toString().padStart(2, "0")}:
-              {((event.startHour % 1) * 60).toString().padStart(2, "0")}
-              {" — "}
-              {Math.floor(event.endHour).toString().padStart(2, "0")}:
-              {((event.endHour % 1) * 60).toString().padStart(2, "0")}
-            </span>
-          </p>
-          {isPending && (
-            <span className="mt-1 inline-block text-[10px] font-semibold uppercase tracking-wider text-[#7a5610]">
-              {t("status.pending")}
-            </span>
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          style={{ top, height }}
+          className={cn(
+            "absolute inset-x-1 overflow-hidden rounded-[var(--radius-sm)] px-2 py-1.5 text-start transition-shadow focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_var(--ring-soft)]",
+            // Booked — accent card
+            event.status === "booked" &&
+              "bg-card border border-accent/30 shadow-e1 hover:shadow-e2 [&_.bar]:bg-accent",
+            // Pending — warning card
+            isPending &&
+              "bg-card border border-warning/40 shadow-e1 hover:shadow-e2 [&_.bar]:bg-warning",
+            // Available — dashed outline only
+            isAvailable &&
+              "bg-background border border-dashed border-border-strong/70 text-ink-3 hover:border-accent/60 [&_.bar]:bg-border-strong",
+            // Blocked — neutral muted, diagonal hatch via bg-dots
+            isBlocked &&
+              "bg-surface border border-border text-ink-3 bg-dots [&_.bar]:bg-ink-3/40",
           )}
-        </div>
-      </div>
-    </div>
+        >
+          {/* Marker-rule indicator on the start side */}
+          <span className="bar absolute inset-y-0 start-0 w-[3px]" aria-hidden />
+
+          <div className="flex items-start gap-2 ps-2">
+            {event.teacher && !isAvailable && !isBlocked && (
+              <Avatar className="h-6 w-6 shrink-0">
+                <AvatarFallback className={cn("bg-gradient-to-br text-[10px] text-white", event.teacher.accent)}>
+                  {event.teacher.initials}
+                </AvatarFallback>
+              </Avatar>
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[12px] font-semibold leading-snug text-foreground">
+                {event.title[lang]}
+              </p>
+              <p className="mt-0.5 flex items-center gap-1.5 text-[10px] text-ink-3 tabular">
+                <Mode className="h-3 w-3" aria-hidden />
+                <span>
+                  {Math.floor(event.startHour).toString().padStart(2, "0")}:
+                  {((event.startHour % 1) * 60).toString().padStart(2, "0")}
+                  {" — "}
+                  {Math.floor(event.endHour).toString().padStart(2, "0")}:
+                  {((event.endHour % 1) * 60).toString().padStart(2, "0")}
+                </span>
+              </p>
+              {isPending && (
+                <span className="mt-1 inline-block text-[10px] font-semibold uppercase tracking-wider text-[#7a5610]">
+                  {t("status.pending")}
+                </span>
+              )}
+            </div>
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
+        <EventPopover event={event} />
+      </PopoverContent>
+    </Popover>
   );
 }

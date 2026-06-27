@@ -20,7 +20,7 @@ import {
   Heart,
 } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -29,22 +29,56 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CourseCard } from "@/components/student/course-card";
+import { CheckoutDialog } from "@/components/booking/checkout-dialog";
 import { coursesForTeacher } from "@/lib/mock/courses";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
 import type { Teacher } from "@/lib/mock/teachers";
+import { useCurrentUser } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { cn, formatPrice } from "@/lib/utils";
 
 export function TeacherProfile({ teacher }: { teacher: Teacher }) {
   const t = useTranslations("student.teacherProfile");
   const tHome = useTranslations("home.teachers");
   const tBrowse = useTranslations("student.browse");
+  const tBooking = useTranslations("booking");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const router = useRouter();
+  const { show } = useToast();
 
   const teacherCourses = coursesForTeacher(teacher.id);
   const teacherReviews = reviewsForTeacher(teacher.id);
   const [favored, setFavored] = useState(false);
+
+  // Picked slot drives a controlled CheckoutDialog so the grid can pre-fill
+  // start/end. null when no slot selected; dialog is closed in that case.
+  const [pickedSlot, setPickedSlot] = useState<
+    | {
+        start: string;
+        end: string;
+        label: { fr: string; ar: string };
+      }
+    | null
+  >(null);
+
+  // Default course used by "Apply to course" CTA. Picks the cheapest non-1to1
+  // course as a sensible suggestion; falls back to the first course when none
+  // match. If the teacher has no courses, the Apply CTA is hidden.
+  const applyCourse =
+    teacherCourses.find((c) => c.format !== "1to1") ?? teacherCourses[0] ?? null;
+
+  const handleMessage = () => {
+    show({
+      title: tBooking("toasts.openingConversation.title"),
+      description: tBooking("toasts.openingConversation.desc", {
+        name: teacher.name[lang],
+      }),
+      variant: "default",
+    });
+    router.push(`/messages?to=${teacher.slug}` as never);
+  };
 
   return (
     <>
@@ -135,12 +169,21 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
 
             {/* Action row */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button variant="primary" size="lg">
-                <Calendar className="h-4 w-4" />
-                {t("stickyBook1to1")}
-                <Arrow className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg">
+              <CheckoutDialog
+                kind="1to1"
+                subjectTitle={teacher.subject}
+                teacherSlug={teacher.slug}
+                teacherName={teacher.name}
+                priceDzd={teacher.hourlyRate}
+                trigger={
+                  <Button variant="primary" size="lg">
+                    <Calendar className="h-4 w-4" />
+                    {t("stickyBook1to1")}
+                    <Arrow className="h-4 w-4" />
+                  </Button>
+                }
+              />
+              <Button variant="outline" size="lg" onClick={handleMessage}>
                 {t("stickyMessage")}
               </Button>
               <TooltipProvider delayDuration={150}>
@@ -189,13 +232,38 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
               <NumLi label={t("stickyStartFrom")} value={formatPrice(teacher.hourlyRate, locale)} subtle={`${teacher.responseHours}h ${t("stickyPerHour")}`} highlight />
             </ul>
             <div className="grid gap-2 p-3">
-              <Button variant="primary" size="md">
-                {t("stickyBook1to1")}
-                <Arrow className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="md">
-                {t("stickyApplyCourse")}
-              </Button>
+              <CheckoutDialog
+                kind="1to1"
+                subjectTitle={teacher.subject}
+                teacherSlug={teacher.slug}
+                teacherName={teacher.name}
+                priceDzd={teacher.hourlyRate}
+                trigger={
+                  <Button variant="primary" size="md">
+                    {t("stickyBook1to1")}
+                    <Arrow className="h-4 w-4" />
+                  </Button>
+                }
+              />
+              {applyCourse ? (
+                <CheckoutDialog
+                  kind="course"
+                  subjectTitle={applyCourse.title}
+                  teacherSlug={teacher.slug}
+                  teacherName={teacher.name}
+                  priceDzd={applyCourse.priceDzd}
+                  scheduleLabel={applyCourse.dates[0]?.label}
+                  trigger={
+                    <Button variant="outline" size="md">
+                      {t("stickyApplyCourse")}
+                    </Button>
+                  }
+                />
+              ) : (
+                <Button variant="outline" size="md" disabled>
+                  {t("stickyApplyCourse")}
+                </Button>
+              )}
             </div>
             <p className="flex items-start gap-1.5 border-t border-border bg-surface/40 px-4 py-3 text-[11px] text-ink-3">
               <ShieldCheck className="mt-0.5 h-3 w-3 text-success" />
@@ -316,7 +384,7 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
               {/* Availability */}
               <TabsContent value="availability" className="mt-6">
                 <p className="text-[14px] text-ink-2">{t("availabilityBody")}</p>
-                <AvailabilityGrid />
+                <AvailabilityGrid onPick={setPickedSlot} />
               </TabsContent>
             </Tabs>
           </div>
@@ -331,14 +399,39 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
                 <p className="mt-2 text-[12.5px] text-ink-2">{t("stickyTrust")}</p>
                 <Separator className="my-4" />
                 <div className="grid gap-2">
-                  <Button variant="primary" size="md">
-                    {t("stickyBook1to1")}
-                    <Arrow className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="md">
-                    {t("stickyApplyCourse")}
-                  </Button>
-                  <Button variant="ghost" size="md">
+                  <CheckoutDialog
+                    kind="1to1"
+                    subjectTitle={teacher.subject}
+                    teacherSlug={teacher.slug}
+                    teacherName={teacher.name}
+                    priceDzd={teacher.hourlyRate}
+                    trigger={
+                      <Button variant="primary" size="md">
+                        {t("stickyBook1to1")}
+                        <Arrow className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                  {applyCourse ? (
+                    <CheckoutDialog
+                      kind="course"
+                      subjectTitle={applyCourse.title}
+                      teacherSlug={teacher.slug}
+                      teacherName={teacher.name}
+                      priceDzd={applyCourse.priceDzd}
+                      scheduleLabel={applyCourse.dates[0]?.label}
+                      trigger={
+                        <Button variant="outline" size="md">
+                          {t("stickyApplyCourse")}
+                        </Button>
+                      }
+                    />
+                  ) : (
+                    <Button variant="outline" size="md" disabled>
+                      {t("stickyApplyCourse")}
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="md" onClick={handleMessage}>
                     {t("stickyMessage")}
                   </Button>
                 </div>
@@ -377,6 +470,22 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
           </aside>
         </div>
       </section>
+
+      {/* Slot-prefilled checkout — controlled by AvailabilityGrid clicks. */}
+      <CheckoutDialog
+        kind="1to1"
+        subjectTitle={teacher.subject}
+        teacherSlug={teacher.slug}
+        teacherName={teacher.name}
+        priceDzd={teacher.hourlyRate}
+        start={pickedSlot?.start}
+        end={pickedSlot?.end}
+        scheduleLabel={pickedSlot?.label}
+        open={pickedSlot !== null}
+        onOpenChange={(next) => {
+          if (!next) setPickedSlot(null);
+        }}
+      />
     </>
   );
 }
@@ -408,14 +517,70 @@ function NumLi({
   );
 }
 
-function AvailabilityGrid() {
+function AvailabilityGrid({
+  onPick,
+}: {
+  onPick: (slot: { start: string; end: string; label: { fr: string; ar: string } }) => void;
+}) {
   const t = useTranslations("student.teacherProfile");
+  const tBooking = useTranslations("booking");
+  const { user } = useCurrentUser();
+  const router = useRouter();
+  const { show } = useToast();
   // mock availability — 7 days × 8 hour slots
   const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const hours = ["09", "11", "13", "15", "17", "18", "19", "20"];
 
   // pseudo-random booked map
   const isBooked = (di: number, hi: number) => (di * 31 + hi * 7) % 5 < 2;
+
+  // Compute ISO start/end for a (dayIndex, hour) cell anchored to the current
+  // week's Monday. Cheap demo math — doesn't claim TZ accuracy.
+  const buildSlot = (di: number, hourStr: string) => {
+    const hour = parseInt(hourStr, 10);
+    const now = new Date();
+    const monday = new Date(now);
+    monday.setHours(0, 0, 0, 0);
+    monday.setDate(now.getDate() - ((now.getDay() + 6) % 7) + di);
+    const start = new Date(monday);
+    start.setHours(hour, 0, 0, 0);
+    const end = new Date(start);
+    end.setHours(hour + 1, 0, 0, 0);
+    return { start: start.toISOString(), end: end.toISOString() };
+  };
+
+  const dayLabels = {
+    mon: { fr: "Lundi", ar: "الإثنين" },
+    tue: { fr: "Mardi", ar: "الثلاثاء" },
+    wed: { fr: "Mercredi", ar: "الأربعاء" },
+    thu: { fr: "Jeudi", ar: "الخميس" },
+    fri: { fr: "Vendredi", ar: "الجمعة" },
+    sat: { fr: "Samedi", ar: "السبت" },
+    sun: { fr: "Dimanche", ar: "الأحد" },
+  } as const;
+
+  const handlePick = (di: number, h: string) => {
+    if (!user) {
+      show({
+        title: tBooking("toasts.signInRequired.title"),
+        description: tBooking("toasts.signInRequired.desc"),
+        variant: "warning",
+      });
+      const path = typeof window !== "undefined" ? window.location.pathname : "/";
+      router.push(`/sign-in?next=${encodeURIComponent(path)}` as never);
+      return;
+    }
+    const d = days[di]!;
+    const { start, end } = buildSlot(di, h);
+    onPick({
+      start,
+      end,
+      label: {
+        fr: `${dayLabels[d].fr} · ${h}:00 — ${(parseInt(h, 10) + 1).toString().padStart(2, "0")}:00`,
+        ar: `${dayLabels[d].ar} · ${h}:00 — ${(parseInt(h, 10) + 1).toString().padStart(2, "0")}:00`,
+      },
+    });
+  };
 
   return (
     <div className="mt-5 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
@@ -442,11 +607,12 @@ function AvailabilityGrid() {
                     key={d + h}
                     type="button"
                     disabled={booked}
+                    onClick={booked ? undefined : () => handlePick(di, h)}
                     className={cn(
                       "border-b border-s border-border px-2 py-2 text-[11px] transition-colors",
                       booked
                         ? "cursor-not-allowed bg-surface/40 text-ink-3"
-                        : "bg-card text-accent hover:bg-accent-soft/60",
+                        : "bg-card text-accent hover:bg-accent-soft/60 cursor-pointer",
                     )}
                     aria-label={booked ? t("availabilityBooked") : t("availabilityFree")}
                   >
