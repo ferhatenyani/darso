@@ -15,6 +15,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCurrentUser } from "@/lib/auth/context";
 import { addCourse } from "@/lib/mock/teacher-courses-state";
+import {
+  getTeacherSettings,
+  type ApprovalMode,
+  type PaymentRouting,
+} from "@/lib/mock/teacher-settings-state";
 import { useToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
@@ -48,9 +53,17 @@ export type CourseDraft = {
   priceDzd: number;
   promoEnabled: boolean;
   promoPct: number;
+  // Payment routing + approval — pre-filled from teacher settings,
+  // overridable per listing.
+  paymentRouting: PaymentRouting;
+  approvalMode: ApprovalMode;
 };
 
-function defaultDraft(locale: "fr" | "ar"): CourseDraft {
+function defaultDraft(
+  locale: "fr" | "ar",
+  routing: PaymentRouting,
+  approval: ApprovalMode,
+): CourseDraft {
   return {
     title: "",
     summary: "",
@@ -72,6 +85,8 @@ function defaultDraft(locale: "fr" | "ar"): CourseDraft {
     priceDzd: 1500,
     promoEnabled: false,
     promoPct: 15,
+    paymentRouting: routing,
+    approvalMode: approval,
   };
 }
 
@@ -86,7 +101,13 @@ export function CourseWizard({ locale }: { locale: "fr" | "ar" }) {
   const [step, setStep] = React.useState<Step>("basics");
   const [draft, setDraft] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
-  const [form, setForm] = React.useState<CourseDraft>(() => defaultDraft(locale));
+  // Pre-fill routing + approval from teacher settings. Settings hydrate
+  // on first client read; initial server render sees hardcoded defaults
+  // which is fine because the wizard is a client component.
+  const [form, setForm] = React.useState<CourseDraft>(() => {
+    const s = getTeacherSettings();
+    return defaultDraft(locale, s.defaultPaymentRouting, s.defaultApprovalMode);
+  });
   const idx = steps.indexOf(step);
 
   const update = React.useCallback(<K extends keyof CourseDraft>(key: K, value: CourseDraft[K]) => {
@@ -568,6 +589,90 @@ function PricingStep({
           />
         </div>
       )}
+
+      {/* Approval mode — per-listing override of the teacher-level default */}
+      <div className="border-t border-border pt-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-3">
+          Inscription
+        </p>
+        <p className="mt-1 text-[12.5px] text-ink-2">
+          Comment les élèves rejoignent-ils ce cours ?
+        </p>
+        <RadioGroup
+          value={value.approvalMode}
+          onValueChange={(v) => update("approvalMode", v as ApprovalMode)}
+          className="mt-3 grid gap-2 md:grid-cols-2"
+        >
+          <label
+            htmlFor="am-instant-listing"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              value.approvalMode === "instant" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="am-instant-listing" value="instant" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Réservation instantanée</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Paiement = place verrouillée. Recommandé.</p>
+            </div>
+          </label>
+          <label
+            htmlFor="am-approval-listing"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              value.approvalMode === "approval" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="am-approval-listing" value="approval" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Approbation manuelle</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Utile si prérequis ou niveau à vérifier.</p>
+            </div>
+          </label>
+        </RadioGroup>
+      </div>
+
+      {/* Payment routing — per-listing override */}
+      <div className="border-t border-border pt-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-3">
+          Paiement
+        </p>
+        <p className="mt-1 text-[12.5px] text-ink-2">
+          Où le paiement doit-il transiter ?
+        </p>
+        <RadioGroup
+          value={value.paymentRouting}
+          onValueChange={(v) => update("paymentRouting", v as PaymentRouting)}
+          className="mt-3 grid gap-2 md:grid-cols-2"
+        >
+          <label
+            htmlFor="pr-direct-listing"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              value.paymentRouting === "direct" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="pr-direct-listing" value="direct" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Paiement direct</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">L'élève vous paie directement. v1 par défaut.</p>
+            </div>
+          </label>
+          <label
+            htmlFor="pr-platform-listing"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors opacity-60",
+              value.paymentRouting === "platform" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="pr-platform-listing" value="platform" disabled className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Paiement plateforme</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Bientôt disponible (v2).</p>
+            </div>
+          </label>
+        </RadioGroup>
+      </div>
     </div>
   );
 }

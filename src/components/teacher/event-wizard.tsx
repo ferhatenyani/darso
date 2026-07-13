@@ -18,8 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCurrentUser } from "@/lib/auth/context";
 import { addEvent, type TeacherEventFormat } from "@/lib/mock/teacher-events-state";
+import {
+  getTeacherSettings,
+  type ApprovalMode,
+  type PaymentRouting,
+} from "@/lib/mock/teacher-settings-state";
 import { useToast } from "@/lib/toast";
 import { formatPrice } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -43,9 +49,13 @@ type EventDraft = {
   isFree: boolean;
   priceDzd: number;
   refundPolicy: string;
+  // Payment routing + approval — pre-filled from teacher settings,
+  // overridable per event.
+  paymentRouting: PaymentRouting;
+  approvalMode: ApprovalMode;
 };
 
-function defaultDraft(): EventDraft {
+function defaultDraft(routing: PaymentRouting, approval: ApprovalMode): EventDraft {
   // Default start: next round hour, +90 min end.
   const d = new Date();
   d.setMinutes(0, 0, 0);
@@ -64,6 +74,8 @@ function defaultDraft(): EventDraft {
     isFree: false,
     priceDzd: 1500,
     refundPolicy: "moderate",
+    paymentRouting: routing,
+    approvalMode: approval,
   };
 }
 
@@ -97,7 +109,10 @@ export function EventWizard({ locale }: { locale: "fr" | "ar" }) {
 
   const [step, setStep] = React.useState<Step>("basics");
   const [submitting, startSubmit] = React.useTransition();
-  const [form, setForm] = React.useState<EventDraft>(() => defaultDraft());
+  const [form, setForm] = React.useState<EventDraft>(() => {
+    const s = getTeacherSettings();
+    return defaultDraft(s.defaultPaymentRouting, s.defaultApprovalMode);
+  });
   const idx = steps.indexOf(step);
 
   const update = React.useCallback(
@@ -561,6 +576,90 @@ function PricingStep({
             <SelectItem value="none">{t("refundOptions.none")}</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Approval mode — per-event override of teacher-level default */}
+      <div className="border-t border-border pt-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-3">
+          Inscription
+        </p>
+        <p className="mt-1 text-[12.5px] text-ink-2">
+          Comment les élèves réservent-ils leur place ?
+        </p>
+        <RadioGroup
+          value={form.approvalMode}
+          onValueChange={(v) => update("approvalMode", v as ApprovalMode)}
+          className="mt-3 grid gap-2 md:grid-cols-2"
+        >
+          <label
+            htmlFor="ev-am-instant"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              form.approvalMode === "instant" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="ev-am-instant" value="instant" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Réservation instantanée</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Recommandé pour les événements ouverts.</p>
+            </div>
+          </label>
+          <label
+            htmlFor="ev-am-approval"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              form.approvalMode === "approval" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="ev-am-approval" value="approval" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Approbation manuelle</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Si prérequis ou VIP.</p>
+            </div>
+          </label>
+        </RadioGroup>
+      </div>
+
+      {/* Payment routing */}
+      <div className="border-t border-border pt-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-3">
+          Paiement
+        </p>
+        <p className="mt-1 text-[12.5px] text-ink-2">
+          Où le paiement doit-il transiter ?
+        </p>
+        <RadioGroup
+          value={form.paymentRouting}
+          onValueChange={(v) => update("paymentRouting", v as PaymentRouting)}
+          className="mt-3 grid gap-2 md:grid-cols-2"
+        >
+          <label
+            htmlFor="ev-pr-direct"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors",
+              form.paymentRouting === "direct" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="ev-pr-direct" value="direct" className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Paiement direct</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">L'élève vous paie directement.</p>
+            </div>
+          </label>
+          <label
+            htmlFor="ev-pr-platform"
+            className={cn(
+              "flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-3 transition-colors opacity-60",
+              form.paymentRouting === "platform" ? "border-accent bg-accent-soft/40" : "border-border",
+            )}
+          >
+            <RadioGroupItem id="ev-pr-platform" value="platform" disabled className="mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">Paiement plateforme</p>
+              <p className="mt-0.5 text-[11.5px] text-ink-2">Bientôt disponible (v2).</p>
+            </div>
+          </label>
+        </RadioGroup>
       </div>
     </div>
   );

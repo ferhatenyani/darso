@@ -31,6 +31,11 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import {
+  ListingApprovalBadge,
+  ListingApprovalExplainer,
+  deriveApprovalMode,
+} from "@/components/student/listing-mode-badges";
 import { useCurrentUser } from "@/lib/auth";
 import { ensureThread } from "@/lib/mock/chats";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
@@ -221,6 +226,12 @@ export function CourseDetail({ course }: { course: Course }) {
                 </div>
               </div>
 
+              {/* Approval-mode badge — tells students what happens at
+                  checkout before they click Reserve. */}
+              <div className="mt-1">
+                <ListingApprovalBadge mode={deriveApprovalMode(course.id)} />
+              </div>
+
               <CheckoutDialog
                 kind="course"
                 subjectTitle={course.title}
@@ -236,6 +247,11 @@ export function CourseDetail({ course }: { course: Course }) {
                   </Button>
                 }
               />
+
+              {/* Explainer strip — spells out the flow so students don't
+                  get surprised by an approval wait. */}
+              <ListingApprovalExplainer mode={deriveApprovalMode(course.id)} />
+
               <p className="flex items-start gap-1.5 text-[11px] text-white/65">
                 <ShieldCheck className="mt-0.5 h-3 w-3" />
                 {t("secureNote")}

@@ -10,7 +10,8 @@ import { SectionIndex } from "@/components/teacher/section-index";
 import { Stars } from "@/components/teacher/stars";
 import { RevenueTrend } from "@/components/teacher/revenue-trend";
 import { TeacherChecklist } from "@/components/teacher/checklist";
-import { PendingRequestsInbox } from "@/components/teacher/pending-requests-inbox";
+import { UnifiedActionQueue } from "@/components/teacher/unified-action-queue";
+import { TierProjectionCard } from "@/components/teacher/tier-projection-card";
 import {
   currentTeacher,
   todaySessions,
@@ -173,15 +174,18 @@ export default async function TeachHome({ params }: Props) {
           </div>
         </section>
 
-        {/* Inbox — 4/12 col */}
+        {/* Unified action queue — 4/12 col.
+            Replaces the standalone Pending Requests inbox and merges
+            approvals, direct invites, proposal opportunities and payment
+            confirmations into one time-urgency-sorted list. */}
         <section className="lg:col-span-4">
           <SectionIndex
             num={t("inbox.indexNum")}
             label={t("indexLabel")}
-            title={t("inbox.title")}
-            description={t("inbox.subtitle")}
+            title="File d'action unifiée"
+            description="Approbations, invitations, opportunités et paiements — triés par urgence."
           />
-          <PendingRequestsInbox locale={loc} />
+          <UnifiedActionQueue />
         </section>
 
         {/* Revenue + Trend — 5/12 col */}
@@ -241,6 +245,11 @@ export default async function TeachHome({ params }: Props) {
               <RevenueTrend values={revenueTrend} ariaLabel={t("revenue.weeks")} />
             </div>
           </div>
+
+          {/* Tier projection — decision 6 (rolling monthly with proactive
+              projection). Shows current trailing avg + month-end forecast
+              so the teacher never gets surprised by a tier change. */}
+          <TierProjectionCard />
         </section>
 
         {/* Recent reviews — 4/12 col */}

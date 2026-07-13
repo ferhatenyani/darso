@@ -28,6 +28,7 @@ import {
 import { currentTeacher, topRatedCriteria } from "@/lib/mock/dashboard";
 import { wilayaKeys } from "@/lib/wilayas";
 import { cn } from "@/lib/utils";
+import { TeacherPreferencesTab } from "@/components/teacher/preferences-tab";
 
 const HOURLY_MIN = 500;
 const HOURLY_MAX = 5000;
@@ -70,6 +71,7 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
         <TabsTrigger value="pricing">{t("tabs.pricing")}</TabsTrigger>
         <TabsTrigger value="languages">{t("tabs.languages")}</TabsTrigger>
         <TabsTrigger value="topRated">{t("tabs.topRated")}</TabsTrigger>
+        <TabsTrigger value="preferences">Préférences</TabsTrigger>
       </TabsList>
 
       {/* Profile */}
@@ -410,6 +412,13 @@ export function ProfileForm({ locale }: { locale: "fr" | "ar" }) {
             </ul>
           </div>
         </div>
+      </TabsContent>
+
+      {/* Preferences — routing default, approval default, auto-approve
+          returning students, and vacation mode. All account-wide
+          settings that per-listing forms consume as their defaults. */}
+      <TabsContent value="preferences">
+        <TeacherPreferencesTab />
       </TabsContent>
     </Tabs>
 

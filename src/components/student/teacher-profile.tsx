@@ -30,6 +30,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CourseCard } from "@/components/student/course-card";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import {
+  ResponseSignalBadge,
+  deriveResponseSignals,
+} from "@/components/student/response-signals";
 import { ensureThread } from "@/lib/mock/chats";
 import { coursesForTeacher } from "@/lib/mock/courses";
 import { reviewsForTeacher } from "@/lib/mock/reviews";
@@ -249,6 +253,12 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
                 {t("stickyStatsTitle")}
               </p>
+              {/* Response-rate trust signal — Decision 9. */}
+              <div className="mt-2">
+                <ResponseSignalBadge
+                  signals={deriveResponseSignals(teacher.id, teacher.responseHours)}
+                />
+              </div>
             </div>
             <ul className="grid grid-cols-2 divide-x divide-y divide-border bg-background">
               <NumLi label={t("lessonsGiven", { count: teacher.lessons }).split(" ")[0]!} value={teacher.lessons.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} subtle={tHome("lessons", { count: teacher.lessons })} />

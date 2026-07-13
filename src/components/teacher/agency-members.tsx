@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Sparkles, MoreHorizontal, Loader2, Plus, UserMinus, PencilLine, Eye } from "lucide-react";
+import { Sparkles, MoreHorizontal, Loader2, Plus, UserMinus, PencilLine, Eye, AlertTriangle, RefreshCcw } from "lucide-react";
 
 import { useRouter } from "@/i18n/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -60,20 +60,45 @@ export function AgencyMembersTable({ locale }: { locale: "fr" | "ar" }) {
   const [splits, setSplits] = React.useState<Record<string, number>>(() =>
     Object.fromEntries(agencyMembers.map((m) => [m.id, m.splitPercent])),
   );
+  const [pendingRemoval, setPendingRemoval] = React.useState<AgencyMember | null>(null);
   const splitPanelRef = React.useRef<HTMLDivElement>(null);
 
   const total = members.reduce((sum, m) => sum + (splits[m.id] ?? m.splitPercent), 0);
 
-  const removeMember = (m: AgencyMember) => {
+  /**
+   * Deterministic synthetic count of active/upcoming bookings a member
+   * has. Real backend passes this from the bookings service. Kept as a
+   * hash of id so the confirmation dialog always shows the same number
+   * for the same member across renders.
+   */
+  const activeBookingsFor = (id: string): number => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
+    return (Math.abs(hash) % 6) + 1; // 1..6
+  };
+
+  const openRemovalConfirm = (m: AgencyMember) => {
+    setPendingRemoval(m);
+  };
+
+  // Decision 11: when a member is removed with upcoming confirmed
+  // sessions, students are refunded and can rebook. The teacher-side UX
+  // must surface this clearly BEFORE the destructive action fires — no
+  // silent revocation.
+  const confirmRemoval = () => {
+    const m = pendingRemoval;
+    if (!m) return;
+    const affected = activeBookingsFor(m.id);
     setMembers((prev) => prev.filter((x) => x.id !== m.id));
     setSplits((prev) => {
       const next = { ...prev };
       delete next[m.id];
       return next;
     });
+    setPendingRemoval(null);
     show({
       title: tt("memberRemoved.title"),
-      description: tt("memberRemoved.desc", { name: m.name[locale] }),
+      description: `${m.name[locale]} retiré · ${affected} réservation${affected > 1 ? "s" : ""} remboursée${affected > 1 ? "s" : ""} aux élèves.`,
       variant: "warning",
     });
   };
@@ -130,7 +155,7 @@ export function AgencyMembersTable({ locale }: { locale: "fr" | "ar" }) {
               locale={locale}
               split={splits[m.id] ?? m.splitPercent}
               onSplitChange={(v) => setSplits((s) => ({ ...s, [m.id]: v }))}
-              onRemove={() => removeMember(m)}
+              onRemove={() => openRemovalConfirm(m)}
               onEditSplit={focusSplitEditor}
             />
           ))}
@@ -165,6 +190,54 @@ export function AgencyMembersTable({ locale }: { locale: "fr" | "ar" }) {
           ))}
         </ul>
       </div>
+
+      {/* Removal confirmation — Decision 11: student refunded, can rebook. */}
+      <Dialog open={pendingRemoval !== null} onOpenChange={(o) => !o && setPendingRemoval(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-danger" aria-hidden />
+              Retirer {pendingRemoval?.name[locale] ?? "ce membre"} de l'agence ?
+            </DialogTitle>
+            <DialogDescription>
+              Ce membre a des sessions à venir. Retirer va déclencher les remboursements automatiquement.
+            </DialogDescription>
+          </DialogHeader>
+          {pendingRemoval && (
+            <div className="space-y-3">
+              <div className="rounded-[var(--radius-md)] border border-warning/25 bg-warning/8 p-4">
+                <p className="flex items-center gap-2 text-[13.5px] font-semibold text-warning">
+                  <RefreshCcw className="h-4 w-4" aria-hidden />
+                  {activeBookingsFor(pendingRemoval.id)} réservation
+                  {activeBookingsFor(pendingRemoval.id) > 1 ? "s" : ""} confirmée
+                  {activeBookingsFor(pendingRemoval.id) > 1 ? "s" : ""}
+                </p>
+                <ul className="mt-2 space-y-1 text-[12.5px] text-ink-2">
+                  <li>• Les élèves seront intégralement remboursés</li>
+                  <li>• Ils recevront une notification et pourront rebooker avec un autre professeur</li>
+                  <li>• L'agence perd la rétribution future de ce membre</li>
+                </ul>
+              </div>
+              <p className="text-[12.5px] text-ink-3">
+                Cette action est irréversible. Vous pouvez ré-inviter {pendingRemoval.name[locale]} plus tard mais les remboursements ne seront pas annulés.
+              </p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingRemoval(null)}>
+              Annuler
+            </Button>
+            <Button
+              variant="primary"
+              onClick={confirmRemoval}
+              className="bg-danger hover:bg-danger/90"
+            >
+              <UserMinus className="h-4 w-4" />
+              Retirer et rembourser
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div
         ref={splitPanelRef}

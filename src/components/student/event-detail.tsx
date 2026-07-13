@@ -17,6 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { CheckoutDialog } from "@/components/booking/checkout-dialog";
+import {
+  ListingApprovalBadge,
+  ListingApprovalExplainer,
+  deriveApprovalMode,
+} from "@/components/student/listing-mode-badges";
 import type { Course } from "@/lib/mock/courses";
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -88,6 +93,9 @@ export function EventDetail({ course }: { course: Course }) {
               </p>
             </div>
             <p className="mt-4 text-[18px] font-bold tabular">{formatPrice(course.priceDzd, locale)}</p>
+            <div className="mt-2">
+              <ListingApprovalBadge mode={deriveApprovalMode(course.id)} size="sm" />
+            </div>
             <CheckoutDialog
               kind="event"
               subjectTitle={course.title}
@@ -103,6 +111,9 @@ export function EventDetail({ course }: { course: Course }) {
                 </Button>
               }
             />
+            <div className="mt-3">
+              <ListingApprovalExplainer mode={deriveApprovalMode(course.id)} />
+            </div>
           </aside>
         </div>
       </section>
