@@ -47,8 +47,8 @@ type InvoiceData = {
 
 const VAT_RATE = 19; // Algerian standard VAT
 
-function fmtDate(d: Date, locale: Locale) {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-DZ" : "fr-DZ", {
+function fmtDate(d: Date, _locale: Locale) {
+  return new Intl.DateTimeFormat("fr-DZ", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -119,8 +119,7 @@ export default async function InvoicePage({ params }: Props) {
     notFound();
   }
 
-  const customerName =
-    user.studentName ?? (loc === "ar" ? "زبون darso" : "Client darso");
+  const customerName = user.studentName ?? "Client darso";
 
   const data: InvoiceData = booking
     ? {
@@ -159,13 +158,10 @@ export default async function InvoicePage({ params }: Props) {
         dueDate: new Date(),
         status: "paid",
         customer: { name: customerName },
-        paymentMethod: loc === "ar" ? "بطاقة الذّهبية •••• 1234" : "Carte Edahabia ****1234",
+        paymentMethod: "Carte Edahabia ****1234",
         items: [
           {
-            description:
-              loc === "ar"
-                ? "حصّة تعليميّة على منصّة darso"
-                : "Séance d'apprentissage sur darso",
+            description: "Séance d'apprentissage sur darso",
             qty: 1,
             unitPrice: 4500,
           },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LogOut, User, LayoutDashboard, ChevronDown } from "lucide-react";
+import { LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,10 +22,11 @@ import { cn } from "@/lib/utils";
  * Auth-aware cluster for the right end of the SiteHeader.
  *
  * - Anonymous: classic "Sign in / Sign up" pair.
- * - Signed in: avatar + dropdown menu with Account / Sign out.
- *
- * Lives as a client component because it reads the user context. The
- * surrounding header is a server component.
+ * - Signed in (student): renders nothing here — [UserRail] takes over
+ *   with an icon rail + labeled bookings CTA so frequent destinations
+ *   stay one click away instead of buried in a dropdown.
+ * - Signed in (teacher): a slim menu with a dashboard link + sign out —
+ *   the teacher app has its own dedicated dashboard nav.
  */
 export function UserMenu() {
   const t = useTranslations("nav");
@@ -45,25 +46,16 @@ export function UserMenu() {
     );
   }
 
-  const initials =
-    user.role === "teacher"
-      ? user.teacherSlug
-        ? user.teacherSlug
-            .split("-")
-            .slice(0, 2)
-            .map((p) => p[0]?.toUpperCase() ?? "")
-            .join("")
-        : "T"
-      : user.studentInitials ?? user.email.slice(0, 2).toUpperCase();
+  // Students use UserRail — this component is a no-op for them.
+  if (user.role === "student") return null;
 
-  const accountHref = user.role === "teacher" ? routes.teachDashboard() : routes.account();
-  const accountLabel = user.role === "teacher" ? tMenu("dashboard") : tMenu("account");
-  const accountIcon =
-    user.role === "teacher" ? (
-      <LayoutDashboard className="h-4 w-4" />
-    ) : (
-      <User className="h-4 w-4" />
-    );
+  const initials = user.teacherSlug
+    ? user.teacherSlug
+        .split("-")
+        .slice(0, 2)
+        .map((p) => p[0]?.toUpperCase() ?? "")
+        .join("")
+    : "T";
 
   return (
     <div className="hidden md:flex items-center ms-1">
@@ -89,9 +81,7 @@ export function UserMenu() {
           <DropdownMenuLabel>
             <span className="block normal-case tracking-normal">
               <span className="block text-[12.5px] font-semibold text-foreground">
-                {user.role === "teacher"
-                  ? tMenu("teacherTagline")
-                  : user.studentName ?? user.email}
+                {tMenu("teacherTagline")}
               </span>
               <span className="mt-0.5 block text-[11px] font-normal text-ink-3 tabular">
                 {user.email}
@@ -100,9 +90,9 @@ export function UserMenu() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={accountHref} className="flex w-full items-center gap-2">
-              {accountIcon}
-              <span>{accountLabel}</span>
+            <Link href={routes.teachDashboard()} className="flex w-full items-center gap-2">
+              <LayoutDashboard className="h-4 w-4" />
+              <span>{tMenu("dashboard")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

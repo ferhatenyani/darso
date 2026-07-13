@@ -47,8 +47,11 @@ import type {
   RequestUrgency,
   RequestAudience,
 } from "./requests";
+import { loadPersisted, savePersisted } from "./persistence";
 
 export type { LearningRequest } from "./requests";
+
+const PERSIST_KEY = "requests";
 
 /**
  * Optional account ownership tag. The seeded requests use the existing
@@ -58,12 +61,15 @@ export type { LearningRequest } from "./requests";
  */
 type StoredRequest = LearningRequest & { ownedBy?: string };
 
-let requests: StoredRequest[] = seedRequests.map((r) => ({
+const SEEDED: StoredRequest[] = seedRequests.map((r) => ({
   ...r,
   // Tag seeded "owned" rows to the demo student account so /requests/my
   // continues to show them when the demo account is signed in.
   ownedBy: r.ownedByCurrentUser ? "acc-lina" : undefined,
 }));
+
+let requests: StoredRequest[] = SEEDED;
+let hydrated = false;
 
 const listeners = new Set<() => void>();
 
@@ -73,14 +79,40 @@ const ownerCache = new Map<string, readonly LearningRequest[]>();
 let allCache: readonly LearningRequest[] | null = null;
 const EMPTY: readonly LearningRequest[] = Object.freeze([]);
 
+// Client-only lazy hydration. Merges persisted user-created requests on
+// top of the seeded catalogue so demo seeds stay visible after refresh.
+function ensureHydrated() {
+  if (hydrated || typeof window === "undefined") return;
+  hydrated = true;
+  const persistedExtras = loadPersisted<StoredRequest[]>(PERSIST_KEY, []);
+  if (persistedExtras.length) {
+    const seedIds = new Set(SEEDED.map((r) => r.id));
+    const extras = persistedExtras.filter((r) => !seedIds.has(r.id));
+    requests = [...extras, ...SEEDED];
+    ownerCache.clear();
+    allCache = null;
+    listeners.forEach((fn) => fn());
+  }
+}
+
+function persist() {
+  // Only persist non-seed rows so we don't rehydrate stale copies of the
+  // seeded catalogue after seeds evolve.
+  const seedIds = new Set(SEEDED.map((r) => r.id));
+  const extras = requests.filter((r) => !seedIds.has(r.id));
+  savePersisted(PERSIST_KEY, extras);
+}
+
 function invalidate() {
   ownerCache.clear();
   allCache = null;
+  persist();
   listeners.forEach((fn) => fn());
 }
 
 /** Returns every request in the store (used by browse). */
 export function getRequests(): readonly LearningRequest[] {
+  ensureHydrated();
   if (allCache) return allCache;
   allCache = Object.freeze(requests.map(stripInternal));
   return allCache;
@@ -94,6 +126,7 @@ export function getRequests(): readonly LearningRequest[] {
 export function getRequestsByOwner(
   accountId: string | null | undefined,
 ): readonly LearningRequest[] {
+  ensureHydrated();
   if (!accountId) return EMPTY;
   const cached = ownerCache.get(accountId);
   if (cached) return cached;
@@ -108,6 +141,7 @@ export function getRequestsByOwner(
 
 /** Look up by slug OR id (mirrors the existing getRequestBySlug helper). */
 export function getRequestById(id: string | null | undefined): LearningRequest | undefined {
+  ensureHydrated();
   if (!id) return undefined;
   const found = requests.find((r) => r.slug === id || r.id === id);
   return found ? stripInternal(found) : undefined;
@@ -238,3 +272,15 @@ function stripInternal(r: StoredRequest): LearningRequest {
 // Re-export EMPTY just so test code / debug surfaces can compare identity
 // without having to construct a fresh frozen array each call.
 export const EMPTY_REQUESTS = EMPTY;
+
+/**
+ * Wipe the persisted user-created requests. Called from the dev scenario
+ * switcher; seeded catalogue rows are preserved.
+ */
+export function resetRequests(): void {
+  requests = SEEDED;
+  ownerCache.clear();
+  allCache = null;
+  persist();
+  listeners.forEach((fn) => fn());
+}

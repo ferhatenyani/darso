@@ -87,6 +87,21 @@ export const routes = {
   accountOnboarding: (): "/account/onboarding" => "/account/onboarding",
   accountInvoice: (id: string): `/account/invoices/${string}` => `/account/invoices/${id}`,
 
+  // ───────── bookings (student v3) ─────────
+  bookings: (): "/bookings" => "/bookings",
+  booking: (id: string): `/bookings/${string}` => `/bookings/${id}`,
+  bookingReview: (id: string): `/bookings/${string}/review` => `/bookings/${id}/review`,
+  bookingCancel: (id: string): `/bookings/${string}/cancel` => `/bookings/${id}/cancel`,
+  bookingRefund: (id: string): `/bookings/${string}/refund` => `/bookings/${id}/refund`,
+
+  // ───────── checkout (student v3) ─────────
+  checkout: (bookingId: string): `/checkout/${string}` => `/checkout/${bookingId}`,
+  checkoutSuccess: (bookingId: string): `/checkout/${string}/success` =>
+    `/checkout/${bookingId}/success`,
+
+  // ───────── agencies (student v3) ─────────
+  agency: (slug: string): `/agencies/${string}` => `/agencies/${slug}`,
+
   // ───────── messaging / notifications / calendar ─────────
   messages: (): "/messages" => "/messages",
   messageThread: (id: string): `/messages/${string}` => `/messages/${id}`,

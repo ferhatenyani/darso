@@ -1,12 +1,12 @@
 import { useTranslations } from "next-intl";
-import { Search } from "lucide-react";
+import { Search, PenLine } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/brand/logo";
-import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { DiscoverMenu } from "@/components/nav/discover-menu";
 import { UserMenu } from "@/components/nav/user-menu";
+import { UserRail } from "@/components/nav/user-rail";
 import { routes } from "@/lib/routes";
 
 export function SiteHeader() {
@@ -38,6 +38,13 @@ export function SiteHeader() {
             </span>
             {t("liveNow")}
           </Link>
+          <Link
+            href={routes.requestNew()}
+            className="inline-flex h-10 items-center gap-1.5 rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
+          >
+            <PenLine className="h-[15px] w-[15px]" aria-hidden />
+            {t("postRequest")}
+          </Link>
         </nav>
 
         <div className="ms-auto flex items-center gap-2">
@@ -58,8 +65,9 @@ export function SiteHeader() {
 
           <span className="hidden md:block h-6 w-px bg-border me-1" aria-hidden />
 
-          <LanguageSwitcher />
-
+          {/* Signed-in students: icon rail + labeled bookings CTA. */}
+          <UserRail />
+          {/* Anonymous or teacher: sign-in/up buttons or teacher menu. */}
           <UserMenu />
           <MobileNav />
         </div>
