@@ -104,10 +104,9 @@ export function WeekView({ events, weekStart }: WeekViewProps) {
                   </span>
                   <span
                     className={cn(
-                      "block font-serif text-[28px] leading-[1.1] tabular",
-                      isToday ? "text-accent italic" : "text-foreground",
+                      "block text-[24px] font-bold leading-[1.1] tabular tracking-tight",
+                      isToday ? "text-accent" : "text-foreground",
                     )}
-                    style={{ fontFamily: "ui-serif, Georgia, serif" }}
                   >
                     {dayNum}
                   </span>

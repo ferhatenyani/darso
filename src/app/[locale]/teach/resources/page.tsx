@@ -106,7 +106,7 @@ export default async function TeachResourcesPage({ params }: Props) {
         {/* Newsletter */}
         <section className="bg-background">
           <div className="container-narrow py-16 md:py-24">
-            <div className="rounded-[var(--radius-2xl)] border border-border bg-card p-8 md:p-12">
+            <div className="rounded-[var(--radius-xl)] border border-border bg-card p-8 md:p-12">
               <div className="grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-center">
                 <div>
                   <h2 className="max-w-xl text-balance text-[26px] font-semibold tracking-tight text-foreground md:text-[34px]">

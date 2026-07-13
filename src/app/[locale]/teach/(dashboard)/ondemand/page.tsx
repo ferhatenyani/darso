@@ -26,7 +26,7 @@ export default async function OnDemandPage({ params }: Props) {
         <CreateSeriesButton locale={loc} />
       </div>
 
-      <div className="grid place-items-center rounded-[var(--radius-2xl)] border border-dashed border-border bg-card px-6 py-20 text-center">
+      <div className="grid place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-card px-6 py-20 text-center">
         <span className="grid h-14 w-14 place-items-center rounded-full bg-accent-soft text-accent">
           <PlayCircle className="h-6 w-6" aria-hidden />
         </span>

@@ -55,7 +55,7 @@ export default async function AgencyAnalyticsPage({ params, searchParams }: Prop
           <span className="ink-rule" aria-hidden />
           {t("scopeAgency")}
         </p>
-        <h1 className="mt-3 text-[32px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[44px] md:text-[56px]">
+        <h1 className="mt-3 text-[28px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[36px] md:text-[44px]">
           {t("title")}
         </h1>
         <p className="mt-2 max-w-xl text-pretty text-[15px] text-ink-2">

@@ -13,70 +13,79 @@ export function SiteHeader() {
   const t = useTranslations("nav");
 
   return (
-    <header className="sticky top-0 z-40 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-      <div className="container-narrow flex h-20 items-center">
-        <Link href={routes.home()} className="shrink-0 outline-none focus-visible:rounded-md">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      <div className="container-wide flex h-14 items-center gap-3 md:h-[68px] lg:h-[72px]">
+        {/* Logo */}
+        <Link href={routes.home()} className="shrink-0 outline-none focus-visible:rounded-[var(--radius-xs)]">
           <Logo />
         </Link>
 
-        <nav className="ms-8 hidden lg:flex items-center gap-1" aria-label="Main">
+        {/* Desktop nav */}
+        <nav className="ms-4 hidden lg:flex items-center gap-0.5" aria-label="Main">
           <DiscoverMenu />
-          <Link
-            href={routes.teachers()}
-            className="inline-flex h-10 items-center rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
-          >
-            {t("teachers")}
-          </Link>
-          <Link
-            href={routes.live()}
-            className="group inline-flex h-10 items-center gap-2 rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
-            aria-label={t("liveNowSub")}
-          >
-            <span className="relative flex h-2 w-2">
+          <NavLink href={routes.teachers()}>{t("teachers")}</NavLink>
+          <NavLink href={routes.live()} className="gap-2">
+            <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inset-0 rounded-full bg-danger live-dot" />
-              <span className="relative h-2 w-2 rounded-full bg-danger" />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-danger" />
             </span>
             {t("liveNow")}
-          </Link>
-          <Link
-            href={routes.requestNew()}
-            className="inline-flex h-10 items-center gap-1.5 rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
-          >
+          </NavLink>
+          <NavLink href={routes.requestNew()} className="gap-1.5">
             <PenLine className="h-[15px] w-[15px]" aria-hidden />
             {t("postRequest")}
-          </Link>
+          </NavLink>
         </nav>
 
-        <div className="ms-auto flex items-center gap-2">
+        {/* Right rail */}
+        <div className="ms-auto flex items-center gap-1.5">
+          {/* Icon search (desktop only) */}
           <Link
             href={routes.search()}
             aria-label={t("search")}
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-ink-2 transition-colors hover:bg-surface hover:text-foreground"
+            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-xs)] text-ink-2 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus"
           >
             <Search className="h-[18px] w-[18px]" />
           </Link>
 
+          {/* Become teacher (desktop) */}
           <Link
             href={routes.teachLanding()}
-            className="hidden md:inline-flex h-10 items-center rounded-[var(--radius-md)] px-3 text-[15px] font-medium text-ink-2 transition-colors hover:text-foreground"
+            className="hidden md:inline-flex h-10 items-center rounded-[var(--radius-xs)] px-3 text-[13.5px] font-medium text-ink-2 transition-colors hover:text-foreground"
           >
             {t("becomeTeacher")}
           </Link>
 
           <span className="hidden md:block h-6 w-px bg-border me-1" aria-hidden />
 
-          {/* Signed-in students: icon rail + labeled bookings CTA. */}
+          {/* Auth-aware slots */}
           <UserRail />
-          {/* Anonymous or teacher: sign-in/up buttons or teacher menu. */}
           <UserMenu />
           <MobileNav />
         </div>
       </div>
-
-      {/* Subtle bottom rule: thin border with a small accent strip on the start side */}
-      <div className="relative h-px bg-border" aria-hidden>
-        <span className="absolute start-0 top-0 h-px w-24 bg-accent" />
-      </div>
     </header>
+  );
+}
+
+function NavLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href as never}
+      className={
+        "inline-flex h-10 items-center rounded-[var(--radius-xs)] px-3 text-[14px] font-medium text-ink-2 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus " +
+        (className ?? "")
+      }
+    >
+      {children}
+    </Link>
   );
 }

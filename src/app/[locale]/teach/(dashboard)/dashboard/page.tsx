@@ -56,7 +56,7 @@ export default async function TeachHome({ params }: Props) {
               <span className="ink-rule" aria-hidden />
               {dateLabel}
             </p>
-            <h1 className="text-balance text-[34px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[44px] md:text-[56px] lg:text-[64px]">
+            <h1 className="text-balance text-[28px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[36px] md:text-[44px] lg:text-[52px]">
               {t("greetingDay")},
               <br />
               <span className="text-ink-2">{currentTeacher.name[loc]}.</span>
@@ -104,7 +104,7 @@ export default async function TeachHome({ params }: Props) {
             title={t("today.title")}
             description={t("today.subtitle")}
           />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <ul className="divide-y divide-border">
               {todaySessions.map((s, i) => {
                 const isLive = s.state === "live";
@@ -198,7 +198,7 @@ export default async function TeachHome({ params }: Props) {
               threshold: formatCompact(revenueSnapshot.nextTierThresholdDzd, locale),
             })}
           />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <div className="border-b border-border p-5">
               <div className="flex items-baseline justify-between">
                 <div>
@@ -301,7 +301,7 @@ export default async function TeachHome({ params }: Props) {
             title={t("checklist.title")}
             description={t("checklist.subtitle")}
           />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <TeacherChecklist items={actionItems} locale={loc} goLabel={t("checklist.go")} />
           </div>
           <div className="mt-4 rounded-[var(--radius-lg)] border border-dashed border-accent/30 bg-accent-soft/40 p-4">

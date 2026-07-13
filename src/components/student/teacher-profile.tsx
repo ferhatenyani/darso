@@ -18,6 +18,9 @@ import {
   CheckCheck,
   Calendar,
   Heart,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import { Link, useRouter } from "@/i18n/navigation";
@@ -50,6 +53,7 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const Back = locale === "ar" ? ChevronRight : ChevronLeft;
   const router = useRouter();
   const { show } = useToast();
   const { user } = useCurrentUser();
@@ -57,6 +61,7 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
 
   const teacherCourses = coursesForTeacher(teacher.id);
   const teacherReviews = reviewsForTeacher(teacher.id);
+  const hasReviews = teacher.reviews > 0 && teacherReviews.length > 0;
   const [favored, setFavored] = useState(false);
 
   // Picked slot drives a controlled CheckoutDialog so the grid can pre-fill
@@ -111,93 +116,138 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
 
   return (
     <>
-      {/* HERO — editorial, large avatar + sliced background mark */}
+      {/* Mobile back row — sticky under nav to preserve orientation. */}
+      <div className="border-b border-border bg-background lg:hidden">
+        <div className="container-narrow flex h-11 items-center">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus rounded-[var(--radius-xs)] -mx-1 px-1"
+            aria-label={t("backLabel")}
+          >
+            <Back className="h-4 w-4" aria-hidden />
+            {t("backLabel")}
+          </button>
+        </div>
+      </div>
+
+      {/* HERO — mobile-first identity block. Sits above tabs. */}
       <section className="relative isolate overflow-hidden border-b border-border bg-background">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-grid-sm opacity-50 [mask-image:radial-gradient(70%_60%_at_30%_0%,black,transparent_85%)]" />
-        <span
+        <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-6 end-4 -z-10 select-none text-[160px] font-black leading-none tracking-tighter text-foreground/[0.04] md:text-[220px]"
-        >
-          {teacher.initials}
-        </span>
+          className="absolute inset-0 -z-10 bg-grid-sm opacity-40 [mask-image:radial-gradient(70%_60%_at_30%_0%,black,transparent_85%)]"
+        />
 
-        <div className="container-narrow grid gap-10 py-12 md:py-16 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
-          {/* Left: identity */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-3">
-              <Link href="/teachers" className="hover:text-foreground">
-                {t("tabAbout")}
+        <div className="container-narrow grid gap-8 py-8 md:py-12 lg:grid-cols-[1fr_320px] lg:gap-10 lg:py-14">
+          {/* Left column — identity */}
+          <div className="flex flex-col gap-5">
+            {/* Breadcrumb — desktop-only, mobile has the back row above */}
+            <nav
+              aria-label="Breadcrumb"
+              className="hidden lg:flex flex-wrap items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-3"
+            >
+              <Link href="/browse" className="transition-colors hover:text-foreground">
+                {tBrowse("pageEyebrow")}
               </Link>
-              <span className="ink-rule h-[2px]" aria-hidden />
-              <span>{teacher.subject[lang]}</span>
-            </div>
+              <span aria-hidden>›</span>
+              <span className="text-ink-2">{teacher.subject[lang]}</span>
+              <span aria-hidden>›</span>
+              <span className="text-foreground">{teacher.name[lang]}</span>
+            </nav>
 
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-              <Avatar className="h-28 w-28 shadow-e2 sm:h-32 sm:w-32">
-                <AvatarFallback className={cn("bg-gradient-to-br text-3xl text-white", teacher.accent)}>
+            {/* Identity — stacked on mobile, side-by-side on sm+ */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
+              <Avatar className="h-20 w-20 shadow-e2 sm:h-24 sm:w-24 md:h-28 md:w-28">
+                <AvatarFallback
+                  className={cn("bg-gradient-to-br text-2xl text-white md:text-3xl", teacher.accent)}
+                >
                   {teacher.initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-[36px] font-bold leading-[1.02] tracking-tight text-foreground md:text-[44px]">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+                  <h1 className="text-[26px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[30px] md:text-[36px]">
                     {teacher.name[lang]}
                   </h1>
                   {teacher.idVerified && (
                     <span className="inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/10 px-2 py-0.5 text-[10.5px] font-semibold text-success">
-                      <ShieldCheck className="h-3 w-3" />
+                      <ShieldCheck className="h-3 w-3" aria-hidden />
                       {t("verifiedId")}
                     </span>
                   )}
-                  {teacher.topRated && (
+                  {teacher.topRated && hasReviews && (
                     <span className="inline-flex items-center gap-1 rounded-full border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10.5px] font-semibold text-[#7a5610]">
-                      <Sparkles className="h-3 w-3" />
+                      <Sparkles className="h-3 w-3" aria-hidden />
                       {t("topRated")}
                     </span>
                   )}
+                  {!hasReviews && (
+                    <Badge variant="new" shape="square">
+                      {t("newChip")}
+                    </Badge>
+                  )}
                 </div>
-                <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-ink-2 text-pretty">
+
+                <p className="mt-2 text-[15px] leading-relaxed text-ink-2 text-pretty md:mt-3 md:text-[16px]">
                   {teacher.headline[lang]}
                 </p>
 
-                <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-ink-2">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Star className="h-4 w-4 fill-warning text-warning" />
-                    <span className="font-semibold text-foreground tabular">{teacher.rating.toFixed(2)}</span>
-                    <span className="text-ink-3">·</span>
-                    <span>{tHome("reviews", { count: teacher.reviews })}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="h-4 w-4 text-ink-3" />
-                    {teacher.city[lang]}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Languages className="h-4 w-4 text-ink-3" />
-                    {t("speaks")}: {teacher.speaks[lang].join(" · ")}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    {teacher.mode === "online" ? (
-                      <Wifi className="h-4 w-4 text-ink-3" />
-                    ) : teacher.mode === "in-person" ? (
-                      <MapPin className="h-4 w-4 text-ink-3" />
-                    ) : (
-                      <>
-                        <Wifi className="h-4 w-4 text-ink-3" />
-                        <MapPin className="h-4 w-4 text-ink-3" />
-                      </>
+                {/* Chip row — subject · city · languages · mode. Scrolls horizontally on xs. */}
+                <div className="mt-4 -mx-4 overflow-x-auto scroll-none px-4 sm:mx-0 sm:overflow-visible sm:px-0">
+                  <ul className="flex w-max flex-nowrap items-center gap-1.5 text-[12.5px] text-ink-2 sm:w-auto sm:flex-wrap">
+                    <li>
+                      <Chip icon={<BookOpen className="h-3.5 w-3.5" aria-hidden />}>
+                        {teacher.subject[lang]}
+                      </Chip>
+                    </li>
+                    <li>
+                      <Chip icon={<MapPin className="h-3.5 w-3.5" aria-hidden />}>
+                        {teacher.city[lang]}
+                      </Chip>
+                    </li>
+                    <li>
+                      <Chip icon={<Languages className="h-3.5 w-3.5" aria-hidden />}>
+                        {teacher.speaks[lang].join(" · ")}
+                      </Chip>
+                    </li>
+                    <li>
+                      <Chip
+                        icon={
+                          teacher.mode === "online" ? (
+                            <Wifi className="h-3.5 w-3.5" aria-hidden />
+                          ) : teacher.mode === "in-person" ? (
+                            <MapPin className="h-3.5 w-3.5" aria-hidden />
+                          ) : (
+                            <Wifi className="h-3.5 w-3.5" aria-hidden />
+                          )
+                        }
+                      >
+                        {teacher.mode === "online"
+                          ? tBrowse("filterModeOnline")
+                          : teacher.mode === "in-person"
+                            ? tBrowse("filterModeInPerson")
+                            : tBrowse("filterModeBoth")}
+                      </Chip>
+                    </li>
+                    {hasReviews && (
+                      <li>
+                        <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-[12px] font-medium text-foreground">
+                          <Star className="h-3.5 w-3.5 fill-warning text-warning" aria-hidden />
+                          <span className="tabular">{teacher.rating.toFixed(2)}</span>
+                          <span className="text-ink-3">·</span>
+                          <span className="text-ink-3 tabular">
+                            {tHome("reviews", { count: teacher.reviews })}
+                          </span>
+                        </span>
+                      </li>
                     )}
-                    {teacher.mode === "online"
-                      ? tBrowse("filterModeOnline")
-                      : teacher.mode === "in-person"
-                        ? tBrowse("filterModeInPerson")
-                        : tBrowse("filterModeBoth")}
-                  </span>
+                  </ul>
                 </div>
               </div>
             </div>
 
-            {/* Action row */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Desktop action row — hidden on mobile since sticky bottom bar handles CTAs. */}
+            <div className="hidden lg:flex flex-wrap items-center gap-2">
               <CheckoutDialog
                 kind="1to1"
                 subjectTitle={teacher.subject}
@@ -206,13 +256,14 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
                 priceDzd={teacher.hourlyRate}
                 trigger={
                   <Button variant="primary" size="lg">
-                    <Calendar className="h-4 w-4" />
+                    <Calendar className="h-4 w-4" aria-hidden />
                     {t("stickyBook1to1")}
-                    <Arrow className="h-4 w-4" />
+                    <Arrow className="h-4 w-4" aria-hidden />
                   </Button>
                 }
               />
               <Button variant="outline" size="lg" onClick={handleMessage}>
+                <MessageCircle className="h-4 w-4" aria-hidden />
                 {t("stickyMessage")}
               </Button>
               <TooltipProvider delayDuration={150}>
@@ -221,160 +272,201 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
                     <Button
                       type="button"
                       variant="ghost"
-                      size="icon"
+                      size="icon-lg"
                       onClick={() => setFavored((v) => !v)}
-                      aria-label={t("stickyMessage")}
+                      aria-label={favored ? t("verifiedContact") : t("verifiedId")}
                       aria-pressed={favored}
                     >
-                      <Heart className={cn("h-4 w-4", favored && "fill-danger text-danger")} />
+                      <Heart
+                        className={cn("h-4 w-4", favored && "fill-danger text-danger")}
+                        aria-hidden
+                      />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>{favored ? t("verifiedContact") : t("verifiedId")}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" aria-label={t("shareLabel")}>
-                      <Share2 className="h-4 w-4" />
+                    <Button type="button" variant="ghost" size="icon-lg" aria-label={t("shareLabel")}>
+                      <Share2 className="h-4 w-4" aria-hidden />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>{t("shareLabel")}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               <span className="ms-auto inline-flex items-center gap-1.5 text-[11.5px] text-ink-3">
-                <Clock className="h-3.5 w-3.5" />
+                <Clock className="h-3.5 w-3.5" aria-hidden />
                 {t("lastActive", { min: 4 })}
               </span>
             </div>
+
+            {/* Mobile secondary — small ghost row for Message / Fav / Share. Primary lives in sticky bar. */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <Button variant="outline" size="md" onClick={handleMessage} className="flex-1">
+                <MessageCircle className="h-4 w-4" aria-hidden />
+                {t("stickyMessage")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => setFavored((v) => !v)}
+                aria-label={favored ? t("verifiedContact") : t("verifiedId")}
+                aria-pressed={favored}
+              >
+                <Heart
+                  className={cn("h-4 w-4", favored && "fill-danger text-danger")}
+                  aria-hidden
+                />
+              </Button>
+              <Button type="button" variant="outline" size="icon" aria-label={t("shareLabel")}>
+                <Share2 className="h-4 w-4" aria-hidden />
+              </Button>
+            </div>
           </div>
 
-          {/* Right: numeric strip */}
-          <aside className="rounded-[var(--radius-2xl)] border border-border-strong bg-card p-2 shadow-e1">
-            <div className="border-b border-border bg-surface/40 px-4 py-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
-                {t("stickyStatsTitle")}
-              </p>
-              {/* Response-rate trust signal — Decision 9. */}
-              <div className="mt-2">
-                <ResponseSignalBadge
-                  signals={deriveResponseSignals(teacher.id, teacher.responseHours)}
-                />
-              </div>
-            </div>
-            <ul className="grid grid-cols-2 divide-x divide-y divide-border bg-background">
-              <NumLi label={t("lessonsGiven", { count: teacher.lessons }).split(" ")[0]!} value={teacher.lessons.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} subtle={tHome("lessons", { count: teacher.lessons })} />
-              <NumLi label={t("responseTime", { hours: teacher.responseHours }).split(" ")[0]!} value={`${teacher.responseHours}h`} subtle={t("responseTime", { hours: teacher.responseHours })} />
-              <NumLi label={t("completion")} value="98%" subtle={t("verifiedContact")} />
-              <NumLi label={t("stickyStartFrom")} value={formatPrice(teacher.hourlyRate, locale)} subtle={`${teacher.responseHours}h ${t("stickyPerHour")}`} highlight />
-            </ul>
-            <div className="grid gap-2 p-3">
-              <CheckoutDialog
-                kind="1to1"
-                subjectTitle={teacher.subject}
-                teacherSlug={teacher.slug}
-                teacherName={teacher.name}
-                priceDzd={teacher.hourlyRate}
-                trigger={
-                  <Button variant="primary" size="md">
-                    {t("stickyBook1to1")}
-                    <Arrow className="h-4 w-4" />
-                  </Button>
-                }
-              />
-              {applyCourse ? (
-                <CheckoutDialog
-                  kind="course"
-                  subjectTitle={applyCourse.title}
-                  teacherSlug={teacher.slug}
-                  teacherName={teacher.name}
-                  priceDzd={applyCourse.priceDzd}
-                  scheduleLabel={applyCourse.dates[0]?.label}
-                  trigger={
-                    <Button variant="outline" size="md">
-                      {t("stickyApplyCourse")}
-                    </Button>
+          {/* Right column — sticky rail (desktop only). Duplicated below in tabs section for content-adjacent stickiness. */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 grid gap-3">
+              <RightRail
+                teacher={teacher}
+                applyCourse={applyCourse}
+                onMessage={handleMessage}
+                onScrollToAvailability={() => {
+                  if (typeof document !== "undefined") {
+                    document.getElementById("availability")?.scrollIntoView({ behavior: "smooth" });
                   }
-                />
-              ) : (
-                <Button variant="outline" size="md" disabled>
-                  {t("stickyApplyCourse")}
-                </Button>
-              )}
+                }}
+              />
             </div>
-            <p className="flex items-start gap-1.5 border-t border-border bg-surface/40 px-4 py-3 text-[11px] text-ink-3">
-              <ShieldCheck className="mt-0.5 h-3 w-3 text-success" />
-              {t("stickyTrust")}
-            </p>
           </aside>
         </div>
       </section>
 
-      {/* CONTENT — tabs + sticky right rail on desktop */}
-      <section className="bg-background">
-        <div className="container-narrow grid gap-8 py-10 lg:grid-cols-[1fr_320px] lg:gap-12">
-          <div>
-            <Tabs defaultValue="about">
-              <TabsList className="w-full justify-start">
-                <TabsTrigger value="about">{t("tabAbout")}</TabsTrigger>
-                <TabsTrigger value="courses">{t("tabCourses", { count: teacherCourses.length })}</TabsTrigger>
-                <TabsTrigger value="reviews">{t("tabReviews", { count: teacherReviews.length })}</TabsTrigger>
-                <TabsTrigger value="availability">{t("tabAvailability")}</TabsTrigger>
+      {/* CONTENT — Tabs. Tab bar sticks under the nav on mobile. */}
+      <section className="bg-background pb-24 lg:pb-16">
+        <div className="container-narrow py-8 lg:py-10">
+          <Tabs defaultValue="about">
+            {/* Sticky tab strip on mobile so the user always sees where they are */}
+            <div className="sticky top-14 z-20 -mx-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 px-4 md:top-[68px] lg:static lg:mx-0 lg:border-b-0 lg:bg-transparent lg:px-0 lg:backdrop-blur-none">
+              <TabsList className="w-full justify-start overflow-x-auto scroll-none rounded-none border-0 bg-transparent p-0 lg:justify-start lg:rounded-[var(--radius-md)] lg:border lg:border-border lg:bg-surface lg:p-1">
+                <TabTrigger value="about">{t("tabAbout")}</TabTrigger>
+                <TabTrigger value="courses">
+                  {t("tabCourses", { count: teacherCourses.length })}
+                </TabTrigger>
+                <TabTrigger value="availability">{t("tabAvailability")}</TabTrigger>
+                <TabTrigger value="reviews">
+                  {t("tabReviews", { count: teacherReviews.length })}
+                </TabTrigger>
               </TabsList>
+            </div>
 
-              {/* About */}
-              <TabsContent value="about" className="mt-6">
-                <article className="grid gap-8 lg:grid-cols-2">
-                  <section>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                      {t("aboutWhyMe")}
-                    </p>
-                    <h2 className="mt-2 text-[22px] font-semibold tracking-tight text-foreground">
-                      {teacher.headline[lang]}
-                    </h2>
-                    <p className="mt-3 text-[14.5px] leading-relaxed text-ink-2">{t("aboutWhyMeBody")}</p>
-                  </section>
-                  <section>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                      {t("aboutEducation")}
-                    </p>
-                    <ol className="mt-3 grid gap-2.5">
-                      {(t.raw("aboutEducationItems") as string[]).map((it, i) => (
-                        <li key={i} className="grid grid-cols-[28px_1fr] items-start gap-3 border-s-2 border-border ps-3">
-                          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <span className="text-[14px] text-ink-2">{it}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
-
-                  <section className="lg:col-span-2 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                      {t("aboutToolkit")}
-                    </p>
-                    <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">{t("aboutToolkitBody")}</p>
-                  </section>
-                </article>
-              </TabsContent>
-
-              {/* Courses */}
-              <TabsContent value="courses" className="mt-6">
-                {teacherCourses.length === 0 ? (
-                  <EmptyBlock label={t("coursesEmpty")} />
-                ) : (
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {teacherCourses.map((c, i) => (
-                      <CourseCard key={c.id} course={c} index={i} />
+            {/* About */}
+            <TabsContent value="about" className="mt-6">
+              <article className="grid gap-8 lg:grid-cols-2">
+                <section>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+                    {t("aboutWhyMe")}
+                  </p>
+                  <h2 className="mt-2 text-[20px] font-semibold tracking-tight text-foreground md:text-[22px]">
+                    {teacher.headline[lang]}
+                  </h2>
+                  <p className="mt-3 text-[14.5px] leading-relaxed text-ink-2">
+                    {t("aboutWhyMeBody")}
+                  </p>
+                </section>
+                <section>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+                    {t("aboutEducation")}
+                  </p>
+                  <ol className="mt-3 grid gap-2.5">
+                    {(t.raw("aboutEducationItems") as string[]).map((it, i) => (
+                      <li
+                        key={i}
+                        className="grid grid-cols-[28px_1fr] items-start gap-3 border-s-2 border-border ps-3"
+                      >
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-[14px] text-ink-2">{it}</span>
+                      </li>
                     ))}
-                  </div>
-                )}
-              </TabsContent>
+                  </ol>
+                </section>
 
-              {/* Reviews */}
-              <TabsContent value="reviews" className="mt-6">
-                {teacherReviews.length === 0 ? (
-                  <EmptyBlock label={t("reviewsEmpty")} />
-                ) : (
+                <section className="lg:col-span-2 rounded-[var(--radius-lg)] border border-border bg-card p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+                    {t("aboutToolkit")}
+                  </p>
+                  <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">
+                    {t("aboutToolkitBody")}
+                  </p>
+                </section>
+
+                {/* Trust strip — moved from hero for cleaner scan */}
+                <section className="lg:col-span-2 flex items-center gap-2.5 rounded-[var(--radius-lg)] border border-border bg-surface/50 p-4">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-success/10 text-success">
+                    <ShieldCheck className="h-4 w-4" aria-hidden />
+                  </span>
+                  <p className="text-[12.5px] leading-relaxed text-ink-2">{t("stickyTrust")}</p>
+                </section>
+              </article>
+            </TabsContent>
+
+            {/* Courses */}
+            <TabsContent value="courses" className="mt-6">
+              {teacherCourses.length === 0 ? (
+                <EmptyBlock label={t("coursesEmpty")} />
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {teacherCourses.map((c, i) => (
+                    <CourseCard key={c.id} course={c} index={i} />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Availability */}
+            <TabsContent value="availability" className="mt-6" id="availability">
+              <p className="text-[14px] text-ink-2">{t("availabilityBody")}</p>
+              <AvailabilityGrid onPick={setPickedSlot} />
+            </TabsContent>
+
+            {/* Reviews */}
+            <TabsContent value="reviews" className="mt-6">
+              {!hasReviews ? (
+                <EmptyBlock label={t("reviewsEmptyLong")} />
+              ) : (
+                <>
+                  {/* Rating summary — only rendered when we have real reviews */}
+                  <div className="mb-5 flex items-center gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-[28px] font-bold tabular text-foreground">
+                        {teacher.rating.toFixed(2)}
+                      </span>
+                      <span className="text-[12px] text-ink-3 tabular">/ 5</span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-0.5 text-warning">
+                        {Array.from({ length: 5 }).map((_, k) => (
+                          <Star
+                            key={k}
+                            className={cn(
+                              "h-3.5 w-3.5",
+                              k < Math.round(teacher.rating)
+                                ? "fill-warning"
+                                : "text-border-strong",
+                            )}
+                            aria-hidden
+                          />
+                        ))}
+                      </div>
+                      <p className="text-[12px] text-ink-3 tabular">
+                        {tHome("reviews", { count: teacher.reviews })}
+                      </p>
+                    </div>
+                  </div>
+
                   <ol className="grid gap-3">
                     {teacherReviews.map((r, i) => (
                       <li
@@ -382,23 +474,27 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
                         className="grid grid-cols-[44px_1fr] gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-5"
                       >
                         <Avatar className="h-11 w-11">
-                          <AvatarFallback className={cn("bg-gradient-to-br text-sm text-white", r.studentAccent)}>
+                          <AvatarFallback
+                            className={cn("bg-gradient-to-br text-sm text-white", r.studentAccent)}
+                          >
                             {r.studentInitials}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
                           <div className="flex items-baseline justify-between gap-3">
                             <div className="flex items-baseline gap-2">
-                              <p className="text-[14.5px] font-semibold text-foreground">{r.studentName[lang]}</p>
+                              <p className="text-[14.5px] font-semibold text-foreground">
+                                {r.studentName[lang]}
+                              </p>
                               <span className="text-[11px] uppercase tracking-[0.18em] text-ink-3 tabular">
                                 № {String(i + 1).padStart(2, "0")}
                               </span>
                             </div>
                             <p className="text-[11.5px] text-ink-3 tabular">{r.date[lang]}</p>
                           </div>
-                          <div className="mt-1 flex items-center gap-1 text-warning">
+                          <div className="mt-1 flex items-center gap-0.5 text-warning">
                             {Array.from({ length: r.rating }).map((_, k) => (
-                              <Star key={k} className="h-3.5 w-3.5 fill-warning" />
+                              <Star key={k} className="h-3.5 w-3.5 fill-warning" aria-hidden />
                             ))}
                           </div>
                           <p className="mt-3 text-[14px] leading-relaxed text-ink-2 text-pretty">
@@ -413,98 +509,54 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
                       </li>
                     ))}
                   </ol>
-                )}
-              </TabsContent>
+                </>
+              )}
+            </TabsContent>
+          </Tabs>
 
-              {/* Availability */}
-              <TabsContent value="availability" className="mt-6">
-                <p className="text-[14px] text-ink-2">{t("availabilityBody")}</p>
-                <AvailabilityGrid onPick={setPickedSlot} />
-              </TabsContent>
-            </Tabs>
+          {/* Report / published — small footer strip. */}
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5 text-[11.5px] text-ink-3">
+            <span>{t("publishedLabel", { label: t("publishedLabelValue") })}</span>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-[var(--radius-xs)] px-1 -mx-1 transition-colors hover:text-danger focus-visible:outline-none focus-visible:shadow-focus"
+            >
+              <Flag className="h-3.5 w-3.5" aria-hidden />
+              {t("reportLabel")}
+            </button>
           </div>
-
-          {/* Sticky rail (desktop) */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 grid gap-4">
-              <div className="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-e1">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                  {t("stickyEyebrow")}
-                </p>
-                <p className="mt-2 text-[12.5px] text-ink-2">{t("stickyTrust")}</p>
-                <Separator className="my-4" />
-                <div className="grid gap-2">
-                  <CheckoutDialog
-                    kind="1to1"
-                    subjectTitle={teacher.subject}
-                    teacherSlug={teacher.slug}
-                    teacherName={teacher.name}
-                    priceDzd={teacher.hourlyRate}
-                    trigger={
-                      <Button variant="primary" size="md">
-                        {t("stickyBook1to1")}
-                        <Arrow className="h-4 w-4" />
-                      </Button>
-                    }
-                  />
-                  {applyCourse ? (
-                    <CheckoutDialog
-                      kind="course"
-                      subjectTitle={applyCourse.title}
-                      teacherSlug={teacher.slug}
-                      teacherName={teacher.name}
-                      priceDzd={applyCourse.priceDzd}
-                      scheduleLabel={applyCourse.dates[0]?.label}
-                      trigger={
-                        <Button variant="outline" size="md">
-                          {t("stickyApplyCourse")}
-                        </Button>
-                      }
-                    />
-                  ) : (
-                    <Button variant="outline" size="md" disabled>
-                      {t("stickyApplyCourse")}
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="md" onClick={handleMessage}>
-                    {t("stickyMessage")}
-                  </Button>
-                </div>
-                <Separator className="my-4" />
-                <ul className="grid gap-2 text-[12.5px] text-ink-2">
-                  <li className="flex items-center justify-between">
-                    <span className="text-ink-3">{t("stickyStartFrom")}</span>
-                    <span className="font-semibold tabular text-foreground">
-                      {formatPrice(teacher.hourlyRate, locale)}
-                      <span className="ms-0.5 text-[11px] text-ink-3">{t("stickyPerHour")}</span>
-                    </span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-ink-3">{t("responseTime", { hours: teacher.responseHours })}</span>
-                    <span className="font-semibold tabular text-foreground">{teacher.responseHours}h</span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-ink-3">{t("completion")}</span>
-                    <span className="font-semibold tabular text-foreground">98%</span>
-                  </li>
-                </ul>
-              </div>
-
-              <p className="px-2 text-[11px] text-ink-3">
-                {t("publishedLabel", { label: t("publishedLabelValue") })}
-              </p>
-
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 rounded px-2 text-[12px] text-ink-3 transition-colors hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              >
-                <Flag className="h-3.5 w-3.5" aria-hidden />
-                {t("reportLabel")}
-              </button>
-            </div>
-          </aside>
         </div>
       </section>
+
+      {/* Sticky bottom CTA — mobile only. Elevated shadow-e3, respects safe area. */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background pb-safe shadow-e3 lg:hidden">
+        <div className="container-narrow flex h-16 items-center gap-3">
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+              {t("stickyPriceLabel")}
+            </p>
+            <p className="text-[15px] font-semibold tabular text-foreground">
+              {formatPrice(teacher.hourlyRate, locale)}
+              <span className="ms-0.5 text-[11px] font-normal text-ink-3">
+                {t("stickyPerHour")}
+              </span>
+            </p>
+          </div>
+          <CheckoutDialog
+            kind="1to1"
+            subjectTitle={teacher.subject}
+            teacherSlug={teacher.slug}
+            teacherName={teacher.name}
+            priceDzd={teacher.hourlyRate}
+            trigger={
+              <Button variant="primary" size="lg" className="ms-auto">
+                {t("stickyBook1to1")}
+                <Arrow className="h-4 w-4" aria-hidden />
+              </Button>
+            }
+          />
+        </div>
+      </div>
 
       {/* Slot-prefilled checkout — controlled by AvailabilityGrid clicks. */}
       <CheckoutDialog
@@ -525,30 +577,145 @@ export function TeacherProfile({ teacher }: { teacher: Teacher }) {
   );
 }
 
-function NumLi({
-  label,
-  value,
-  subtle,
-  highlight = false,
+/* -------------------------------------------------------------------------- */
+/* Sub-components                                                             */
+/* -------------------------------------------------------------------------- */
+
+function RightRail({
+  teacher,
+  applyCourse,
+  onMessage,
+  onScrollToAvailability,
 }: {
-  label: string;
-  value: string;
-  subtle: string;
-  highlight?: boolean;
+  teacher: Teacher;
+  applyCourse: ReturnType<typeof coursesForTeacher>[number] | null;
+  onMessage: () => void;
+  onScrollToAvailability: () => void;
 }) {
+  const t = useTranslations("student.teacherProfile");
+  const locale = useLocale();
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const hasReviews = teacher.reviews > 0;
+
   return (
-    <li
+    <div className="rounded-[var(--radius-lg)] border border-border bg-card shadow-e1">
+      {/* Price header */}
+      <div className="border-b border-border bg-surface/40 px-4 py-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
+          {t("stickyStartFrom")}
+        </p>
+        <p className="mt-0.5 text-[22px] font-bold tabular text-foreground">
+          {formatPrice(teacher.hourlyRate, locale)}
+          <span className="ms-1 text-[13px] font-normal text-ink-3">{t("stickyPerHour")}</span>
+        </p>
+        <div className="mt-2">
+          <ResponseSignalBadge
+            signals={deriveResponseSignals(teacher.id, teacher.responseHours)}
+          />
+        </div>
+      </div>
+
+      {/* CTA stack */}
+      <div className="grid gap-2 p-4">
+        <CheckoutDialog
+          kind="1to1"
+          subjectTitle={teacher.subject}
+          teacherSlug={teacher.slug}
+          teacherName={teacher.name}
+          priceDzd={teacher.hourlyRate}
+          trigger={
+            <Button variant="primary" size="md" block>
+              {t("stickyBook1to1")}
+              <Arrow className="h-4 w-4" aria-hidden />
+            </Button>
+          }
+        />
+        {applyCourse ? (
+          <CheckoutDialog
+            kind="course"
+            subjectTitle={applyCourse.title}
+            teacherSlug={teacher.slug}
+            teacherName={teacher.name}
+            priceDzd={applyCourse.priceDzd}
+            scheduleLabel={applyCourse.dates[0]?.label}
+            trigger={
+              <Button variant="outline" size="md" block>
+                {t("stickyApplyCourse")}
+              </Button>
+            }
+          />
+        ) : (
+          <Button variant="outline" size="md" block disabled>
+            {t("stickyApplyCourse")}
+          </Button>
+        )}
+        <Button variant="ghost" size="md" block onClick={onMessage}>
+          <MessageCircle className="h-4 w-4" aria-hidden />
+          {t("stickyMessage")}
+        </Button>
+        <button
+          type="button"
+          onClick={onScrollToAvailability}
+          className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-xs)] text-[12.5px] font-medium text-accent transition-colors hover:text-accent-hover focus-visible:outline-none focus-visible:shadow-focus"
+        >
+          {t("stickySeeAvailability")}
+          <Arrow className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </div>
+
+      {/* Availability preview + stats */}
+      <Separator />
+      <ul className="grid gap-2 px-4 py-3 text-[12.5px] text-ink-2">
+        <li className="flex items-center justify-between">
+          <span className="text-ink-3">{t("responseTime", { hours: teacher.responseHours })}</span>
+          <span className="font-semibold tabular text-foreground">{teacher.responseHours}h</span>
+        </li>
+        <li className="flex items-center justify-between">
+          <span className="text-ink-3">{t("completion")}</span>
+          <span className="font-semibold tabular text-foreground">98%</span>
+        </li>
+        {hasReviews && (
+          <li className="flex items-center justify-between">
+            <span className="text-ink-3">{t("tabReviews", { count: teacher.reviews })}</span>
+            <span className="inline-flex items-center gap-1 font-semibold tabular text-foreground">
+              <Star className="h-3.5 w-3.5 fill-warning text-warning" aria-hidden />
+              {teacher.rating.toFixed(2)}
+            </span>
+          </li>
+        )}
+      </ul>
+
+      {/* Trust footer */}
+      <p className="flex items-start gap-1.5 border-t border-border bg-surface/40 px-4 py-3 text-[11px] leading-relaxed text-ink-3">
+        <ShieldCheck className="mt-0.5 h-3 w-3 shrink-0 text-success" aria-hidden />
+        {t("stickyTrust")}
+      </p>
+    </div>
+  );
+}
+
+function Chip({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-[12px] font-medium text-ink-2">
+      {icon}
+      {children}
+    </span>
+  );
+}
+
+function TabTrigger({ value, children }: { value: string; children: React.ReactNode }) {
+  return (
+    <TabsTrigger
+      value={value}
       className={cn(
-        "px-4 py-4",
-        highlight && "bg-accent-soft/40",
+        // Mobile look — underline pill, no bg
+        "relative h-11 shrink-0 rounded-none border-b-2 border-transparent bg-transparent px-3 text-[13.5px] text-ink-2 data-[state=active]:border-accent data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none",
+        // Desktop reverts to the shell's pill treatment
+        "lg:h-8 lg:rounded-[var(--radius-xs)] lg:border-b-0 lg:px-3 lg:data-[state=active]:bg-background lg:data-[state=active]:shadow-e1",
       )}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
-      <p className={cn("mt-0.5 text-[20px] font-bold tabular", highlight ? "text-accent" : "text-foreground")}>
-        {value}
-      </p>
-      <p className="mt-0.5 text-[10.5px] text-ink-3 line-clamp-1">{subtle}</p>
-    </li>
+      {children}
+    </TabsTrigger>
   );
 }
 
@@ -634,7 +801,9 @@ function AvailabilityGrid({
           ))}
           {hours.map((h, hi) => (
             <div key={h} className="contents">
-              <div className="border-b border-border px-3 py-2 text-[11.5px] tabular text-ink-3">{h}:00</div>
+              <div className="border-b border-border px-3 py-2 text-[11.5px] tabular text-ink-3">
+                {h}:00
+              </div>
               {days.map((d, di) => {
                 const booked = isBooked(di, hi);
                 return (
@@ -652,7 +821,7 @@ function AvailabilityGrid({
                     )}
                     aria-label={booked ? t("availabilityBooked") : t("availabilityFree")}
                   >
-                    {booked ? "—" : <CheckCheck className="mx-auto h-3.5 w-3.5" />}
+                    {booked ? "—" : <CheckCheck className="mx-auto h-3.5 w-3.5" aria-hidden />}
                   </button>
                 );
               })}
@@ -668,9 +837,9 @@ function EmptyBlock({ label }: { label: string }) {
   return (
     <div className="grid place-items-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-card p-10 text-center">
       <span className="grid h-10 w-10 place-items-center rounded-full bg-surface text-ink-3">
-        <BookOpen className="h-4 w-4" />
+        <BookOpen className="h-4 w-4" aria-hidden />
       </span>
-      <p className="text-[13px] text-ink-2">{label}</p>
+      <p className="max-w-md text-[13px] leading-relaxed text-ink-2">{label}</p>
     </div>
   );
 }

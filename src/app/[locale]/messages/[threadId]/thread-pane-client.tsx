@@ -58,11 +58,8 @@ function MissingThreadPane() {
       <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-ink-3">
         {t("title")}
       </p>
-      <h2
-        className="font-serif text-2xl text-foreground"
-        style={{ fontFamily: "ui-serif, Georgia, serif" }}
-      >
-        <span className="italic">{t("emptyFiltered.title")}</span>
+      <h2 className="text-[20px] font-semibold tracking-tight text-foreground">
+        {t("emptyFiltered.title")}
       </h2>
       <p className="max-w-sm text-pretty text-sm text-ink-2">
         {t("emptyFiltered.body")}

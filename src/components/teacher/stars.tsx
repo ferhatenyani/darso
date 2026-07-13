@@ -15,7 +15,7 @@ export function Stars({ value, size = 14, className }: { value: number; size?: n
             key={i}
             width={size}
             height={size}
-            className={filled ? "fill-[#DDA13A] text-[#DDA13A]" : "text-border-strong"}
+            className={filled ? "fill-warning text-warning" : "text-border-strong"}
             aria-hidden
           />
         );

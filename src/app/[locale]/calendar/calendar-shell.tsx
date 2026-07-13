@@ -134,13 +134,10 @@ export function CalendarShell() {
             <span className="ink-rule" aria-hidden />
             <span>{t("eyebrow")}</span>
           </div>
-          <h1
-            className="mt-3 font-serif text-4xl text-foreground sm:text-5xl"
-            style={{ fontFamily: "ui-serif, Georgia, serif" }}
-          >
-            <span className="text-balance">{t("title")} </span>
-            <span className="italic text-accent">·</span>{" "}
-            <span className="italic text-ink-2 text-balance">{monthLabel}</span>
+          <h1 className="mt-3 text-[28px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[36px]">
+            <span className="text-balance">{t("title")}</span>{" "}
+            <span className="text-accent">·</span>{" "}
+            <span className="font-medium text-ink-2 text-balance">{monthLabel}</span>
           </h1>
           <p className="mt-3 max-w-xl text-pretty text-[15px] text-ink-2">{t("subtitle")}</p>
         </div>
@@ -177,7 +174,7 @@ export function CalendarShell() {
                   {t("block.openSheet")}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="max-h-[88dvh] rounded-t-[var(--radius-2xl)]">
+              <SheetContent side="bottom" className="max-h-[88dvh] rounded-t-[var(--radius-xl)]">
                 <SheetHeader>
                   <SheetTitle>{t("block.title")}</SheetTitle>
                   <SheetDescription>{t("block.subtitle")}</SheetDescription>
@@ -238,8 +235,8 @@ export function CalendarShell() {
             />
           ) : (
             <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-e1">
-              <h2 className="mb-1 font-serif text-lg" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
-                <span className="italic text-accent">·</span> {t("block.title")}
+              <h2 className="mb-1 text-[17px] font-semibold text-foreground">
+                <span className="text-accent">·</span> {t("block.title")}
               </h2>
               <p className="mb-4 text-xs text-ink-3">{t("block.subtitle")}</p>
               <BlockTimeForm />

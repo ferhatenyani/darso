@@ -40,7 +40,7 @@ function useDebounced<T>(value: T, delayMs: number): T {
 
 type Lang = "fr" | "ar";
 
-const SUGGESTIONS = ["Maths", "IELTS", "Coran", "Piano", "Programming"];
+const SUGGESTIONS = ["Maths", "IELTS", "Coran", "Piano", "React"];
 const MAX_PER_GROUP = 6;
 
 /* --------------------------------------------------------------------- */
@@ -108,15 +108,16 @@ export function GlobalSearch({ initialQuery }: { initialQuery: string }) {
 
   return (
     <div>
-      {/* Sticky search header */}
+      {/* Sticky search header — the search input owns focus on mount and
+          reflects into the URL so bookmarks / share sheets carry state. */}
       <section className="sticky top-[var(--site-header-h,64px)] z-20 border-b border-border bg-background/95 backdrop-blur">
-        <div className="container-narrow py-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
+        <div className="container-standard py-5 md:py-6">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
             {t("eyebrow")}
           </p>
-          <div className="mt-3 flex items-center gap-3 rounded-[var(--radius-xl)] border border-border-strong bg-card p-2 shadow-e1 transition-[border-color,box-shadow] focus-within:border-foreground focus-within:shadow-e2">
-            <span className="ms-1 grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-surface text-ink-2">
-              <SearchIcon className="h-4 w-4" />
+          <div className="mt-3 flex items-center gap-2 rounded-[var(--radius-lg)] border border-border-strong bg-card p-1.5 shadow-e1 transition-[border-color,box-shadow] focus-within:border-accent focus-within:shadow-e2">
+            <span className="ms-1 grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] bg-surface text-ink-2">
+              <SearchIcon className="h-4 w-4" aria-hidden />
             </span>
             <input
               ref={inputRef}
@@ -125,7 +126,7 @@ export function GlobalSearch({ initialQuery }: { initialQuery: string }) {
               placeholder={t("placeholder")}
               aria-label={t("ariaLabel")}
               dir={locale === "ar" ? "rtl" : "ltr"}
-              className="h-10 flex-1 bg-transparent text-[15px] text-foreground placeholder:text-ink-3 focus:outline-none"
+              className="h-11 flex-1 bg-transparent text-[15px] text-foreground placeholder:text-ink-3 focus:outline-none"
             />
             {trimmed.length > 0 && (
               <span className="me-2 hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-3 sm:inline tabular">
@@ -136,7 +137,7 @@ export function GlobalSearch({ initialQuery }: { initialQuery: string }) {
         </div>
       </section>
 
-      <section className="container-narrow grid gap-10 py-10">
+      <section className="container-standard grid gap-10 py-10">
         {/* === No query / short query — jump links === */}
         {!hasQuery && (
           <article>
@@ -247,15 +248,15 @@ function JumpLink({
   return (
     <Link
       href={href as never}
-      className="group flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border bg-card p-4 transition-colors hover:border-foreground hover:bg-surface"
+      className="group card-interactive flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border bg-card p-4 shadow-e1"
     >
       <span className="flex items-center gap-3">
-        <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-surface text-ink-2 transition-colors group-hover:bg-background group-hover:text-foreground">
+        <span className="grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] bg-surface text-ink-2 transition-colors group-hover:bg-accent-soft group-hover:text-accent">
           {icon}
         </span>
         <span className="text-[14px] font-medium text-foreground">{label}</span>
       </span>
-      <ArrowUpRight className="h-4 w-4 text-ink-3 transition-colors group-hover:text-foreground" />
+      <ArrowUpRight className="h-4 w-4 text-ink-3 transition-colors group-hover:text-accent" />
     </Link>
   );
 }

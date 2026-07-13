@@ -39,7 +39,7 @@ export default async function PayoutsPage({ params }: Props) {
           <span className="ink-rule" aria-hidden />
           {loc === "ar" ? "الخزينة" : "Trésorerie"}
         </p>
-        <h1 className="mt-3 text-balance text-[30px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[40px] md:text-[52px]">
+        <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[36px] md:text-[44px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-pretty text-[15px] text-ink-2 sm:text-base">

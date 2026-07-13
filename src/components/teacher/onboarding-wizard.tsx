@@ -437,7 +437,7 @@ function StepIdentity({
             className={cn(
               "relative grid h-16 w-16 shrink-0 place-items-center rounded-full border text-background transition-all",
               selfieCaptured
-                ? "border-success/40 bg-gradient-to-br from-[#1C3A5E] via-[#2F6BFF] to-[#7BB7FF]"
+                ? "border-success/40 bg-primary text-primary-foreground"
                 : "border-dashed border-border bg-surface text-ink-3",
             )}
             aria-hidden

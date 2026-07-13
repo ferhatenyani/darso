@@ -123,10 +123,7 @@ export function DisputeDetail({ dispute }: { dispute: Dispute }) {
             <span aria-hidden>·</span>
             <span className="font-mono tracking-tight text-foreground">{dispute.id}</span>
           </div>
-          <h1
-            className="mt-3 max-w-3xl font-serif text-4xl text-foreground sm:text-5xl"
-            style={{ fontFamily: "ui-serif, Georgia, serif" }}
-          >
+          <h1 className="mt-3 max-w-3xl text-[28px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[36px] lg:text-[40px]">
             <span className="text-balance">{dispute.title[lang]}</span>
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-ink-2">

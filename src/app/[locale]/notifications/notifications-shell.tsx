@@ -65,7 +65,7 @@ export function NotificationsShell() {
   const unreadCount = filtered.filter((n) => n.unread).length;
 
   return (
-    <section className="container-narrow grid gap-8 py-10 lg:grid-cols-[1fr_280px]">
+    <section className="container-narrow grid gap-8 py-8 md:py-10 lg:grid-cols-[1fr_280px]">
       <div>
         {/* Editorial header */}
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
@@ -74,10 +74,7 @@ export function NotificationsShell() {
               <span className="ink-rule" aria-hidden />
               <span>{t("title")}</span>
             </div>
-            <h1
-              className="mt-3 font-serif text-4xl text-foreground sm:text-5xl"
-              style={{ fontFamily: "ui-serif, Georgia, serif" }}
-            >
+            <h1 className="mt-3 text-[28px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[32px] md:text-[36px]">
               <span className="text-balance">{t("subtitle")}</span>
             </h1>
           </div>
@@ -116,11 +113,7 @@ export function NotificationsShell() {
             <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
               {String(unreadCount).padStart(2, "0")}
             </span>
-            <h2
-              className="mt-2 font-serif text-lg leading-snug"
-              style={{ fontFamily: "ui-serif, Georgia, serif" }}
-            >
-              <span className="italic text-accent">·</span>{" "}
+            <h2 className="mt-2 text-[16px] font-semibold leading-snug text-foreground">
               {unreadCount === 1
                 ? t("type.message") /* single-noun fallback */
                 : t("title")}

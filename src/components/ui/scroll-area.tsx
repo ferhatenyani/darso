@@ -4,13 +4,25 @@ import * as React from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { cn } from "@/lib/utils";
 
+type ScrollAreaProps = React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & {
+  /**
+   * Which scroll axes to expose scrollbars for. Defaults to vertical-only so
+   * existing callsites don't shift. Set to `"both"` (or `"horizontal"`) when
+   * the inner content declares an explicit `min-w-[…]` wider than the
+   * viewport — mirrors how the calendar `WeekView` needs to expose
+   * horizontal scrolling on mobile without losing the ink-tinted thumb.
+   */
+  orientation?: "vertical" | "horizontal" | "both";
+};
+
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
->(({ className, children, ...props }, ref) => (
+  ScrollAreaProps
+>(({ className, children, orientation = "vertical", ...props }, ref) => (
   <ScrollAreaPrimitive.Root ref={ref} className={cn("relative overflow-hidden", className)} {...props}>
     <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
-    <ScrollBar />
+    {orientation !== "horizontal" && <ScrollBar orientation="vertical" />}
+    {orientation !== "vertical" && <ScrollBar orientation="horizontal" />}
     <ScrollAreaPrimitive.Corner />
   </ScrollAreaPrimitive.Root>
 ));

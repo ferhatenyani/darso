@@ -61,11 +61,11 @@ export function DiscoverMenu() {
         align="start"
         sideOffset={10}
         collisionPadding={16}
-        className="w-screen max-w-[880px] p-0 rounded-[var(--radius-2xl)] border-border-strong"
+        className="w-screen max-w-[880px] p-0 rounded-[var(--radius-xl)] border-border-strong"
       >
         <div className="grid grid-cols-12">
           {/* Left rail: format + audience */}
-          <aside className="col-span-4 rounded-s-[var(--radius-2xl)] bg-surface p-5">
+          <aside className="col-span-4 rounded-s-[var(--radius-xl)] bg-surface p-5">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
               {t("discoverEyebrow")}
             </p>

@@ -118,7 +118,7 @@ export function CoursesView({ locale }: { locale: "fr" | "ar" }) {
           </ul>
 
           {/* Desktop table */}
-          <div className="hidden overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card md:block">
+          <div className="hidden overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card md:block">
             <div className="grid grid-cols-[2.5fr_1fr_1.2fr_1.5fr_1fr_88px] gap-4 border-b border-border bg-surface/60 px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3">
               <span>{t("thead.title")}</span>
               <span>{t("thead.format")}</span>

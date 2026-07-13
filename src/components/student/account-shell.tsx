@@ -87,19 +87,19 @@ export function AccountShell() {
       {/* Header strip */}
       <section className="relative isolate border-b border-border bg-background">
         <div aria-hidden className="absolute inset-0 -z-10 bg-dots opacity-40 [mask-image:radial-gradient(70%_60%_at_30%_0%,black,transparent_80%)]" />
-        <div className="container-narrow py-10">
+        <div className="container-narrow py-8 md:py-10">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">{t("title")}</p>
-          <div className="mt-3 flex flex-wrap items-end gap-6">
-            <Avatar className="h-16 w-16 shadow-e1">
-              <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-lg text-white">
+          <div className="mt-3 flex flex-wrap items-end gap-5 md:gap-6">
+            <Avatar className="h-14 w-14 shadow-e1 md:h-16 md:w-16">
+              <AvatarFallback className="bg-primary text-base text-primary-foreground md:text-lg">
                 {displayInitials}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-[32px] font-bold leading-[1.02] tracking-tight text-foreground md:text-[40px]">
+              <h1 className="text-[26px] font-semibold leading-[1.05] tracking-tight text-foreground md:text-[32px]">
                 {displayName}
               </h1>
-              <p className="mt-1.5 text-[13px] text-ink-2">
+              <p className="mt-1 text-[13px] text-ink-2">
                 {t("memberSince", { date: t("memberSinceValue") })}
               </p>
               <p className="mt-1 flex items-center gap-1.5 text-[12px] text-ink-3">
@@ -112,9 +112,39 @@ export function AccountShell() {
       </section>
 
       <section className="bg-background">
-        <div className="container-narrow grid gap-8 py-10 md:grid-cols-[200px_1fr] md:gap-10 lg:grid-cols-[240px_1fr] lg:gap-12">
-          {/* Sidebar nav */}
-          <nav aria-label={t("title")}>
+        {/* Mobile: horizontally scrollable section tabs (touch-safe, ≥44px targets).
+            Desktop: sticky left sidebar. */}
+        <div
+          className="sticky top-0 z-10 -mx-4 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/85 md:hidden"
+          role="tablist"
+          aria-label={t("title")}
+        >
+          <div className="scroll-none flex gap-1 overflow-x-auto py-2">
+            {navItems.map((it) => (
+              <button
+                key={it.key}
+                type="button"
+                role="tab"
+                aria-selected={section === it.key}
+                onClick={() => setSection(it.key)}
+                className={cn(
+                  "inline-flex h-11 shrink-0 items-center gap-2 rounded-[var(--radius-xs)] px-3 text-[13.5px] font-medium transition-colors",
+                  "focus-visible:outline-none focus-visible:shadow-focus",
+                  section === it.key
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border bg-card text-ink-2 hover:border-border-strong hover:text-foreground",
+                )}
+              >
+                <span aria-hidden>{it.icon}</span>
+                <span>{it.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="container-narrow grid gap-8 py-8 md:grid-cols-[200px_1fr] md:gap-10 md:py-10 lg:grid-cols-[240px_1fr] lg:gap-12">
+          {/* Desktop sidebar nav */}
+          <nav aria-label={t("title")} className="hidden md:block">
             <ul className="grid gap-1 rounded-[var(--radius-lg)] border border-border bg-card p-2">
               {navItems.map((it) => (
                 <li key={it.key}>
@@ -123,8 +153,8 @@ export function AccountShell() {
                     onClick={() => setSection(it.key)}
                     aria-current={section === it.key ? "page" : undefined}
                     className={cn(
-                      "group flex w-full items-center gap-2.5 rounded-[var(--radius-md)] px-3 py-2.5 text-[13.5px] text-ink-2 transition-colors",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                      "group flex w-full items-center gap-2.5 rounded-[var(--radius-xs)] px-3 py-2.5 text-[13.5px] text-ink-2 transition-colors",
+                      "focus-visible:outline-none focus-visible:shadow-focus",
                       section === it.key
                         ? "bg-surface text-foreground font-semibold"
                         : "hover:bg-surface hover:text-foreground",
@@ -165,6 +195,22 @@ export function AccountShell() {
             {section === "payments" && <PaymentsSection />}
             {section === "security" && <SecuritySection />}
             {section === "danger" && <DangerSection />}
+
+            {/* Mobile-only sign out row lives at the bottom of the pane so
+                the top scrollable tab bar keeps every section in reach. */}
+            <div className="mt-8 md:hidden">
+              <Button
+                type="button"
+                variant="ghost"
+                size="md"
+                className="h-11 w-full justify-start text-ink-2"
+                onClick={() => void signOut()}
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="ms-1">{t("signOut")}</span>
+                <Arrow className="ms-auto h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -220,8 +266,8 @@ function ProfileSection({
         <div className="grid gap-3">
           <Label>{t("avatarLabel")}</Label>
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 shadow-e1">
-              <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-lg text-white">
+            <Avatar className="h-14 w-14 shadow-e1 md:h-16 md:w-16">
+              <AvatarFallback className="bg-primary text-base text-primary-foreground md:text-lg">
                 {displayInitials}
               </AvatarFallback>
             </Avatar>
@@ -650,7 +696,24 @@ function PaymentsSection() {
         </Dialog>
       </section>
 
-      {confirmedBookings.length > 0 && (
+      {confirmedBookings.length === 0 ? (
+        <section aria-label={tBooking("payments.recentLabel")}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+            {tBooking("payments.recentLabel")}
+          </p>
+          <div className="mt-3 rounded-[var(--radius-lg)] border border-dashed border-border bg-card px-5 py-6 text-start">
+            <p className="text-[13.5px] font-semibold text-foreground">
+              Aucune réservation pour le moment.
+            </p>
+            <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">
+              Explorez nos enseignants pour trouver votre premier cours.
+            </p>
+            <Button asChild size="sm" className="mt-4">
+              <a href={`/${locale}/teachers`}>Explorer</a>
+            </Button>
+          </div>
+        </section>
+      ) : (
         <section>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
             {tBooking("payments.recentLabel")}

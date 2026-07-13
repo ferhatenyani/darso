@@ -1,137 +1,136 @@
 "use client";
 
+/**
+ * Teachers directory — refreshed to a mobile-first hero + chip filter + grid
+ * layout that reuses the marketing TeacherCard (the newer densified variant).
+ * The historic "leaderboard table" export name is preserved so the page
+ * import stays stable during redesign.
+ */
+
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  ChevronDown,
-  ChevronRight,
-  Star,
-  ArrowRight,
-  ArrowLeft,
-  ShieldCheck,
-  Wifi,
-  MapPin,
-} from "lucide-react";
+import { ChevronDown, MapPin, ShieldCheck } from "lucide-react";
 
-import { Link } from "@/i18n/navigation";
+import { TeacherCard } from "@/components/marketing/teacher-card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "@/i18n/navigation";
 import { featuredTeachers, type Teacher } from "@/lib/mock/teachers";
 import { categories, wilayaKeys } from "@/lib/mock/categories";
-import { coursesForTeacher } from "@/lib/mock/courses";
-import { cn, formatPrice } from "@/lib/utils";
+import { routes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
 type SortKey = "rating" | "newest" | "priceAsc" | "response";
+type QuickChip = "all" | "verified" | "topRated" | "fast" | "online" | "inPerson";
 
 export function TeachersLeaderboard() {
   const t = useTranslations("student.teachers");
-  const tHome = useTranslations("home.teachers");
-  const tCommon = useTranslations("student.common");
   const tCats = useTranslations("home.categories.items");
   const tWilayas = useTranslations("search.wilayas");
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "fr";
-  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
 
   const [sort, setSort] = useState<SortKey>("rating");
   const [subject, setSubject] = useState<string>("any");
   const [wilaya, setWilaya] = useState<string>("any");
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [chip, setChip] = useState<QuickChip>("all");
 
   const ranked = useMemo<Teacher[]>(() => {
     return [...featuredTeachers]
-      .filter((t) => subject === "any" || t.subject[lang].toLowerCase().includes(tCats(`${subject}.name` as never).toLowerCase()))
-      .filter((t) => wilaya === "any" || t.city[lang].toLowerCase() === tWilayas(wilaya as never).toLowerCase())
+      .filter((tc) =>
+        subject === "any" ||
+        tc.subject[lang].toLowerCase().includes(tCats(`${subject}.name` as never).toLowerCase()),
+      )
+      .filter((tc) => wilaya === "any" || tc.city[lang].toLowerCase() === tWilayas(wilaya as never).toLowerCase())
+      .filter((tc) => {
+        if (chip === "verified") return tc.idVerified && tc.contactVerified;
+        if (chip === "topRated") return Boolean(tc.topRated);
+        if (chip === "fast") return tc.responseHours <= 3;
+        if (chip === "online") return tc.mode === "online" || tc.mode === "both";
+        if (chip === "inPerson") return tc.mode === "in-person" || tc.mode === "both";
+        return true;
+      })
       .sort((a, b) => {
         if (sort === "rating") return b.rating - a.rating;
         if (sort === "priceAsc") return a.hourlyRate - b.hourlyRate;
         if (sort === "response") return a.responseHours - b.responseHours;
-        return b.lessons - a.lessons; // "newest" stand-in
+        return b.lessons - a.lessons;
       });
-  }, [sort, subject, wilaya, lang, tCats, tWilayas]);
+  }, [sort, subject, wilaya, chip, lang, tCats, tWilayas]);
 
-  const wilayaCount = new Set(ranked.map((t) => t.city[lang])).size;
+  const wilayaCount = new Set(ranked.map((tc) => tc.city[lang])).size;
+
+  const chips: { key: QuickChip; label: string }[] = [
+    { key: "all", label: t("filterSubjectAny") },
+    { key: "verified", label: t("verifiedChip") },
+    { key: "topRated", label: t("topRatedChip") },
+    { key: "fast", label: t("fastChip") },
+    { key: "online", label: t("modeOnline") },
+    { key: "inPerson", label: t("modeInPerson") },
+  ];
 
   return (
     <>
-      {/* Hero */}
+      {/* ========== HERO ========== */}
       <section className="relative isolate border-b border-border bg-background">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-grid-sm opacity-50 [mask-image:radial-gradient(80%_70%_at_80%_0%,black,transparent_80%)]" />
-        <span
+        <div
           aria-hidden
-          className="pointer-events-none absolute -top-4 end-6 -z-10 select-none text-[140px] font-black leading-none tracking-tighter text-foreground/[0.04] md:text-[200px]"
-        >
-          TOP
-        </span>
-        <div className="container-narrow grid gap-8 py-12 md:py-16 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-              {t("pageEyebrow")}
-            </p>
-            <h1 className="mt-3 text-[40px] font-bold leading-[1.02] tracking-tight text-foreground md:text-[54px]">
-              <span className="block">{t("title")}</span>
-              <span className="block font-light italic text-ink-2">{t("titleAccent")}</span>
-            </h1>
-            <p className="mt-4 max-w-xl text-[14.5px] leading-relaxed text-ink-2">{t("subtitle")}</p>
-          </div>
+          className="absolute inset-0 -z-10 bg-dots opacity-60 [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent_80%)]"
+        />
+        <div aria-hidden className="absolute start-4 top-0 -z-10 h-[3px] w-16 bg-accent md:start-8" />
+        <div className="container-standard py-10 md:py-14 lg:py-16">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+            {t("pageEyebrow")}
+          </p>
+          <h1 className="mt-3 max-w-3xl text-[32px] font-bold leading-[1.05] tracking-tight text-foreground sm:text-[40px] md:text-[48px]">
+            {t("title")}{" "}
+            <span className="font-light italic text-ink-2">{t("titleAccent")}</span>
+          </h1>
+          <p className="mt-4 max-w-xl text-[14.5px] leading-relaxed text-ink-2">{t("subtitle")}</p>
 
-          {/* Right rail summary */}
-          <div className="rounded-[var(--radius-xl)] border border-border-strong bg-card p-5 shadow-e1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-              {t("leaderboardEyebrow")}
-            </p>
-            <p className="mt-2 text-[14px] text-foreground">
-              {t("leaderboardLine", { count: ranked.length, wilayaCount })}
-            </p>
-            <div className="mt-4 grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius-md)] bg-border">
-              <Stat value={ranked.length.toString()} label={t("teacherCol")} />
-              <Stat
-                value={(ranked.reduce((s, t) => s + t.rating, 0) / Math.max(ranked.length, 1)).toFixed(2)}
-                label={t("ratingCol")}
-              />
-              <Stat
-                value={(ranked.reduce((s, t) => s + t.responseHours, 0) / Math.max(ranked.length, 1)).toFixed(1) + "h"}
-                label={t("responseCol")}
-              />
-            </div>
+          {/* Real, non-fabricated summary line — count + wilaya count only */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-ink-3">
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-accent" aria-hidden />
+              <span className="tabular text-foreground">{ranked.length}</span>{" "}
+              {t("summaryTeachers")}
+            </span>
+            <span aria-hidden className="h-3 w-px bg-border" />
+            <span className="inline-flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-ink-3" aria-hidden />
+              <span className="tabular text-foreground">{wilayaCount}</span>{" "}
+              {t("summaryWilayas")}
+            </span>
           </div>
         </div>
+      </section>
 
-        {/* Filter row */}
-        <div className="border-t border-border bg-surface/40">
-          <div className="container-narrow flex flex-wrap items-center gap-2 py-4">
-            <div className="flex items-center gap-2">
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3 sm:inline">
-                {t("filterSubjectAny")}
-              </span>
-              <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger size="sm" className="min-w-0 flex-1 sm:min-w-44 sm:flex-none">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">{t("filterSubjectAny")}</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c.key} value={c.key}>
-                      {tCats(`${c.key}.name` as never)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      {/* ========== FILTER STRIP ========== */}
+      <div className="sticky top-[var(--site-header-h,64px)] z-30 border-b border-border bg-background/95 backdrop-blur">
+        <div className="container-standard py-3">
+          {/* Row 1: selects + sort */}
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={subject} onValueChange={setSubject}>
+              <SelectTrigger size="sm" className="min-w-0 flex-1 sm:min-w-44 sm:flex-none">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">{t("filterSubjectAny")}</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.key} value={c.key}>
+                    {tCats(`${c.key}.name` as never)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Select value={wilaya} onValueChange={setWilaya}>
               <SelectTrigger size="sm" className="min-w-0 flex-1 sm:min-w-44 sm:flex-none">
                 <SelectValue />
@@ -149,11 +148,16 @@ export function TeachersLeaderboard() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
-                    {t("sortLabel")}: {t(`sort${sort.charAt(0).toUpperCase()}${sort.slice(1)}` as never)}
-                    <ChevronDown className="h-4 w-4" />
+                    {t("sortLabel")}:{" "}
+                    <span>
+                      {t(`sort${sort.charAt(0).toUpperCase()}${sort.slice(1)}` as never)}
+                    </span>
+                    <ChevronDown className="h-3.5 w-3.5" aria-hidden />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>{t("sortLabel")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   {(["rating", "newest", "priceAsc", "response"] as SortKey[]).map((s) => (
                     <DropdownMenuItem key={s} onSelect={() => setSort(s)}>
                       {t(`sort${s.charAt(0).toUpperCase()}${s.slice(1)}` as never)}
@@ -163,197 +167,68 @@ export function TeachersLeaderboard() {
               </DropdownMenu>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Leaderboard table */}
-      <section className="bg-background">
-        <div className="container-narrow py-10">
-          {/* Header row */}
-          <div className="hidden lg:grid grid-cols-[60px_minmax(220px,2.2fr)_120px_120px_140px_140px_120px_40px] items-center gap-3 border-b border-border bg-surface/40 px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-ink-3">
-            <span>{t("rankLabel")}</span>
-            <span>{t("teacherCol")}</span>
-            <span>{t("ratingCol")}</span>
-            <span>{t("lessonsCol")}</span>
-            <span>{t("priceCol")}</span>
-            <span>{t("responseCol")}</span>
-            <span>{t("modeCol") || "Mode"}</span>
-            <span aria-hidden />
-          </div>
-
-          <ul className="grid divide-y divide-border rounded-b-[var(--radius-lg)] border-s border-e border-b border-border bg-card">
-            {ranked.map((teacher, i) => {
-              const isOpen = expanded === teacher.id;
+          {/* Row 2: horizontal-scroll quick chips (mobile-first) */}
+          <div className="scroll-none -mx-4 mt-2.5 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
+            {chips.map((c) => {
+              const active = chip === c.key;
               return (
-                <li key={teacher.id} className="group relative">
-                  <div className="grid grid-cols-[60px_1fr_auto] items-center gap-3 px-4 py-3 lg:grid-cols-[60px_minmax(220px,2.2fr)_120px_120px_140px_140px_120px_40px] lg:px-5">
-                    {/* Rank */}
-                    <span className="text-[15px] font-bold tabular text-ink-3">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-
-                    {/* Teacher cell */}
-                    <Link
-                      href={`/teachers/${teacher.slug}` as never}
-                      className="flex min-w-0 items-center gap-3 outline-none focus-visible:rounded-md"
-                    >
-                      <Avatar className="h-11 w-11 shadow-e1">
-                        <AvatarFallback className={cn("bg-gradient-to-br text-sm text-white", teacher.accent)}>
-                          {teacher.initials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="truncate text-[14.5px] font-semibold text-foreground group-hover:text-accent">
-                            {teacher.name[lang]}
-                          </p>
-                          {teacher.idVerified && (
-                            <ShieldCheck className="h-3.5 w-3.5 text-success" aria-hidden />
-                          )}
-                          {teacher.topRated && (
-                            <span className="text-[10px] font-semibold uppercase tracking-wider text-warning">
-                              · {tHome("badges.topRated")}
-                            </span>
-                          )}
-                        </div>
-                        <p className="truncate text-[12px] text-ink-2">
-                          {teacher.subject[lang]} · {teacher.city[lang]}
-                        </p>
-                      </div>
-                    </Link>
-
-                    {/* Rating */}
-                    <div className="hidden lg:flex items-center gap-1 text-[13px]">
-                      <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                      <span className="font-semibold tabular text-foreground">{teacher.rating.toFixed(2)}</span>
-                      <span className="text-ink-3">·{teacher.reviews}</span>
-                    </div>
-
-                    {/* Lessons */}
-                    <div className="hidden lg:block text-[13px] tabular text-ink-2">{teacher.lessons.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")}</div>
-
-                    {/* Price */}
-                    <div className="hidden lg:block text-[13px] font-semibold tabular text-foreground">
-                      {formatPrice(teacher.hourlyRate, locale)}
-                      <span className="ms-0.5 text-[11px] text-ink-3">{t("perHour")}</span>
-                    </div>
-
-                    {/* Response */}
-                    <div className="hidden lg:block text-[13px] tabular text-ink-2">
-                      {t("responseHours", { hours: teacher.responseHours })}
-                    </div>
-
-                    {/* Mode */}
-                    <div className="hidden lg:flex items-center gap-1 text-[12px] text-ink-2">
-                      {teacher.mode === "online" ? (
-                        <Wifi className="h-3.5 w-3.5" />
-                      ) : teacher.mode === "in-person" ? (
-                        <MapPin className="h-3.5 w-3.5" />
-                      ) : (
-                        <>
-                          <Wifi className="h-3.5 w-3.5" />
-                          <MapPin className="h-3.5 w-3.5" />
-                        </>
-                      )}
-                      <span className="hidden xl:inline">
-                        {teacher.mode === "online" ? t("modeOnline") : teacher.mode === "in-person" ? t("modeInPerson") : t("modeBoth")}
-                      </span>
-                    </div>
-
-                    {/* Expand toggle (desktop only — mobile expands by tap on row) */}
-                    <button
-                      type="button"
-                      onClick={() => setExpanded(isOpen ? null : teacher.id)}
-                      className={cn(
-                        "hidden lg:grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] text-ink-3 transition-colors",
-                        "hover:bg-surface hover:text-foreground",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-                      )}
-                      aria-label={isOpen ? t("collapseRow") : t("expandRow")}
-                      aria-expanded={isOpen}
-                    >
-                      <ChevronRight
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          isOpen ? "rotate-90" : "rtl:-scale-x-100",
-                        )}
-                        aria-hidden
-                      />
-                    </button>
-
-                    {/* Mobile: price + arrow */}
-                    <div className="lg:hidden text-end">
-                      <p className="text-[13px] font-semibold tabular text-foreground">
-                        {formatPrice(teacher.hourlyRate, locale)}
-                        <span className="ms-0.5 text-[11px] text-ink-3">{t("perHour")}</span>
-                      </p>
-                      <p className="mt-0.5 inline-flex items-center gap-0.5 text-[11px] text-ink-3">
-                        <Star className="h-3 w-3 fill-warning text-warning" />
-                        <span className="tabular text-foreground">{teacher.rating.toFixed(2)}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Expanded panel (desktop) */}
-                  {isOpen && (
-                    <div className="hidden lg:block border-t border-border bg-surface/30 px-5 py-4">
-                      <div className="grid gap-6 md:grid-cols-3">
-                        <div>
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
-                            {tHome("badges.topRated")}
-                          </p>
-                          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-2">{teacher.headline[lang]}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
-                            {t("speaksLabel")}
-                          </p>
-                          <div className="mt-1.5 flex flex-wrap gap-1.5">
-                            {teacher.speaks[lang].map((sp) => (
-                              <Badge key={sp} variant="default">
-                                {sp}
-                              </Badge>
-                            ))}
-                          </div>
-                          <p className="mt-3 text-[11.5px] text-ink-3">
-                            {coursesForTeacher(teacher.id).length} {t("lessonsCol")}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-end gap-2">
-                          <Button asChild variant="outline" size="md">
-                            <Link href={`/teachers/${teacher.slug}` as never}>{t("openProfile")}</Link>
-                          </Button>
-                          <Button asChild variant="primary" size="md">
-                            <Link href={`/teachers/${teacher.slug}` as never}>
-                              {tCommon("view")}
-                              <Arrow className="h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                <button
+                  key={c.key}
+                  type="button"
+                  onClick={() => setChip(c.key)}
+                  aria-pressed={active}
+                  className={cn(
+                    "inline-flex h-8 shrink-0 items-center rounded-full border px-3 text-[12.5px] font-medium transition-colors focus-visible:outline-none",
+                    active
+                      ? "border-accent bg-accent-soft text-accent"
+                      : "border-border bg-card text-ink-2 hover:border-border-strong hover:text-foreground",
                   )}
-                </li>
+                >
+                  {c.label}
+                </button>
               );
             })}
-          </ul>
+          </div>
+        </div>
+      </div>
 
-          {ranked.length === 0 && (
-            <p className="mt-8 text-center text-sm text-ink-3">{t("noResults")}</p>
+      {/* ========== GRID ========== */}
+      <section className="bg-surface/40">
+        <div className="container-standard py-8 md:py-12">
+          {ranked.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+              {ranked.map((teacher) => (
+                <li key={teacher.id}>
+                  <TeacherCard teacher={teacher} density="compact" />
+                </li>
+              ))}
+            </ul>
           )}
-
-          <p className="mt-4 text-center text-[11px] text-ink-3">{t("tableHelp")}</p>
         </div>
       </section>
     </>
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function EmptyState() {
+  const t = useTranslations("student.teachers");
   return (
-    <div className="bg-card px-3 py-3 text-start">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">{label}</p>
-      <p className="mt-1 text-[18px] font-bold text-foreground tabular">{value}</p>
+    <div className="grid place-items-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-card p-10 text-center">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">
+        {t("emptyEyebrow")}
+      </p>
+      <h3 className="text-[18px] font-semibold text-foreground">{t("emptyTitle")}</h3>
+      <p className="max-w-md text-[13.5px] leading-relaxed text-ink-2 text-pretty">
+        {t("emptyBody")}
+      </p>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
+        <Button variant="primary" size="md" asChild>
+          <Link href={routes.teachLanding()}>{t("emptyCta")}</Link>
+        </Button>
+      </div>
     </div>
   );
 }

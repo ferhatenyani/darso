@@ -31,7 +31,7 @@ export function MessageBubble({ message, mine, showAuthor }: Props) {
     return (
       <div className="my-4 flex items-center justify-center gap-3">
         <span className="h-px w-12 bg-border" aria-hidden />
-        <p className="max-w-md text-pretty text-center font-serif text-[12px] italic text-ink-3" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
+        <p className="max-w-md text-pretty text-center text-[12px] font-medium text-ink-3">
           {message.system[lang]}
         </p>
         <span className="h-px w-12 bg-border" aria-hidden />

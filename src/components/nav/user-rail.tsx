@@ -120,7 +120,7 @@ export function UserRail() {
             className="ms-1 inline-flex items-center gap-1.5 rounded-[var(--radius-md)] p-1 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-[11px] font-semibold text-white">
+              <AvatarFallback className="bg-primary text-[11px] font-semibold text-primary-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>

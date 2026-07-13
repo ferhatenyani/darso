@@ -29,7 +29,7 @@ export function AuthStage() {
       <div aria-hidden className="absolute inset-0 bg-grid opacity-[0.12]" />
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-[#102338] opacity-95"
+        className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-dark opacity-95"
       />
       <span
         aria-hidden
@@ -127,35 +127,30 @@ export function AuthStage() {
           </div>
         </div>
 
-        {/* Metric strip */}
-        <div className="mt-auto grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius-md)] bg-white/12">
-          <Metric value="14" label={t("metricLive")} icon={<Sparkles className="h-3 w-3" />} />
-          <Metric value={t("metricResponseValue")} label={t("metricResponse")} icon={<Clock className="h-3 w-3" />} />
-          <Metric
-            value="2.3k"
-            label={t("metricTeachers")}
-            icon={<ShieldCheck className="h-3 w-3" />}
-          />
+        {/* Trust promise strip — honest, no fake counters */}
+        <div className="mt-auto space-y-3">
+          <TrustLine icon={<ShieldCheck className="h-3.5 w-3.5" />}>
+            Paiement retenu jusqu'à la fin du cours
+          </TrustLine>
+          <TrustLine icon={<Star className="h-3.5 w-3.5" />}>
+            Enseignants vérifiés — identité et coordonnées validées
+          </TrustLine>
+          <TrustLine icon={<Sparkles className="h-3.5 w-3.5" />}>
+            Support humain en français, sous 24 h
+          </TrustLine>
         </div>
-
-        {/* Trust line */}
-        <p className="flex items-center gap-2 text-[11px] text-white/55">
-          <Star className="h-3 w-3 fill-warning text-warning" />
-          {t("trustLine")}
-        </p>
       </div>
     </div>
   );
 }
 
-function Metric({ value, label, icon }: { value: string; label: string; icon: React.ReactNode }) {
+function TrustLine({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="bg-primary px-3 py-3 text-start">
-      <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
+    <p className="flex items-center gap-2.5 text-[12.5px] text-white/75">
+      <span aria-hidden className="grid h-6 w-6 place-items-center rounded-[var(--radius-xs)] bg-white/10 text-accent">
         {icon}
-        {label}
-      </div>
-      <p className="mt-0.5 text-[18px] font-bold tabular">{value}</p>
-    </div>
+      </span>
+      {children}
+    </p>
   );
 }

@@ -129,7 +129,7 @@ export function AnalyticsDashboard({
           description={t("kpis.sectionSubtitle")}
           className="mb-5"
         />
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-border lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-border bg-border lg:grid-cols-4">
           {kpiCards.map((card) => (
             <KpiCell key={card.key} card={card} locale={locale} t={t} />
           ))}
@@ -179,7 +179,7 @@ export function AnalyticsDashboard({
             description={t("topCourses.sectionSubtitle")}
             className="mb-5"
           />
-          <div className="overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             {topCourses.length === 0 ? (
               <p className="px-5 py-6 text-sm text-ink-3">{t("topCourses.empty")}</p>
             ) : (
@@ -244,7 +244,7 @@ export function AnalyticsDashboard({
             description={t("topSubjects.sectionSubtitle")}
             className="mb-5"
           />
-          <ul className="divide-y divide-border overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card">
+          <ul className="divide-y divide-border overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             {topSubjects.length === 0 && (
               <li className="px-5 py-6 text-sm text-ink-3">{t("topSubjects.empty")}</li>
             )}
@@ -418,7 +418,7 @@ function ChartCard({
 }) {
   if (series.length === 0) {
     return (
-      <article className="rounded-[var(--radius-2xl)] border border-border bg-card p-6">
+      <article className="rounded-[var(--radius-lg)] border border-border bg-card p-6">
         <h3 className="text-[15px] font-semibold tracking-tight text-foreground">{title}</h3>
         <p className="mt-4 text-sm text-ink-3">{noData}</p>
       </article>
@@ -431,7 +431,7 @@ function ChartCard({
   const min = Math.min(...values);
 
   return (
-    <article className="flex flex-col gap-5 rounded-[var(--radius-2xl)] border border-border bg-card p-6">
+    <article className="flex flex-col gap-5 rounded-[var(--radius-lg)] border border-border bg-card p-6">
       <header className="flex items-baseline justify-between gap-3">
         <h3 className="text-[15px] font-semibold tracking-tight text-foreground">{title}</h3>
         <p className="text-[12px] tabular text-ink-3">

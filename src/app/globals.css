@@ -1,7 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ---------------------------------------------------------------- *
+ * Darso — Design system tokens
+ * See design-system/MASTER.md for the full spec.
+ * Palette: charcoal + electric blue. Upwork-tight radius. Light-only.
+ * ---------------------------------------------------------------- */
+
 @theme inline {
+  /* Surfaces */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -11,95 +18,140 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
 
+  /* Brand */
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
+
+  /* Muted (aliased to surface family) */
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
 
+  /* State */
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --color-warning-foreground: var(--warning-foreground);
   --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
   --color-danger-foreground: var(--danger-foreground);
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
   --color-info-foreground: var(--info-foreground);
 
+  /* Structure */
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Ink */
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
 
+  /* Grid overlay */
   --color-grid-line: var(--grid-line);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-xs: 0.25rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
-  --radius-xl: 1.125rem;
-  --radius-2xl: 1.5rem;
-  --radius-3xl: 2rem;
+  /* Radius — Upwork-tight scale */
+  --radius-xs: 0.25rem;   /* 4px  · buttons, badges */
+  --radius-sm: 0.375rem;  /* 6px  · inputs, small chips */
+  --radius-md: 0.5rem;    /* 8px  · small cards */
+  --radius-lg: 0.625rem;  /* 10px · large cards */
+  --radius-xl: 0.75rem;   /* 12px · modals, hero panels */
+  --radius-2xl: 1rem;     /* 16px · edge-case surfaces only */
+  --radius-3xl: 1.5rem;
 
-  --shadow-e1: 0 1px 2px 0 rgba(14, 23, 38, 0.04), 0 1px 1px 0 rgba(14, 23, 38, 0.03);
-  --shadow-e2: 0 4px 14px -2px rgba(14, 23, 38, 0.06), 0 2px 6px -1px rgba(14, 23, 38, 0.04);
-  --shadow-e3: 0 18px 44px -14px rgba(14, 23, 38, 0.14), 0 8px 18px -6px rgba(14, 23, 38, 0.08);
-  --shadow-focus: 0 0 0 3px var(--ring-soft), 0 0 0 1.5px var(--ring);
+  /* Elevation */
+  --shadow-e0: none;
+  --shadow-e1: 0 1px 2px 0 rgba(10, 11, 14, 0.04);
+  --shadow-e2:
+    0 4px 10px -2px rgba(10, 11, 14, 0.05),
+    0 2px 4px -1px rgba(10, 11, 14, 0.04);
+  --shadow-e3:
+    0 12px 32px -8px rgba(10, 11, 14, 0.12),
+    0 6px 14px -4px rgba(10, 11, 14, 0.06);
+  --shadow-e4:
+    0 24px 64px -16px rgba(10, 11, 14, 0.20),
+    0 12px 24px -8px rgba(10, 11, 14, 0.10);
+  --shadow-focus:
+    0 0 0 3px var(--ring-soft),
+    0 0 0 1.5px var(--ring);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 :root {
+  /* Surfaces */
   --background: #FFFFFF;
-  --foreground: #0E1726;
-  --surface: #F4F7FC;
-  --surface-2: #EAF0F9;
+  --foreground: #0A0B0E;
+  --surface: #F5F6F7;
+  --surface-2: #EBEDEF;
   --card: #FFFFFF;
-  --card-foreground: #0E1726;
+  --card-foreground: #0A0B0E;
   --popover: #FFFFFF;
-  --popover-foreground: #0E1726;
+  --popover-foreground: #0A0B0E;
 
-  --primary: #1C3A5E;
-  --primary-dark: #102338;
+  /* Brand */
+  --primary: #1C1F26;
+  --primary-dark: #0D0F14;
   --primary-foreground: #FFFFFF;
-  --accent: #2F6BFF;
-  --accent-soft: #DCE7FF;
+  --accent: #2F6FEB;
+  --accent-hover: #1E58C7;
+  --accent-soft: #DCE7FC;
   --accent-foreground: #FFFFFF;
 
-  --muted: #F0F4FB;
-  --muted-foreground: #51607A;
+  /* Muted */
+  --muted: #F5F6F7;
+  --muted-foreground: #6A6E78;
 
-  --success: #2E9E78;
+  /* State */
+  --success: #2E8B6B;
+  --success-soft: #DDEDE3;
   --success-foreground: #FFFFFF;
-  --warning: #DDA13A;
-  --warning-foreground: #2C1B05;
-  --danger: #DD514D;
+  --warning: #D68A2C;
+  --warning-soft: #FBEAD1;
+  --warning-foreground: #4A2E05;
+  --danger: #D3352E;
+  --danger-soft: #FADEDC;
   --danger-foreground: #FFFFFF;
-  --info: #3E8FD0;
+  --info: #3A76B8;
+  --info-soft: #D9E6F3;
   --info-foreground: #FFFFFF;
 
-  --border: #DCE3EE;
-  --border-strong: #BBC6D8;
-  --input: #DCE3EE;
-  --ring: #2F6BFF;
-  --ring-soft: rgba(47, 107, 255, 0.22);
+  /* Structure */
+  --border: #E2E4E7;
+  --border-strong: #CDD0D5;
+  --input: #E2E4E7;
+  --ring: #2F6FEB;
+  --ring-soft: rgba(47, 111, 235, 0.22);
+  --ring-danger-soft: rgba(211, 53, 46, 0.20);
+  --ring-success-soft: rgba(46, 139, 107, 0.20);
 
-  --ink: #0E1726;
-  --ink-2: #38465D;
-  --ink-3: #6B7689;
+  /* Ink */
+  --ink: #0A0B0E;
+  --ink-2: #2D3038;
+  --ink-3: #6A6E78;
 
-  --grid-line: rgba(14, 23, 38, 0.07);
+  /* Overlays */
+  --grid-line: rgba(10, 11, 14, 0.06);
+  --scrim: rgba(10, 11, 14, 0.55);
+  --overlay-soft: rgba(10, 11, 14, 0.04);
 
+  /* Scrollbar */
   --scrollbar-track: transparent;
-  --scrollbar-thumb: #C5D0E2;
-  --scrollbar-thumb-hover: #94A4BD;
+  --scrollbar-thumb: #CDD0D5;
+  --scrollbar-thumb-hover: #9EA3AE;
 
   color-scheme: light;
 }
@@ -130,10 +182,19 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
+    font-size: 1rem;
     line-height: 1.55;
+    letter-spacing: 0;
   }
 
-  /* Strip browser default focus rings; we apply our own via :focus-visible */
+  /* Typography rhythm */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  /* Focus */
   :focus {
     outline: none;
   }
@@ -142,12 +203,13 @@
     box-shadow: var(--shadow-focus);
     border-radius: var(--radius-sm);
   }
-  /* Remove iOS / Chrome blue tap highlight */
+
+  /* Tap highlight strip */
   * {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* WebKit scrollbars — match the design system */
+  /* WebKit scrollbars */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -167,7 +229,7 @@
     background: transparent;
   }
 
-  /* Strip native select / input chrome */
+  /* Native control chrome strip */
   select,
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button,
@@ -200,8 +262,8 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--accent) 25%, var(--surface));
-    color: var(--foreground);
+    background: var(--accent-soft);
+    color: var(--ink);
   }
 
   html[lang^="ar"] .num-latn {
@@ -210,31 +272,66 @@
 }
 
 @layer utilities {
+  /* Numeric variant */
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Container widths — mobile-first, real margins per breakpoint */
+  .container-tight {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    max-width: 45rem; /* 720 */
   }
   .container-narrow {
     width: 100%;
     margin-inline: auto;
-    padding-inline: 1.25rem;
-    max-width: 80rem;
+    padding-inline: 1rem;
+    max-width: 60rem; /* 960 */
+  }
+  .container-standard {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    max-width: 75rem; /* 1200 */
+  }
+  .container-wide {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    max-width: 90rem; /* 1440 */
+  }
+  @media (min-width: 480px) {
+    .container-tight, .container-narrow, .container-standard, .container-wide {
+      padding-inline: 1.25rem;
+    }
   }
   @media (min-width: 768px) {
-    .container-narrow {
+    .container-tight, .container-narrow, .container-standard, .container-wide {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-tight, .container-narrow, .container-standard, .container-wide {
       padding-inline: 2rem;
     }
   }
   @media (min-width: 1280px) {
-    .container-narrow {
+    .container-standard, .container-wide {
       padding-inline: 2.5rem;
     }
   }
+
+  /* RTL flip (deferred — locale is FR only for now) */
   .rtl-flip {
     transform: scaleX(1);
   }
   html[dir="rtl"] .rtl-flip {
     transform: scaleX(-1);
   }
+
+  /* Background patterns */
   .bg-grid {
     background-image:
       linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
@@ -251,12 +348,16 @@
     background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
     background-size: 18px 18px;
   }
+
+  /* Text utilities */
   .text-balance {
     text-wrap: balance;
   }
   .text-pretty {
     text-wrap: pretty;
   }
+
+  /* Scrollbars */
   .scroll-thin {
     scrollbar-width: thin;
   }
@@ -267,17 +368,34 @@
     width: 0;
     height: 0;
   }
+  /* Snap carousel horizontal (mobile marketing carousels) */
+  .snap-x-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .snap-x-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  .snap-x-carousel > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+
+  /* Motion */
   @keyframes live-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(221, 81, 77, 0.55); }
-    50% { box-shadow: 0 0 0 6px rgba(221, 81, 77, 0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(211, 53, 46, 0.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(211, 53, 46, 0); }
   }
   .live-dot {
     animation: live-pulse 1.6s ease-out infinite;
   }
-  /* Skeleton pulse — restrained, editorial. Honors reduced motion. */
   @keyframes skeleton-pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.55; }
+    50%      { opacity: 0.55; }
   }
   .skeleton-pulse {
     animation: skeleton-pulse 1.6s ease-in-out infinite;
@@ -288,12 +406,6 @@
     .animate-marquee {
       animation: none !important;
     }
-    /* Collapse Radix / tw-animate-css enter/exit transitions to a near-
-       instant fade so dialogs, popovers, sheets, dropdowns, toasts and
-       tooltips still announce/dismiss but don't slide or zoom.
-       Loader spinners (`animate-spin`) are intentionally untouched: they
-       are functional indicators of a pending action and removing them
-       hurts UX more than it helps. */
     .animate-in,
     .animate-out,
     [data-state="open"].animate-in,
@@ -303,7 +415,7 @@
     }
   }
   @keyframes marquee-x {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
   .animate-marquee {
@@ -312,23 +424,60 @@
   html[dir="rtl"] .animate-marquee {
     animation-direction: reverse;
   }
+
   /* Editorial accents */
   .ink-rule {
     display: inline-block;
-    height: 0.45em;
+    height: 2px;
     width: 2.2em;
     background: var(--accent);
     vertical-align: middle;
-    margin-inline-end: 0.4em;
-    border-radius: 2px;
+    margin-inline-end: 0.5em;
+    border-radius: 1px;
   }
-  .underline-wavy {
-    text-decoration: underline wavy var(--accent);
-    text-underline-offset: 0.18em;
-    text-decoration-thickness: 1.5px;
+  .accent-underline {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+    background-position: 0 100%;
+    padding-bottom: 2px;
   }
-  /* No-AI corner-cut for cards */
-  .clip-corner {
-    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+
+  /* Safe-area helpers */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 0.5rem);
+  }
+
+  /* Card interaction — reusable */
+  .card-interactive {
+    transition:
+      box-shadow 180ms var(--ease-out),
+      border-color 180ms var(--ease-out),
+      transform 180ms var(--ease-out);
+  }
+  .card-interactive:hover {
+    box-shadow: var(--shadow-e2);
+    border-color: var(--border-strong);
+  }
+  .card-interactive:active {
+    transform: translateY(0.5px);
+  }
+
+  /* Section rhythm */
+  .section-rhythm > * + * {
+    margin-top: 3rem; /* 48 mobile */
+  }
+  @media (min-width: 768px) {
+    .section-rhythm > * + * {
+      margin-top: 4rem; /* 64 tablet */
+    }
+  }
+  @media (min-width: 1024px) {
+    .section-rhythm > * + * {
+      margin-top: 6rem; /* 96 desktop */
+    }
   }
 }

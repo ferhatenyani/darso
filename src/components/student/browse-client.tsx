@@ -8,8 +8,7 @@ import {
   ChevronDown,
   Wifi,
   MapPin,
-  LayoutGrid,
-  List as ListIcon,
+  X,
 } from "lucide-react";
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -27,14 +26,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { categories, wilayaKeys } from "@/lib/mock/categories";
 import { featuredTeachers, type Teacher } from "@/lib/mock/teachers";
 import { courses, type Course, type CourseLevel } from "@/lib/mock/courses";
-import { TeacherCard } from "@/components/student/teacher-card";
+import { TeacherCard } from "@/components/marketing/teacher-card";
 import { CourseCard } from "@/components/student/course-card";
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -91,8 +96,10 @@ export function BrowseClient({
     ondemand: true,
   });
   const [sort, setSort] = useState<SortKey>("relevance");
-  const [view, setView] = useState<"grid" | "list">("grid");
   const [tab, setTab] = useState<Tab>("all");
+  // Controls the mobile bottom-sheet — we open/close programmatically so the
+  // sticky "Apply" footer can dismiss on commit without hunting the trigger.
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // ---- Derived: filtered teachers / courses ----------------------------
   const filteredTeachers = useMemo<Teacher[]>(() => {
@@ -182,16 +189,34 @@ export function BrowseClient({
     router.replace(`${pathname}${qs ? `?${qs}` : ""}` as never);
   }
 
+  function resetAll() {
+    setQuery("");
+    setSubject("any");
+    setWilaya("any");
+    setMode("both");
+    setPriceRange([0, 20000]);
+    setMinRating("any");
+    setLevel("any");
+    setFormats({ cohort: true, event: true, "1to1": true, ondemand: true });
+  }
+
   const activeFilterCount =
     (subject !== "any" ? 1 : 0) +
     (wilaya !== "any" ? 1 : 0) +
     (mode !== "both" ? 1 : 0) +
     (minRating !== "any" ? 1 : 0) +
-    (level !== "any" ? 1 : 0);
+    (level !== "any" ? 1 : 0) +
+    (priceRange[0] !== 0 || priceRange[1] !== 20000 ? 1 : 0);
+
+  const sortLabel = t(`sort${sort.charAt(0).toUpperCase()}${sort.slice(1)}` as never);
 
   // ---- UI fragments ----------------------------------------------------
-  const Filters = (
-    <div className="grid gap-7 p-1">
+  // The filter body is used inside BOTH the desktop sidebar and the mobile
+  // bottom-sheet. It intentionally does NOT include Apply/Reset — those live
+  // in the respective surrounding chrome so each surface can style them
+  // (sticky footer on mobile, inline row on desktop).
+  const FilterBody = (
+    <div className="grid gap-6">
       <div className="grid gap-2">
         <Label>{t("filterSubject")}</Label>
         <Select value={subject} onValueChange={setSubject}>
@@ -226,7 +251,7 @@ export function BrowseClient({
       </div>
 
       <fieldset className="grid gap-3">
-        <legend className="text-sm font-medium text-foreground">{t("filterMode")}</legend>
+        <legend className="text-[13px] font-medium text-foreground">{t("filterMode")}</legend>
         <div className="grid divide-y divide-border rounded-[var(--radius-md)] border border-border">
           <ModeRow
             id="mode-online"
@@ -269,7 +294,7 @@ export function BrowseClient({
       </div>
 
       <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium text-foreground">{t("filterRating")}</legend>
+        <legend className="text-[13px] font-medium text-foreground">{t("filterRating")}</legend>
         <div className="grid gap-2">
           {(["any", "5", "4.5", "4"] as const).map((r) => (
             <label key={r} className="flex items-center gap-2 text-[13px] text-ink-2">
@@ -285,7 +310,7 @@ export function BrowseClient({
       </fieldset>
 
       <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium text-foreground">{t("filterLevel")}</legend>
+        <legend className="text-[13px] font-medium text-foreground">{t("filterLevel")}</legend>
         <RadioGroup
           value={level}
           onValueChange={(v) => setLevel(v as CourseLevel | "any")}
@@ -305,7 +330,7 @@ export function BrowseClient({
       </fieldset>
 
       <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium text-foreground">{t("filterFormat")}</legend>
+        <legend className="text-[13px] font-medium text-foreground">{t("filterFormat")}</legend>
         <div className="grid gap-1.5">
           {(["cohort", "event", "1to1", "ondemand"] as const).map((f) => (
             <label key={f} className="flex cursor-pointer items-center gap-2 text-[13px] text-ink-2">
@@ -318,31 +343,6 @@ export function BrowseClient({
           ))}
         </div>
       </fieldset>
-
-      <div className="flex items-center gap-2 border-t border-border pt-4">
-        <Button
-          type="button"
-          variant="outline"
-          size="md"
-          onClick={() => {
-            setQuery("");
-            setSubject("any");
-            setWilaya("any");
-            setMode("both");
-            setPriceRange([0, 20000]);
-            setMinRating("any");
-            setLevel("any");
-            setFormats({ cohort: true, event: true, "1to1": true, ondemand: true });
-            commit();
-          }}
-          className="flex-1"
-        >
-          {t("filterClearAll")}
-        </Button>
-        <Button type="button" size="md" onClick={commit} className="flex-1">
-          {t("filterApply")}
-        </Button>
-      </div>
     </div>
   );
 
@@ -350,32 +350,46 @@ export function BrowseClient({
     <>
       {/* ========== PAGE HEADER ========== */}
       <section className="relative isolate border-b border-border bg-background">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-dots opacity-50 [mask-image:radial-gradient(70%_70%_at_50%_0%,black,transparent_80%)]" />
-        <div className="container-narrow py-10 md:py-14">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">{t("pageEyebrow")}</p>
-          <h1 className="mt-3 max-w-3xl text-[36px] font-bold leading-[1.02] tracking-tight text-foreground md:text-[46px]">
-            <span className="block">{t("title")}</span>
-            <span className="block font-light italic text-ink-2">{t("titleAccent")}</span>
+        <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-border" />
+        <div aria-hidden className="absolute start-4 top-0 h-[3px] w-16 bg-accent md:start-8" />
+        <div className="container-standard py-8 md:py-12 lg:py-14">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+            {t("pageEyebrow")}
+          </p>
+          <h1 className="mt-3 max-w-3xl text-[28px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[34px] md:text-[42px]">
+            {t("title")}{" "}
+            <span className="font-light italic text-ink-2">{t("titleAccent")}</span>
           </h1>
-          <p className="mt-4 max-w-xl text-[14.5px] leading-relaxed text-ink-2">{t("subtitle")}</p>
+          <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-ink-2 md:text-[15px]">
+            {t("subtitle")}
+          </p>
 
           {/* Search bar */}
-          <div className="mt-7 flex max-w-2xl items-center gap-2 rounded-[var(--radius-xl)] border border-border-strong bg-card p-1.5 shadow-e1 focus-within:border-accent focus-within:shadow-e2">
-            <span className="ms-2 grid h-9 w-9 place-items-center rounded-[var(--radius-md)] bg-surface text-ink-2">
-              <Search className="h-4 w-4" />
+          <div className="mt-6 flex max-w-2xl items-center gap-2 rounded-[var(--radius-lg)] border border-border-strong bg-card p-1.5 shadow-e1 focus-within:border-accent focus-within:shadow-e2">
+            <span className="ms-1 grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] bg-surface text-ink-2">
+              <Search className="h-4 w-4" aria-hidden />
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && commit()}
               placeholder={t("searchPlaceholder")}
-              className="h-10 flex-1 bg-transparent text-[15px] text-foreground placeholder:text-ink-3 focus:outline-none"
+              className="h-11 flex-1 bg-transparent text-[15px] text-foreground placeholder:text-ink-3 focus:outline-none"
               dir={locale === "ar" ? "rtl" : "ltr"}
               aria-label={t("searchPlaceholder")}
             />
-            <Button size="md" onClick={commit}>
-              <Search className="h-4 w-4" />
+            <Button size="md" variant="accent" onClick={commit} className="hidden sm:inline-flex">
+              <Search className="h-4 w-4" aria-hidden />
               {t("filterApply")}
+            </Button>
+            <Button
+              size="icon"
+              variant="accent"
+              onClick={commit}
+              className="sm:hidden"
+              aria-label={t("filterApply")}
+            >
+              <Search className="h-4 w-4" aria-hidden />
             </Button>
           </div>
 
@@ -386,66 +400,186 @@ export function BrowseClient({
                 {t("filterActive", { count: activeFilterCount })}
               </span>
               {subject !== "any" && (
-                <Badge variant="accent">{tCats(`${subject}.name` as never)}</Badge>
+                <ChipRemovable onRemove={() => { setSubject("any"); commit(); }}>
+                  {tCats(`${subject}.name` as never)}
+                </ChipRemovable>
               )}
-              {wilaya !== "any" && <Badge variant="primary">{tWilayas(wilaya as never)}</Badge>}
+              {wilaya !== "any" && (
+                <ChipRemovable onRemove={() => { setWilaya("any"); commit(); }}>
+                  {tWilayas(wilaya as never)}
+                </ChipRemovable>
+              )}
               {mode !== "both" && (
-                <Badge variant="info">
+                <ChipRemovable onRemove={() => { setMode("both"); commit(); }}>
                   {mode === "online" ? t("filterModeOnline") : t("filterModeInPerson")}
-                </Badge>
+                </ChipRemovable>
               )}
+              {minRating !== "any" && (
+                <ChipRemovable onRemove={() => { setMinRating("any"); commit(); }}>
+                  {t("filterRatingStar", { n: minRating })}
+                </ChipRemovable>
+              )}
+              {level !== "any" && (
+                <ChipRemovable onRemove={() => { setLevel("any"); commit(); }}>
+                  {t(`filterLevel${level.charAt(0).toUpperCase()}${level.slice(1)}` as never)}
+                </ChipRemovable>
+              )}
+              <button
+                type="button"
+                onClick={() => { resetAll(); commit(); }}
+                className="text-[12px] font-medium text-accent underline-offset-2 hover:underline"
+              >
+                {t("filterClearAll")}
+              </button>
             </div>
           )}
         </div>
       </section>
 
+      {/* ========== MOBILE STICKY FILTER BAR ========== */}
+      {/* Under the site header, above the results. Shows the two hero chips
+          per MASTER.md filter/sort UX for mobile. Hidden on lg+ since the
+          desktop sidebar covers the same affordances. */}
+      <div className="sticky top-[var(--site-header-h,64px)] z-30 border-b border-border bg-background/95 backdrop-blur lg:hidden">
+        <div className="container-standard flex items-center gap-2 py-2.5">
+          {/* Sort trigger */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-xs)] border border-border bg-card px-3 text-[13px] font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-none"
+              >
+                <span className="text-ink-3">{t("sortLabel")}:</span>
+                <span className="max-w-[100px] truncate">{sortLabel}</span>
+                <ChevronDown className="h-3.5 w-3.5 text-ink-3" aria-hidden />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuLabel>{t("sortLabel")}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {(["relevance", "rating", "priceAsc", "priceDesc", "newest", "response"] as SortKey[]).map((s) => (
+                <DropdownMenuItem key={s} onSelect={() => setSort(s)}>
+                  {t(`sort${s.charAt(0).toUpperCase()}${s.slice(1)}` as never)}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Filters trigger — opens bottom sheet */}
+          <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-xs)] border border-border bg-card px-3 text-[13px] font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-none"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
+                {t("filterMobileOpen")}
+                {activeFilterCount > 0 && (
+                  <span className="ms-0.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-accent px-1 text-[10.5px] font-semibold tabular text-accent-foreground">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="bottom"
+              className="flex max-h-[92dvh] flex-col p-0"
+            >
+              {/* Grabber affordance — communicates draggable sheet */}
+              <div className="flex justify-center pt-2 pb-1" aria-hidden>
+                <span className="h-1 w-10 rounded-full bg-border-strong" />
+              </div>
+              <div className="border-b border-border px-5 py-3">
+                <SheetTitle className="text-[15px] font-semibold text-foreground">
+                  {t("filtersTitle")}
+                </SheetTitle>
+                <SheetDescription className="mt-0.5 text-[12.5px] text-ink-3">
+                  {t("filtersIntro")}
+                </SheetDescription>
+              </div>
+              <div className="scroll-thin flex-1 overflow-y-auto px-5 py-5">
+                {FilterBody}
+              </div>
+              <div className="pb-safe sticky bottom-0 flex items-center gap-2 border-t border-border bg-background px-5 py-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="flex-1"
+                  onClick={resetAll}
+                >
+                  {t("filterClearAll")}
+                </Button>
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="accent"
+                  className="flex-[1.4]"
+                  onClick={() => {
+                    commit();
+                    setMobileFiltersOpen(false);
+                  }}
+                >
+                  {t("filterApply")}
+                  {totalCount > 0 && (
+                    <span className="tabular">· {totalCount}</span>
+                  )}
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          {/* Result counter, right-aligned */}
+          <span className="ms-auto text-[12px] tabular text-ink-3">
+            {t("resultsCount", { count: totalCount })}
+          </span>
+        </div>
+      </div>
+
       {/* ========== RESULTS BODY ========== */}
       <section className="bg-surface/40">
-        <div className="container-narrow grid gap-6 py-10 lg:grid-cols-[300px_1fr] lg:gap-10">
+        <div className="container-standard grid gap-6 py-8 md:py-10 lg:grid-cols-[280px_1fr] lg:gap-8">
           {/* Sidebar (desktop) */}
           <aside className="hidden lg:block">
             <div className="sticky top-24">
-              <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-e1">
-                <div className="mb-4 border-b border-border pb-3">
+              <div className="rounded-[var(--radius-lg)] border border-border bg-card shadow-e1">
+                <div className="flex items-center justify-between border-b border-border px-5 py-3">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
                     {t("filtersTitle")}
                   </p>
-                  <p className="mt-1 text-[12.5px] text-ink-2">{t("filtersIntro")}</p>
+                  {activeFilterCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => { resetAll(); commit(); }}
+                      className="text-[12px] font-medium text-accent hover:underline"
+                    >
+                      {t("filterClearAll")}
+                    </button>
+                  )}
                 </div>
-                {Filters}
+                <div className="p-5">
+                  {FilterBody}
+                  <Button
+                    type="button"
+                    size="md"
+                    variant="accent"
+                    onClick={commit}
+                    className="mt-6 w-full"
+                  >
+                    {t("filterApply")}
+                    {activeFilterCount > 0 && totalCount > 0 && (
+                      <span className="tabular">· {totalCount}</span>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           </aside>
 
           {/* Results column */}
           <div>
-            {/* Toolbar */}
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              {/* Mobile filter trigger */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="md" className="lg:hidden">
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {t("filterMobileOpen")}
-                    {activeFilterCount > 0 && (
-                      <span className="ms-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] font-semibold tabular text-accent-foreground">
-                        {activeFilterCount}
-                      </span>
-                    )}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="start" className="flex flex-col">
-                  <div className="border-b border-border p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3">
-                      {t("filtersTitle")}
-                    </p>
-                    <p className="mt-1 text-[13px] text-ink-2">{t("filtersIntro")}</p>
-                  </div>
-                  <div className="flex-1 overflow-y-auto scroll-thin p-5">{Filters}</div>
-                </SheetContent>
-              </Sheet>
-
-              {/* Tabs */}
+            {/* Desktop toolbar — hidden on mobile since sticky bar above covers it */}
+            <div className="mb-4 hidden flex-wrap items-center gap-2 lg:flex">
               <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="me-auto">
                 <TabsList>
                   <TabsTrigger value="all">{t("tabAll")}</TabsTrigger>
@@ -454,11 +588,14 @@ export function BrowseClient({
                 </TabsList>
               </Tabs>
 
-              {/* Sort */}
+              <span className="text-[12.5px] tabular text-ink-3">
+                {t("resultsCount", { count: totalCount })}
+              </span>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="md">
-                    {t("sortLabel")}: {t(`sort${sort.charAt(0).toUpperCase()}${sort.slice(1)}` as never)}
+                    {t("sortLabel")}: {sortLabel}
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -472,57 +609,39 @@ export function BrowseClient({
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              {/* View toggle */}
-              <div className="hidden md:flex h-10 items-center gap-0.5 rounded-[var(--radius-md)] border border-border bg-card p-1" role="group" aria-label={t("viewToggle")}>
-                <button
-                  type="button"
-                  onClick={() => setView("grid")}
-                  aria-pressed={view === "grid"}
-                  className={cn(
-                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-                    view === "grid" && "bg-surface text-foreground shadow-e1",
-                  )}
-                  aria-label={t("viewGrid")}
-                >
-                  <LayoutGrid className="h-4 w-4" aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setView("list")}
-                  aria-pressed={view === "list"}
-                  className={cn(
-                    "inline-flex h-7 w-9 items-center justify-center rounded-[var(--radius-sm)] text-ink-3 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-                    view === "list" && "bg-surface text-foreground shadow-e1",
-                  )}
-                  aria-label={t("viewList")}
-                >
-                  <ListIcon className="h-4 w-4" aria-hidden />
-                </button>
-              </div>
             </div>
 
-            {/* Result count + meta line */}
-            <div className="mb-4 flex items-baseline gap-2 text-[12.5px] text-ink-3">
-              <span className="tabular text-foreground">{t("resultsCount", { count: totalCount })}</span>
-              <span className="ink-rule h-[2px]" aria-hidden />
+            {/* Mobile tabs — full-width row, below the sticky bar */}
+            <div className="mb-4 lg:hidden">
+              <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
+                <TabsList className="w-full">
+                  <TabsTrigger value="all" className="flex-1">{t("tabAll")}</TabsTrigger>
+                  <TabsTrigger value="teachers" className="flex-1">{t("tabTeachers")}</TabsTrigger>
+                  <TabsTrigger value="courses" className="flex-1">{t("tabCourses")}</TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
 
             <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
               <TabsContent value="all" className="mt-0">
-                <ResultGrid view={view} teachers={filteredTeachers} courses={filteredCourses} mixed />
+                <ResultGrid teachers={filteredTeachers} courses={filteredCourses} mixed />
               </TabsContent>
               <TabsContent value="teachers" className="mt-0">
-                <ResultGrid view={view} teachers={filteredTeachers} courses={[]} />
+                <ResultGrid teachers={filteredTeachers} courses={[]} />
               </TabsContent>
               <TabsContent value="courses" className="mt-0">
-                <ResultGrid view={view} teachers={[]} courses={filteredCourses} />
+                <ResultGrid teachers={[]} courses={filteredCourses} />
               </TabsContent>
             </Tabs>
 
-            {totalCount === 0 && <EmptyState onClear={() => {
-              setQuery(""); setSubject("any"); setWilaya("any"); setMode("both"); commit();
-            }} />}
+            {totalCount === 0 && (
+              <EmptyState
+                onClear={() => {
+                  resetAll();
+                  commit();
+                }}
+              />
+            )}
           </div>
         </div>
       </section>
@@ -552,13 +671,33 @@ function ModeRow({
   );
 }
 
+function ChipRemovable({
+  children,
+  onRemove,
+}: {
+  children: React.ReactNode;
+  onRemove: () => void;
+}) {
+  return (
+    <span className="inline-flex h-7 items-center gap-1 rounded-full border border-border-strong bg-accent-soft/50 ps-2.5 pe-1 text-[12px] font-medium text-foreground">
+      {children}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Retirer"
+        className="grid h-5 w-5 place-items-center rounded-full text-ink-3 transition-colors hover:bg-background hover:text-foreground focus-visible:outline-none"
+      >
+        <X className="h-3 w-3" aria-hidden />
+      </button>
+    </span>
+  );
+}
+
 function ResultGrid({
-  view,
   teachers,
   courses,
   mixed = false,
 }: {
-  view: "grid" | "list";
   teachers: Teacher[];
   courses: Course[];
   mixed?: boolean;
@@ -566,7 +705,8 @@ function ResultGrid({
   if (teachers.length === 0 && courses.length === 0) {
     return null;
   }
-  // Interleave on "all" tab so it doesn't feel like a feature-card grid.
+  // Interleave on "all" tab so the mix doesn't clump by type — the pattern
+  // (2 teachers, 1 course) reads better than 8 teachers then 8 courses.
   const items: ({ kind: "teacher"; data: Teacher } | { kind: "course"; data: Course })[] = [];
   if (mixed) {
     let ti = 0;
@@ -582,16 +722,10 @@ function ResultGrid({
   }
 
   return (
-    <div
-      className={cn(
-        view === "grid"
-          ? "grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
-          : "grid gap-3",
-      )}
-    >
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((it, i) =>
         it.kind === "teacher" ? (
-          <TeacherCard key={`t-${it.data.id}`} teacher={it.data} index={i} />
+          <TeacherCard key={`t-${it.data.id}`} teacher={it.data} density="compact" />
         ) : (
           <CourseCard key={`c-${it.data.id}`} course={it.data} index={i} />
         ),
@@ -603,9 +737,9 @@ function ResultGrid({
 function EmptyState({ onClear }: { onClear: () => void }) {
   const t = useTranslations("student.browse");
   return (
-    <div className="grid place-items-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-card p-12 text-center">
+    <div className="mt-6 grid place-items-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-card p-10 text-center">
       <span className="grid h-12 w-12 place-items-center rounded-full bg-surface text-ink-3">
-        <Search className="h-5 w-5" />
+        <Search className="h-5 w-5" aria-hidden />
       </span>
       <h3 className="text-[16px] font-semibold text-foreground">{t("emptyTitle")}</h3>
       <p className="max-w-md text-[13px] text-ink-2 text-pretty">{t("emptyBody")}</p>

@@ -256,7 +256,7 @@ export function LegalShell({ toc, sections, labels }: Props) {
           ))}
 
           {/* Contact DPO callout */}
-          <aside className="mt-12 rounded-[var(--radius-2xl)] border border-border bg-card p-6 shadow-e1 md:p-8">
+          <aside className="mt-12 rounded-[var(--radius-xl)] border border-border bg-card p-6 shadow-e1 md:p-8">
             <div className="grid gap-4 md:grid-cols-[1.4fr_auto] md:items-center md:gap-8">
               <div>
                 <h2 className="text-[18px] font-semibold tracking-tight text-foreground md:text-[20px]">

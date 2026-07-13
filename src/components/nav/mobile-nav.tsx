@@ -76,7 +76,7 @@ export function MobileNav() {
           aria-label={t("closeMenu")}
           onClick={() => setOpen(false)}
           className={cn(
-            "absolute inset-0 bg-ink/40 transition-opacity",
+            "absolute inset-0 bg-[var(--scrim)] backdrop-blur-[2px] transition-opacity",
             open ? "opacity-100" : "opacity-0",
           )}
         />

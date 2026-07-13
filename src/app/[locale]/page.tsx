@@ -2,14 +2,16 @@ import { setRequestLocale } from "next-intl/server";
 
 import { SiteHeader } from "@/components/nav/site-header";
 import { SiteFooter } from "@/components/nav/site-footer";
-import { Hero } from "@/components/marketing/hero";
-import { LiveTicker } from "@/components/marketing/live-ticker";
-import { CategoriesGrid } from "@/components/marketing/categories-grid";
-import { FeaturedTeachers } from "@/components/marketing/featured-teachers";
-import { RequestPathRibbon } from "@/components/marketing/request-path-ribbon";
-import { HowItWorks } from "@/components/marketing/how-it-works";
-import { TeacherCta } from "@/components/marketing/teacher-cta";
-import { Testimonials } from "@/components/marketing/testimonials";
+import { HomeHero } from "@/components/marketing/home-hero";
+import { CategoryCarousel } from "@/components/marketing/category-carousel";
+import { HowItWorksV2 } from "@/components/marketing/how-it-works-v2";
+import { TrustSafety } from "@/components/marketing/trust-safety";
+import { FeaturedTeachersV2 } from "@/components/marketing/featured-teachers-v2";
+import { SubjectGrid } from "@/components/marketing/subject-grid";
+import { UpcomingEventsStrip } from "@/components/marketing/upcoming-events-strip";
+import { TeachCtaBand } from "@/components/marketing/teach-cta-band";
+import { FoundersNote } from "@/components/marketing/founders-note";
+import { HomeFaq } from "@/components/marketing/home-faq";
 
 export default async function HomePage({
   params,
@@ -23,14 +25,26 @@ export default async function HomePage({
     <>
       <SiteHeader />
       <main className="flex-1">
-        <Hero />
-        <LiveTicker />
-        <CategoriesGrid />
-        <FeaturedTeachers />
-        <RequestPathRibbon />
-        <HowItWorks />
-        <TeacherCta />
-        <Testimonials />
+        {/* 1 · Hero with functional search + dual-path toggle */}
+        <HomeHero />
+        {/* 2 · Popular categories — carousel on mobile, grid on desktop */}
+        <CategoryCarousel />
+        {/* 3 · How it works — 3 steps */}
+        <HowItWorksV2 />
+        {/* 4 · Featured teachers — real roster only */}
+        <FeaturedTeachersV2 />
+        {/* 5 · Popular subjects — dark surface, real count */}
+        <SubjectGrid />
+        {/* 6 · Upcoming events / live sessions */}
+        <UpcomingEventsStrip />
+        {/* 7 · Trust & safety */}
+        <TrustSafety />
+        {/* 8 · Teach on darso — dark band */}
+        <TeachCtaBand />
+        {/* 9 · Founders note (pre-traction alternative to fake testimonials) */}
+        <FoundersNote />
+        {/* 10 · FAQ */}
+        <HomeFaq />
       </main>
       <SiteFooter />
     </>

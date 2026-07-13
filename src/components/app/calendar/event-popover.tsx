@@ -218,10 +218,9 @@ export function EventPopover({ event, onAddBlock }: EventPopoverProps) {
       <div>
         <p
           className={cn(
-            "font-serif text-base leading-snug text-foreground",
+            "text-[15px] font-semibold leading-snug text-foreground",
             event.status === "blocked" && "text-ink-2",
           )}
-          style={{ fontFamily: "ui-serif, Georgia, serif" }}
         >
           {event.title[lang]}
         </p>

@@ -53,9 +53,9 @@ export type EmptyStateProps = {
 
 const toneTile: Record<NonNullable<EmptyStateProps["tone"]>, string> = {
   neutral: "bg-surface text-ink-2",
-  accent: "bg-accent-soft/60 text-accent",
-  success: "bg-success/10 text-success",
-  warning: "bg-warning/15 text-[#7a5610]",
+  accent: "bg-accent-soft text-accent",
+  success: "bg-success-soft text-success",
+  warning: "bg-warning-soft text-warning-foreground",
 };
 
 export function EmptyState({

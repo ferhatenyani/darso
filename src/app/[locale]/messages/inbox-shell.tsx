@@ -27,7 +27,7 @@ export function InboxShell({ activeId }: { activeId?: string }) {
   );
 
   return (
-    <section className="container-narrow py-8">
+    <section className="container-narrow py-8 md:py-10">
       {/* Editorial title strip — small, distinct */}
       <header className="mb-5 flex items-end justify-between gap-4">
         <div>
@@ -35,18 +35,16 @@ export function InboxShell({ activeId }: { activeId?: string }) {
             <span className="ink-rule" aria-hidden />
             <span>{t("title")}</span>
           </div>
-          <h1
-            className="mt-3 font-serif text-3xl text-foreground sm:text-4xl"
-            style={{ fontFamily: "ui-serif, Georgia, serif" }}
-          >
+          <h1 className="mt-3 text-[26px] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[32px] md:text-[36px]">
             <span className="text-balance">{t("subtitle")}</span>
           </h1>
         </div>
       </header>
 
-      {/* Two-pane shell. Height: fill viewport minus header/footer */}
+      {/* Two-pane shell on desktop; on mobile show only the thread list (a
+          picked thread swaps the entire view to /messages/[threadId]). */}
       <div className="grid h-[min(76vh,820px)] overflow-hidden rounded-[var(--radius-lg)] border border-border bg-background shadow-e1 md:grid-cols-[340px_1fr]">
-        <div className="border-b border-border md:border-b-0 md:border-e">
+        <div className="md:border-e md:border-border">
           <ThreadList threads={threads} activeId={activeId} />
         </div>
         <div className="hidden md:block">
@@ -67,11 +65,8 @@ function EmptyPane() {
       <InboxIllustration />
 
       <div className="relative space-y-3">
-        <h2
-          className="font-serif text-2xl text-foreground"
-          style={{ fontFamily: "ui-serif, Georgia, serif" }}
-        >
-          <span className="italic">{t("title")}</span>
+        <h2 className="text-[20px] font-semibold tracking-tight text-foreground">
+          {t("title")}
         </h2>
         <p className="max-w-md text-pretty text-sm text-ink-2">{t("body")}</p>
         <Button asChild variant="outline" size="md">

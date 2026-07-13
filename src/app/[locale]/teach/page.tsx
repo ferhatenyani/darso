@@ -157,7 +157,7 @@ export default async function TeachLanding({ params }: Props) {
         {/* CTA strip */}
         <section className="bg-background">
           <div className="container-narrow py-16 md:py-20">
-            <div className="rounded-[var(--radius-2xl)] border border-border bg-primary p-8 text-primary-foreground md:p-12">
+            <div className="rounded-[var(--radius-xl)] border border-border bg-primary p-8 text-primary-foreground md:p-12">
               <div className="grid gap-6 md:grid-cols-[1.6fr_auto] md:items-center">
                 <div>
                   <h2 className="max-w-xl text-balance text-[26px] font-semibold tracking-tight md:text-[34px]">

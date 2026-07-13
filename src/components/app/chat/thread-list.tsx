@@ -43,8 +43,8 @@ export function ThreadList({
       {/* Header */}
       <div className="border-b border-border bg-background px-4 pt-4 pb-3">
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          <h2 className="font-serif text-xl text-foreground" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
-            <span className="italic">{t("title")}</span>
+          <h2 className="text-[17px] font-semibold tracking-tight text-foreground">
+            {t("title")}
           </h2>
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-3 tabular">
             {String(threads.filter((t) => t.unread > 0).length).padStart(2, "0")}
@@ -82,7 +82,7 @@ export function ThreadList({
       {/* List */}
       {filtered.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 py-12 text-center">
-          <span className="font-serif text-base italic text-foreground" style={{ fontFamily: "ui-serif, Georgia, serif" }}>
+          <span className="text-[15px] font-medium text-foreground">
             {t("emptyFiltered.title")}
           </span>
           <p className="text-sm text-ink-3">{t("emptyFiltered.body")}</p>

@@ -41,7 +41,7 @@ export default async function AgencyPage({ params }: Props) {
             <span className="ink-rule" aria-hidden />
             {loc === "ar" ? "وكالتك" : "Votre studio"}
           </p>
-          <h1 className="mt-3 text-[32px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[44px] md:text-[56px]">
+          <h1 className="mt-3 text-[28px] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[36px] md:text-[44px]">
             {agency.name[loc]}
           </h1>
           <p className="mt-2 max-w-xl text-pretty text-[15px] text-ink-2">{t("subtitle")}</p>
@@ -52,7 +52,7 @@ export default async function AgencyPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="rounded-[var(--radius-2xl)] border border-border bg-card p-6">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-card p-6">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-3">
             {t("totalMonth")}
           </p>
@@ -92,7 +92,7 @@ export default async function AgencyPage({ params }: Props) {
             {agencyInboxThreads.map((th) => (
               <article
                 key={th.id}
-                className="flex items-start gap-3 rounded-[var(--radius-xl)] border border-border bg-card p-4"
+                className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
               >
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
                   <Inbox className="h-4 w-4" aria-hidden />

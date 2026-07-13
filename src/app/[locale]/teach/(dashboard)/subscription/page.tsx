@@ -29,14 +29,14 @@ export default async function SubscriptionPage({ params }: Props) {
           <span className="ink-rule" aria-hidden />
           {loc === "ar" ? "الاشتراك" : "Abonnement"}
         </p>
-        <h1 className="mt-3 text-balance text-[30px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[40px] md:text-[52px]">
+        <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-[36px] md:text-[44px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-pretty text-[15px] text-ink-2 sm:text-base">{t("subtitle")}</p>
       </header>
 
       {/* Big tier display + progress */}
-      <section className="mb-10 overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card">
+      <section className="mb-10 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
         <div className="grid grid-cols-1 gap-0 lg:grid-cols-[1.3fr_1fr]">
           <div className="border-e border-border p-8 lg:p-10">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-3">
@@ -89,7 +89,7 @@ export default async function SubscriptionPage({ params }: Props) {
 
       {/* Invoices + payment */}
       <section className="mt-10 grid gap-6 lg:grid-cols-[2fr_1fr]">
-        <div className="overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+        <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
           <header className="border-b border-border p-5">
             <h3 className="text-base font-semibold text-foreground">{t("invoices.title")}</h3>
             <p className="text-[12px] text-ink-3">{t("invoices.subtitle")}</p>
@@ -124,7 +124,7 @@ export default async function SubscriptionPage({ params }: Props) {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-[var(--radius-xl)] border border-border bg-card p-5">
+          <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">
               {t("payment.title")}
             </p>

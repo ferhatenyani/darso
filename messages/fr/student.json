@@ -85,9 +85,11 @@
     },
     "teachers": {
       "pageEyebrow": "Annuaire",
-      "title": "Tous les professeurs darso,",
-      "titleAccent": "classés à votre manière.",
-      "subtitle": "Tri par note, ancienneté, prix ou délai de réponse. Cliquez sur une ligne pour voir les détails sans quitter la page.",
+      "title": "Trouvez un enseignant",
+      "titleAccent": "qui s'engage.",
+      "subtitle": "Identité, diplômes, disponibilité — chaque profil affiche uniquement ce qui est vérifiable. Vous choisissez, vous réservez, vous payez après la séance.",
+      "summaryTeachers": "enseignants",
+      "summaryWilayas": "wilayas couvertes",
       "leaderboardEyebrow": "Top du moment",
       "leaderboardLine": "{count} professeurs vérifiés · {wilayaCount} wilayas couvertes",
       "rankLabel": "Rang",
@@ -104,7 +106,7 @@
       "responseHours": "{hours, plural, =0 {< 1h} one {{hours}h} other {{hours}h}}",
       "speaksLabel": "Parle",
       "modeOnline": "En ligne",
-      "modeInPerson": "Présentiel",
+      "modeInPerson": "En présentiel",
       "modeBoth": "Les deux",
       "perHour": "/h",
       "lessonsPlural": "{count, plural, =0 {0 cours} one {# cours} other {# cours}}",
@@ -115,8 +117,15 @@
       "sortResponse": "Réponse rapide",
       "filterSubjectAny": "Toutes matières",
       "filterWilayaAny": "Toutes wilayas",
+      "verifiedChip": "Identité vérifiée",
+      "topRatedChip": "Mieux notés",
+      "fastChip": "Répond en < 3h",
       "tableHelp": "Cliquez sur une ligne pour étendre",
-      "noResults": "Aucun professeur ne correspond à vos filtres."
+      "noResults": "Aucun professeur ne correspond à vos filtres.",
+      "emptyEyebrow": "Bientôt sur darso",
+      "emptyTitle": "Nous accueillons nos premiers enseignants.",
+      "emptyBody": "Aucun profil ne correspond à ce filtre pour l'instant. Vous enseignez ? Les premiers inscrits bénéficient d'une visibilité privilégiée.",
+      "emptyCta": "Devenir enseignant"
     },
     "teacherProfile": {
       "verifiedId": "Identité vérifiée",
@@ -156,13 +165,18 @@
       "availabilityFree": "Libre",
       "availabilityBooked": "Pris",
       "stickyEyebrow": "Réserver",
-      "stickyBook1to1": "Réserver un 1:1",
+      "stickyBook1to1": "Réserver un cours",
       "stickyApplyCourse": "Postuler à un cours",
       "stickyMessage": "Envoyer un message",
       "stickyStartFrom": "À partir de",
       "stickyPerHour": "/h",
       "stickyTrust": "Paiement séquestré · annulation gratuite jusqu'à 24h avant.",
       "stickyStatsTitle": "En chiffres",
+      "stickySeeAvailability": "Voir la disponibilité",
+      "stickyPriceLabel": "Prix",
+      "newChip": "Nouveau",
+      "reviewsEmptyLong": "Ce profil n'a pas encore de retours. Soyez le premier à réserver et à donner votre avis.",
+      "backLabel": "Retour",
       "shareLabel": "Partager",
       "reportLabel": "Signaler",
       "publishedLabel": "Sur darso depuis {label}",
@@ -215,6 +229,10 @@
       "askQuestion": "Poser une question",
       "reviewsEyebrow": "Avis des participants",
       "reviewsEmpty": "Soyez le premier à donner votre avis.",
+      "reviewsEmptyLong": "Ce cours n'a pas encore de retours. Soyez le premier à le réserver et à partager votre avis.",
+      "priceLabel": "Prix",
+      "newChip": "Nouveau",
+      "backLabel": "Retour",
       "teacherCardEyebrow": "Donné par",
       "teacherStatsLessons": "{count} cours donnés",
       "teacherStatsResponse": "Répond en {h} h"
@@ -534,10 +552,13 @@
       "suggestionsTitle": "Suggestions populaires"
     },
     "categories": {
-      "title": "Toutes les catégories",
-      "subtitle": "Du soutien scolaire à la programmation, des langues à la musique — explorez l'offre par grande famille.",
-      "openCategory": "Explorer",
-      "teacherCountLabel": "{count} professeurs",
+      "eyebrow": "Catalogue",
+      "title": "Explorez par catégorie,",
+      "titleAccent": "du soutien scolaire à la programmation.",
+      "subtitle": "Choisissez une grande famille pour parcourir les enseignants et les cours qui vont avec.",
+      "openCategory": "Explorer →",
+      "teacherCountLabel": "{count, plural, one {# enseignant·e} other {# enseignant·es}}",
+      "newChip": "Nouveau",
       "moreLabel": "Sous-catégories"
     },
     "event": {
@@ -552,15 +573,21 @@
       "speakers": "Animé par",
       "agendaTitle": "Au programme",
       "afterTitle": "Après l'événement",
-      "afterBody": "Replay disponible 30 jours, plus une fiche récap envoyée par e-mail."
+      "afterBody": "Replay disponible 30 jours, plus une fiche récap envoyée par e-mail.",
+      "priceLabel": "Prix",
+      "backLabel": "Retour"
     },
     "live": {
-      "title": "En direct sur darso",
-      "subtitle": "Cours en cours et démarrages dans l'heure.",
+      "eyebrow": "En direct",
+      "title": "Cours en direct & ateliers",
+      "titleAccent": "à rejoindre dès maintenant.",
+      "subtitle": "Rejoignez une séance en cours, réservez la prochaine, ou proposez la vôtre si vous enseignez.",
+      "liveNowLabel": "{count, plural, one {# séance en direct} other {# séances en direct}}",
+      "noLiveNow": "Aucune séance en cours",
       "tabsNow": "En direct",
       "tabsSoon": "Dans l'heure",
       "tabsToday": "Aujourd'hui",
-      "tabsTomorrow": "Demain",
+      "tabsTomorrow": "Cette semaine",
       "stateLive": "EN COURS",
       "stateSoon": "Bientôt",
       "stateLater": "Plus tard",
@@ -569,7 +596,11 @@
       "starts": "Démarre",
       "with": "avec",
       "places": "{taken}/{total} places",
-      "empty": "Pas de cours pour ce filtre."
+      "empty": "Aucun événement en direct programmé. Consultez à nouveau bientôt.",
+      "emptyTitle": "Rien pour l'instant",
+      "hostCtaTitle": "Vous enseignez ?",
+      "hostCtaBody": "Publiez votre propre séance en direct ou atelier depuis le tableau de bord enseignant.",
+      "hostCta": "Proposer un événement"
     }
   }
 }

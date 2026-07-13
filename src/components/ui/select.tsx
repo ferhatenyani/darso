@@ -16,7 +16,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "group inline-flex w-full items-center gap-2 rounded-[var(--radius-md)] border border-input bg-background px-3 text-sm text-foreground transition-[border-color,box-shadow] hover:border-border-strong",
+      "group inline-flex w-full items-center gap-2 rounded-[var(--radius-sm)] border border-input bg-background px-3 text-sm text-foreground transition-[border-color,box-shadow] hover:border-border-strong",
       "data-[state=open]:border-accent data-[state=open]:shadow-[0_0_0_3px_var(--ring-soft)]",
       "data-[placeholder]:text-ink-3 disabled:cursor-not-allowed disabled:opacity-50",
       size === "sm" && "h-9",
@@ -44,7 +44,7 @@ const SelectContent = React.forwardRef<
       position={position}
       sideOffset={sideOffset}
       className={cn(
-        "relative z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-[var(--radius-md)] border border-border bg-popover text-popover-foreground shadow-e3",
+        "relative z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-[var(--radius-md)] border border-border bg-popover text-popover-foreground shadow-e2",
         "max-h-(--radix-select-content-available-height)",
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className,
@@ -70,7 +70,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center gap-2 rounded-[var(--radius-sm)] py-2 ps-3 pe-8 text-sm outline-none",
+      "relative flex w-full cursor-default select-none items-center gap-2 rounded-[var(--radius-xs)] py-2 ps-3 pe-8 text-sm outline-none",
       "data-[highlighted]:bg-surface data-[highlighted]:text-foreground",
       "data-[state=checked]:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,

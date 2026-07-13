@@ -70,7 +70,7 @@ export function UserMenu() {
             aria-label={tMenu("openLabel")}
           >
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-gradient-to-br from-[#2F6BFF] to-[#3E8FD0] text-[11px] font-semibold text-white">
+              <AvatarFallback className="bg-primary text-[11px] font-semibold text-primary-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>

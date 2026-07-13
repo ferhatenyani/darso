@@ -17,7 +17,7 @@ export function SubscriptionSimulator({ locale, tiers }: { locale: "fr" | "ar"; 
   const lc = (locale === "ar" ? "ar-DZ" : "fr-DZ") as string;
 
   return (
-    <section className="overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-card">
+    <section className="overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
       <header className="border-b border-border p-6">
         <h2 className="text-xl font-semibold tracking-tight text-foreground">{t("title")}</h2>
         <p className="mt-1 max-w-xl text-[13px] text-ink-2">{t("subtitle")}</p>

@@ -12,7 +12,7 @@ export function TeacherCta() {
 
   return (
     <section className="container-narrow py-16 md:py-24">
-      <div className="relative overflow-hidden rounded-[var(--radius-2xl)] border border-border bg-primary text-primary-foreground">
+      <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-border bg-primary text-primary-foreground">
         <div
           aria-hidden
           className="absolute inset-0 opacity-30"

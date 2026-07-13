@@ -31,7 +31,7 @@ export function LivePanel() {
   return (
     <aside
       aria-label={t("eyebrow")}
-      className="relative rounded-[var(--radius-2xl)] border border-border-strong bg-card p-2 shadow-e3"
+      className="relative rounded-[var(--radius-xl)] border border-border-strong bg-card p-2 shadow-e3"
     >
       <header className="flex items-center justify-between px-3 pt-3 pb-2">
         <div>

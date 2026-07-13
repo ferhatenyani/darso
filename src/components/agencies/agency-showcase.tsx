@@ -151,7 +151,7 @@ export function AgencyShowcase({ agency, members, teachers }: Props) {
         <section className="border-b border-border bg-background">
           <div className="container-narrow py-16 md:py-20">
             <div className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-16">
-              <div className="rounded-[var(--radius-2xl)] border border-border bg-card p-8 text-center shadow-e1 lg:min-w-[240px]">
+              <div className="rounded-[var(--radius-xl)] border border-border bg-card p-8 text-center shadow-e1 lg:min-w-[240px]">
                 <p className="text-[64px] font-bold leading-none tabular tracking-tighter text-foreground">
                   {avgRating.toFixed(1)}
                 </p>
@@ -201,7 +201,7 @@ export function AgencyShowcase({ agency, members, teachers }: Props) {
       {/* CTA */}
       <section className="bg-background">
         <div className="container-narrow py-16 md:py-24">
-          <div className="rounded-[var(--radius-2xl)] border border-border bg-primary p-8 text-primary-foreground md:p-14">
+          <div className="rounded-[var(--radius-xl)] border border-border bg-primary p-8 text-primary-foreground md:p-14">
             <div className="grid gap-6 md:grid-cols-[1.6fr_auto] md:items-center">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/60">

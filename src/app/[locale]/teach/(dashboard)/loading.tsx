@@ -37,7 +37,7 @@ export default function TeachDashboardLoading() {
         {/* Today panel — 8 cols */}
         <section className="lg:col-span-8">
           <SectionHeader />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <ul className="divide-y divide-border">
               {Array.from({ length: 4 }).map((_, i) => (
                 <li
@@ -79,7 +79,7 @@ export default function TeachDashboardLoading() {
         {/* Revenue — 5 cols */}
         <section className="lg:col-span-5">
           <SectionHeader />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <div className="space-y-4 border-b border-border p-5">
               <div className="flex items-baseline justify-between">
                 <div className="space-y-2">
@@ -128,7 +128,7 @@ export default function TeachDashboardLoading() {
         {/* Action items — 3 cols */}
         <section className="lg:col-span-3">
           <SectionHeader />
-          <div className="mt-6 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card">
+          <div className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
             <ul className="divide-y divide-border">
               {Array.from({ length: 4 }).map((_, i) => (
                 <li key={i} className="flex items-center gap-3 p-4">
