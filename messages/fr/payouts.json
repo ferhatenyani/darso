@@ -1,0 +1,106 @@
+{
+  "payouts": {
+    "title": "Versements",
+    "subtitle": "Gérez votre RIB, votre rythme de versement et l'historique de vos virements. Les paiements sont en DZD, virés directement sur votre compte bancaire.",
+    "eyebrow": "Trésorerie",
+    "method": {
+      "indexNum": "01",
+      "title": "Méthode de versement",
+      "subtitle": "Le RIB sur lequel darso vire vos revenus chaque mois.",
+      "emptyTitle": "Aucun RIB enregistré",
+      "emptyBody": "Ajoutez vos coordonnées bancaires pour recevoir vos versements. Vos données restent privées et chiffrées.",
+      "bankLabel": "Banque",
+      "bankPlaceholder": "Sélectionnez votre banque",
+      "accountHolderLabel": "Titulaire du compte",
+      "accountHolderHint": "Doit correspondre exactement au nom enregistré à la banque.",
+      "ribLabel": "RIB (20 chiffres)",
+      "ribHint": "Le RIB complet, sans espaces ni lettres.",
+      "ribErrorLength": "Le RIB doit contenir exactement 20 chiffres.",
+      "ribErrorDigits": "Le RIB ne doit contenir que des chiffres.",
+      "bicLabel": "BIC / SWIFT (facultatif)",
+      "bicHint": "Uniquement pour les virements internationaux.",
+      "save": "Enregistrer la méthode",
+      "saving": "Enregistrement…",
+      "edit": "Modifier",
+      "cancel": "Annuler",
+      "summaryLabel": "Méthode active",
+      "addedOn": "Ajoutée le {date}",
+      "verifiedBadge": "Vérifiée",
+      "unverifiedBadge": "Non vérifiée",
+      "verifyTitle": "Vérification par micro-dépôt",
+      "verifyBody": "Nous virons un petit montant (moins de 10 DZD) sur votre compte. Confirmez-le sous 2 jours ouvrés pour activer les versements.",
+      "verifyAction": "Lancer la vérification",
+      "banks": {
+        "bna": "BNA — Banque Nationale d'Algérie",
+        "bea": "BEA — Banque Extérieure d'Algérie",
+        "cpa": "CPA — Crédit Populaire d'Algérie",
+        "badr": "BADR — Banque de l'Agriculture",
+        "bdl": "BDL — Banque de Développement Local",
+        "agb": "AGB — Gulf Bank Algeria",
+        "sga": "Société Générale Algérie",
+        "trust": "Trust Bank Algeria",
+        "ccp": "BaridiMob / CCP"
+      }
+    },
+    "schedule": {
+      "indexNum": "02",
+      "title": "Calendrier des versements",
+      "subtitle": "Le 5 de chaque mois, nous virons automatiquement vos revenus du mois précédent.",
+      "cadenceLabel": "Cadence",
+      "cadenceValue": "Les versements ont lieu le 5 de chaque mois.",
+      "nextPayoutLabel": "Prochain versement",
+      "pendingLabel": "Montant en attente",
+      "pendingHint": "Cumul des séances confirmées non encore versées.",
+      "frequencyLabel": "Fréquence",
+      "frequencyHint": "Modifier la fréquence affecte tous les versements à venir.",
+      "freq": {
+        "monthly": "Mensuelle",
+        "weekly": "Hebdomadaire",
+        "ondemand": "Sur demande"
+      },
+      "saveFrequency": "Mettre à jour"
+    },
+    "history": {
+      "indexNum": "03",
+      "title": "Historique des versements",
+      "subtitle": "Tous vos virements passés, du plus récent au plus ancien.",
+      "empty": "Aucun versement pour l'instant. Votre premier virement apparaîtra ici après votre première séance facturée.",
+      "thead": {
+        "date": "Date",
+        "reference": "Référence",
+        "amount": "Montant",
+        "method": "Méthode",
+        "status": "Statut",
+        "action": "Action"
+      },
+      "download": "Télécharger le relevé"
+    },
+    "status": {
+      "paid": "Versé",
+      "pending": "En attente",
+      "failed": "Échec"
+    },
+    "toasts": {
+      "methodSaved": {
+        "title": "Méthode enregistrée",
+        "desc": "Vos coordonnées bancaires sont à jour."
+      },
+      "ribInvalid": {
+        "title": "RIB invalide",
+        "desc": "Vérifiez le format : 20 chiffres, sans espaces ni lettres."
+      },
+      "verifyStarted": {
+        "title": "Micro-dépôt envoyé",
+        "desc": "Vous recevrez un petit montant sur votre compte. Confirmez-le sous 2 jours ouvrés."
+      },
+      "frequencyUpdated": {
+        "title": "Fréquence mise à jour",
+        "desc": "Cadence des versements : {freq}."
+      },
+      "statementDownloaded": {
+        "title": "Relevé téléchargé",
+        "desc": "Le relevé du versement {ref} a été préparé."
+      }
+    }
+  }
+}

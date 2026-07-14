@@ -1,0 +1,420 @@
+{
+  "requests": {
+    "shared": {
+      "modes": {
+        "online": "En ligne",
+        "inPerson": "En présentiel",
+        "both": "En ligne ou présentiel"
+      },
+      "status": {
+        "open": "Ouverte",
+        "negotiating": "En négociation",
+        "awarded": "Attribuée",
+        "closed": "Fermée"
+      },
+      "urgency": {
+        "low": "Pas pressé",
+        "med": "Cette quinzaine",
+        "high": "Urgent"
+      },
+      "audience": {
+        "kids": "Enfants",
+        "lycee": "Lycéens & Bac",
+        "students": "Étudiants",
+        "adults": "Adultes & pros"
+      },
+      "level": {
+        "any": "Tous niveaux",
+        "beginner": "Débutant",
+        "intermediate": "Intermédiaire",
+        "advanced": "Avancé"
+      },
+      "time": {
+        "justNow": "à l'instant",
+        "hoursAgo": "{h, plural, =1 {il y a 1 h} other {il y a # h}}",
+        "daysAgo": "{d, plural, =1 {il y a 1 jour} other {il y a # jours}}"
+      },
+      "currency": {
+        "budgetRange": "{min} – {max}",
+        "perHour": "/h"
+      },
+      "anonymous": {
+        "name": "Demande anonyme",
+        "initials": "??"
+      },
+      "deadlines": {
+        "thisWeek": "Cette semaine",
+        "thisMonth": "Ce mois",
+        "notInRush": "Pas pressé"
+      },
+      "subjects": {
+        "school": "Soutien scolaire",
+        "languages": "Langues",
+        "code": "Programmation",
+        "design": "Design & créa",
+        "business": "Business & carrière",
+        "music": "Musique",
+        "religion": "Sciences religieuses",
+        "exams": "Examens & concours"
+      },
+      "cities": {
+        "any": "Toute l'Algérie",
+        "alger": "Alger",
+        "oran": "Oran",
+        "constantine": "Constantine",
+        "annaba": "Annaba",
+        "blida": "Blida",
+        "setif": "Sétif",
+        "batna": "Batna",
+        "tlemcen": "Tlemcen",
+        "tiziOuzou": "Tizi Ouzou",
+        "bejaia": "Béjaïa"
+      }
+    },
+    "browse": {
+      "metaTitle": "Demandes des élèves",
+      "eyebrow": "Marketplace inversée",
+      "title": "Ce que l'Algérie cherche à apprendre",
+      "subtitle": "Des élèves postent ce qu'ils veulent apprendre. Les professeurs viennent à eux — pas l'inverse.",
+      "kicker": "Mise à jour en continu",
+      "mastheadGlyph": "ANNONCES",
+      "openCount": "{count, plural, =0 {Aucune demande ouverte} one {# demande ouverte} other {# demandes ouvertes}}",
+      "totalCount": "{count, plural, =0 {0 publication} one {# publication au total} other {# publications au total}}",
+      "ctaPost": "Poster une demande",
+      "ctaPostHint": "Gratuit · 3 minutes",
+      "filters": {
+        "title": "Filtres",
+        "clear": "Effacer",
+        "applyCount": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
+        "subject": "Matière",
+        "subjectAll": "Toutes",
+        "mode": "Mode",
+        "modeAll": "Indifférent",
+        "urgency": "Urgence",
+        "urgencyAll": "Toutes",
+        "audience": "Public",
+        "audienceAll": "Tous",
+        "city": "Wilaya",
+        "cityAll": "Toute l'Algérie",
+        "budget": "Budget max (DZD / heure)",
+        "budgetMin": "Min",
+        "budgetMax": "Max"
+      },
+      "sort": {
+        "label": "Trier par",
+        "newest": "Plus récentes",
+        "urgent": "Plus urgentes",
+        "budgetHigh": "Budget descendant",
+        "fewestApps": "Moins de candidatures"
+      },
+      "card": {
+        "indexLabel": "Annonce",
+        "applicationCount": "{count, plural, =0 {Aucune candidature encore} one {# candidature} other {# candidatures}}",
+        "postedBy": "Posté par",
+        "budgetLabel": "Budget /h",
+        "viewRequest": "Voir la demande",
+        "deadlineLabel": "Échéance",
+        "noApplicantsYet": "Aucune candidature encore — sois le premier à répondre",
+        "subjectLabel": "Sujet",
+        "levelLabel": "Niveau"
+      },
+      "empty": {
+        "title": "Aucune demande ne correspond",
+        "body": "Réajuste tes filtres ou poste ta propre demande — quelqu'un saura t'aider.",
+        "primary": "Effacer les filtres",
+        "secondary": "Poster ma demande"
+      },
+      "footnote": {
+        "label": "Comment ça marche ?",
+        "body": "Tu postes ce que tu veux apprendre. Les professeurs envoient une proposition avec leur tarif et leurs disponibilités. Tu choisis — paiement sécurisé via darso."
+      },
+      "ribbon": {
+        "openLabel": "OUVERT",
+        "newApp": "Nouvelle candidature il y a {h} h"
+      }
+    },
+    "newRequest": {
+      "metaTitle": "Poster une demande",
+      "eyebrow": "Nouvelle demande",
+      "title": "Dis-nous ce que tu veux apprendre",
+      "subtitle": "Cinq petites étapes. Tu peux revenir en arrière à tout moment.",
+      "backToList": "Retour aux demandes",
+      "stepLabel": "Étape {current} sur {total}",
+      "footer": {
+        "back": "Retour",
+        "next": "Continuer",
+        "skip": "Passer cette étape",
+        "publish": "Publier la demande"
+      },
+      "stepHeader": {
+        "label": "ÉTAPE {n} / {total}"
+      },
+      "budgetAxis": {
+        "min": "MIN",
+        "max": "MAX"
+      },
+      "step1": {
+        "label": "Le sujet",
+        "title": "Qu'est-ce que tu veux apprendre ?",
+        "hint": "Sois précis — c'est ce que les profs verront en premier.",
+        "titleLabel": "Titre de la demande",
+        "titlePlaceholder": "Ex. Préparation IELTS — objectif 7+ en 3 mois",
+        "subjectLabel": "Matière principale",
+        "subjectPlaceholder": "Choisis une matière",
+        "categoryLabel": "Catégories liées (facultatif)",
+        "categoryHint": "Coche tout ce qui s'applique — les profs concernés verront ta demande.",
+        "errorTitle": "Donne un titre à ta demande",
+        "errorSubject": "Choisis une matière"
+      },
+      "step2": {
+        "label": "Le contexte",
+        "title": "Raconte-nous un peu plus",
+        "hint": "Les profs proposent des plans bien meilleurs quand ils comprennent ta situation.",
+        "bodyLabel": "Décris ce que tu veux apprendre",
+        "bodyPlaceholder": "Niveau actuel, objectifs concrets, contraintes (emploi du temps, budget, lieu)…",
+        "bodyHint": "Au moins une phrase — idéalement 3 à 5.",
+        "levelLabel": "Ton niveau actuel",
+        "audienceLabel": "Pour qui ?",
+        "audiencePlaceholder": "Sélectionne un public",
+        "errorBody": "Ajoute au moins une phrase de description"
+      },
+      "step3": {
+        "label": "La logistique",
+        "title": "Quand et comment ?",
+        "hint": "On affichera ces infos pour aider les profs à candidater rapidement.",
+        "modeLabel": "Mode préféré",
+        "cityLabel": "Wilaya (pour le présentiel)",
+        "cityPlaceholder": "Choisis une wilaya",
+        "deadlineLabel": "Échéance",
+        "deadlineHint": "Pour des dates précises, discute-le ensuite avec le prof.",
+        "errorCity": "Choisis une wilaya pour les cours en présentiel"
+      },
+      "step4": {
+        "label": "Budget & visibilité",
+        "title": "Combien et avec quelle priorité ?",
+        "hint": "Une fourchette honnête attire de meilleures candidatures.",
+        "budgetLabel": "Budget par heure (DZD)",
+        "budgetHint": "Min – Max",
+        "urgencyLabel": "À quel point c'est urgent ?",
+        "anonLabel": "Publier de manière anonyme",
+        "anonHint": "Ton nom et ton avatar restent cachés jusqu'à ce que tu acceptes une candidature.",
+        "errorBudget": "Vérifie que le min est positif et que le max est ≥ au min"
+      },
+      "step5": {
+        "label": "Vérification",
+        "title": "Tout est prêt — relis avant de publier",
+        "hint": "Tu pourras modifier ta demande après publication.",
+        "sectionSubject": "Sujet",
+        "sectionDetails": "Description",
+        "sectionLogistics": "Logistique",
+        "sectionBudget": "Budget & priorité",
+        "editStep": "Modifier",
+        "summaryEmpty": "—"
+      }
+    },
+    "wizard": {
+      "footer": {
+        "publishing": "Publication…"
+      },
+      "toasts": {
+        "published": {
+          "title": "Demande publiée",
+          "desc": "Les profs concernés viennent de la voir — les premières propositions arrivent souvent en moins de 24 h."
+        },
+        "missingFields": {
+          "title": "Quelques champs manquent",
+          "desc": "Vérifie le titre, la matière, la description et le mode avant de publier."
+        }
+      }
+    },
+    "edit": {
+      "title": "Modifier ta demande",
+      "subtitle": "Mets à jour les détails — les profs verront la version la plus récente.",
+      "eyebrow": "Édition",
+      "indexLabel": "FICHE",
+      "backToDetail": "Retour au détail",
+      "save": "Enregistrer les changements",
+      "saving": "Enregistrement…",
+      "cancel": "Annuler",
+      "deleting": "Suppression…",
+      "deleteConfirm": "Supprimer définitivement cette demande ? Les candidatures associées seront retirées de ton tableau.",
+      "ownerNote": "Tu peux relire les champs et essayer, mais seules les modifications par le propriétaire sont enregistrées dans cette démo.",
+      "toasts": {
+        "saved": {
+          "title": "Demande mise à jour",
+          "desc": "Les modifications sont visibles immédiatement par les profs."
+        }
+      }
+    },
+    "detail": {
+      "backToList": "Toutes les demandes",
+      "metaTitle": "Demande #{n}",
+      "indexLabel": "Annonce N°{n}",
+      "postedLabel": "Postée",
+      "applicationsTab": "Candidatures ({count})",
+      "discussionTab": "Discussion",
+      "timelineTab": "Suivi",
+      "header": {
+        "budgetLabel": "Budget /h",
+        "deadlineLabel": "Échéance",
+        "modeLabel": "Mode",
+        "cityLabel": "Wilaya",
+        "audienceLabel": "Public",
+        "levelLabel": "Niveau",
+        "share": "Partager",
+        "save": "Enregistrer",
+        "saved": "Enregistrée"
+      },
+      "body": {
+        "title": "Ce qu'on cherche"
+      },
+      "logistics": {
+        "title": "Logistique"
+      },
+      "applications": {
+        "title": "Candidatures reçues",
+        "subtitle": "Lis chaque proposition, compare les tarifs et la disponibilité.",
+        "applyCardLabel": "Proposition N°{n}",
+        "rateLabel": "Tarif proposé",
+        "perHour": "/h",
+        "availability": "Disponibilités",
+        "responseTime": "Répond en ~{hours} h",
+        "messageBtn": "Envoyer un message",
+        "acceptBtn": "Accepter cette proposition",
+        "awardedBadge": "Attribuée",
+        "viewProfile": "Voir le profil",
+        "empty": {
+          "title": "Aucune candidature pour l'instant",
+          "body": "C'est très récent. Les profs concernés sont notifiés — la première candidature arrive souvent en moins de 24 h."
+        }
+      },
+      "discussion": {
+        "title": "Échanges avec les profs",
+        "empty": {
+          "title": "Lance la conversation",
+          "body": "Écris un premier message — les profs ayant candidaté pourront répondre ici. La discussion privée avec le prof retenu démarre après ton choix."
+        },
+        "composer": {
+          "placeholder": "Écris un message à la communauté…",
+          "send": "Envoyer",
+          "you": "Toi"
+        }
+      },
+      "timeline": {
+        "title": "Suivi de la demande",
+        "posted": "Demande publiée",
+        "firstApp": "Première candidature reçue",
+        "negotiating": "Discussion avec les candidats",
+        "awarded": "Candidature attribuée",
+        "closed": "Demande fermée",
+        "pending": "En attente"
+      },
+      "rail": {
+        "ownerTitle": "Tu gères cette demande",
+        "ownerNote": "Tu peux la modifier ou la fermer à tout moment.",
+        "edit": "Modifier la demande",
+        "close": "Fermer la demande",
+        "reopen": "Rouvrir la demande",
+        "shareTitle": "Partager",
+        "shareNote": "Copie le lien pour le partager dans un groupe d'études.",
+        "copyLink": "Copier le lien",
+        "linkCopied": "Lien copié",
+        "statusLabel": "Statut",
+        "applicationCount": "{count, plural, =0 {Aucune candidature} one {# candidature reçue} other {# candidatures reçues}}",
+        "viewsLabel": "Vues",
+        "metaTitle": "Détails",
+        "postedOn": "Publiée",
+        "lastActivity": "Dernière activité",
+        "audienceSummary": "Audience"
+      },
+      "acceptDialog": {
+        "title": "Accepter cette proposition ?",
+        "body": "En acceptant, les autres candidatures sont mises en pause. {teacher} reçoit ta décision et peut commencer à planifier les séances avec toi.",
+        "cancel": "Annuler",
+        "confirm": "Oui, accepter"
+      }
+    },
+    "my": {
+      "metaTitle": "Mes demandes",
+      "eyebrow": "Mon tableau",
+      "title": "Tes demandes en cours",
+      "subtitle": "Garde un œil sur ce que tu as publié, qui répond, et où ça en est.",
+      "newRequest": "Nouvelle demande",
+      "tabs": {
+        "all": "Toutes ({count})",
+        "open": "Ouvertes ({count})",
+        "negotiating": "En négociation ({count})",
+        "awarded": "Attribuées ({count})",
+        "closed": "Fermées ({count})"
+      },
+      "card": {
+        "indexLabel": "N°",
+        "applicationCount": "{count, plural, =0 {Aucune candidature} one {# candidature} other {# candidatures}}",
+        "openDetail": "Voir la demande",
+        "lastActivity": "Dernière activité",
+        "budgetLabel": "Budget /h",
+        "noActivity": "Aucune activité"
+      },
+      "actions": {
+        "label": "Actions",
+        "view": "Voir",
+        "edit": "Modifier",
+        "share": "Partager",
+        "close": "Fermer",
+        "reopen": "Rouvrir",
+        "delete": "Supprimer"
+      },
+      "empty": {
+        "all": {
+          "title": "Tu n'as encore rien publié",
+          "body": "Poste une demande — les professeurs concernés viendront à toi."
+        },
+        "filtered": {
+          "title": "Aucune demande dans cet état",
+          "body": "Change d'onglet ou poste une nouvelle demande."
+        },
+        "primary": "Poster une demande"
+      },
+      "deleteDialog": {
+        "title": "Supprimer cette demande ?",
+        "body": "Cette action est définitive. Les candidatures reçues seront aussi retirées de ton tableau.",
+        "cancel": "Annuler",
+        "confirm": "Oui, supprimer"
+      }
+    },
+    "toasts": {
+      "messageOpening": {
+        "title": "Ouverture de la conversation…",
+        "desc": "On t'amène à la messagerie."
+      },
+      "applicationAccepted": {
+        "title": "Candidature acceptée",
+        "desc": "{teacher} reçoit ta décision. Les autres candidatures sont mises en pause."
+      },
+      "closed": {
+        "title": "Demande fermée",
+        "desc": "Tu peux la rouvrir à tout moment."
+      },
+      "reopened": {
+        "title": "Demande rouverte",
+        "desc": "Elle est de nouveau visible par les professeurs."
+      },
+      "deleted": {
+        "title": "Demande supprimée",
+        "desc": "Elle n'apparaît plus dans ton tableau."
+      },
+      "linkCopied": {
+        "title": "Lien copié",
+        "desc": "Tu peux le coller dans un groupe ou une discussion."
+      },
+      "linkCopyFailed": {
+        "title": "Copie impossible",
+        "desc": "Ton navigateur a bloqué l'accès au presse-papier."
+      },
+      "messagePosted": {
+        "title": "Message envoyé",
+        "desc": "Visible par les profs ayant candidaté."
+      }
+    }
+  }
+}

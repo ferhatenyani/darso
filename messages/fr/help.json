@@ -1,0 +1,202 @@
+{
+  "help": {
+    "meta": {
+      "title": "Centre d'aide",
+      "description": "Réponses, guides et contacts pour bien utiliser darso."
+    },
+    "hero": {
+      "eyebrow": "Centre d'aide",
+      "title": "On répond à vos questions, sans détour.",
+      "subtitle": "Cherchez une réponse, parcourez les catégories ou contactez l'équipe. Disponible 7j/7 en français et en arabe.",
+      "searchPlaceholder": "Tapez votre question — par exemple : « comment payer en Edahabia »",
+      "searchAction": "Rechercher",
+      "popularLabel": "Recherches fréquentes",
+      "popular": [
+        "Réserver un cours 1-à-1",
+        "Modes de paiement",
+        "Devenir professeur",
+        "Annulation et remboursement",
+        "Litige avec un professeur"
+      ]
+    },
+    "shortcuts": {
+      "title": "Raccourcis",
+      "subtitle": "Les chemins les plus utilisés.",
+      "items": [
+        { "title": "Contacter l'équipe", "blurb": "Réponse sous 24 h ouvrées.", "href": "/contact" },
+        { "title": "Confiance & sécurité", "blurb": "Vérifications, litiges, données.", "href": "/trust" },
+        { "title": "Comment ça marche", "blurb": "Tour d'horizon en 3 minutes.", "href": "/how-it-works" },
+        { "title": "Devenir professeur", "blurb": "Étapes d'inscription pédagogique.", "href": "/teach" }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Foire aux questions",
+      "title": "Parcourir par catégorie",
+      "subtitle": "Six rubriques, des réponses concrètes — écrites par notre équipe support à Alger.",
+      "categories": [
+        {
+          "id": "getting-started",
+          "label": "Premiers pas",
+          "items": [
+            {
+              "q": "Comment créer un compte sur darso ?",
+              "a": "Cliquez sur « Créer un compte » dans l'en-tête, choisissez votre rôle (apprenant ou professeur), saisissez vos coordonnées et confirmez votre adresse e-mail. L'inscription est gratuite et prend moins de deux minutes."
+            },
+            {
+              "q": "darso est-il disponible dans toutes les wilayas ?",
+              "a": "Oui — la plateforme couvre les 58 wilayas. Les cours en visio sont accessibles partout ; les cours en présentiel dépendent de la disponibilité géographique de chaque professeur."
+            },
+            {
+              "q": "Faut-il une carte bancaire pour s'inscrire ?",
+              "a": "Non. La création de compte est gratuite et ne demande aucun moyen de paiement. Vous ne renseignerez votre carte (CIB, Edahabia) qu'au moment de réserver votre premier cours."
+            },
+            {
+              "q": "Quelles matières puis-je apprendre ?",
+              "a": "Plus de 120 disciplines : langues (arabe, anglais, français, espagnol, tamazight), matières scolaires (préparation BAC, BEM), informatique, musique, religion (Coran, fiqh), arts, sport et coaching professionnel."
+            },
+            {
+              "q": "Quelle est la différence entre un cours 1-à-1, un atelier et un live ?",
+              "a": "Le 1-à-1 est privé et adapté à votre niveau. L'atelier réunit 4 à 15 personnes sur un sujet précis. Le live est un cours en direct ouvert à un large public, souvent gratuit ou à petit prix."
+            }
+          ]
+        },
+        {
+          "id": "bookings-payments",
+          "label": "Réservations & paiements",
+          "items": [
+            {
+              "q": "Quels moyens de paiement sont acceptés ?",
+              "a": "Edahabia, CIB, BaridiMob, et mandat postal pour les cours hors visio. Les paiements internationaux par carte Visa/Mastercard sont disponibles pour les apprenants de la diaspora."
+            },
+            {
+              "q": "Quand suis-je débité ?",
+              "a": "Le montant est pré-autorisé au moment de la réservation, puis capturé après confirmation du professeur (généralement sous 12 h). Si le professeur refuse, aucune somme n'est prélevée."
+            },
+            {
+              "q": "Comment télécharger ma facture ?",
+              "a": "Rendez-vous dans « Mon compte » → « Factures ». Chaque réservation confirmée génère une facture PDF conforme à la réglementation algérienne, téléchargeable à tout moment."
+            },
+            {
+              "q": "Puis-je annuler un cours déjà réservé ?",
+              "a": "Oui. L'annulation est entièrement gratuite jusqu'à 24 h avant le cours. Entre 24 h et 2 h avant, 50 % du montant est retenu. Moins de 2 h avant, le cours est dû en intégralité, sauf cas de force majeure."
+            },
+            {
+              "q": "Le professeur ne s'est pas présenté — que faire ?",
+              "a": "Signalez l'absence depuis la page du cours. Si l'absence est confirmée par nos équipes, vous êtes intégralement remboursé sous 5 jours ouvrés et le cours est reprogrammé sans frais."
+            },
+            {
+              "q": "Y a-t-il des frais cachés ?",
+              "a": "Aucun. Le prix affiché est le prix payé. La commission darso est prélevée sur le revenu du professeur, jamais en surplus pour l'apprenant."
+            }
+          ]
+        },
+        {
+          "id": "teaching",
+          "label": "Enseigner",
+          "items": [
+            {
+              "q": "Comment devenir professeur sur darso ?",
+              "a": "Cliquez sur « Enseigner sur darso », créez votre profil pédagogique, ajoutez vos diplômes, prenez une courte vidéo de présentation et soumettez votre dossier. Notre équipe de vérification valide votre profil sous 48 h ouvrées."
+            },
+            {
+              "q": "Combien puis-je gagner ?",
+              "a": "Vous fixez librement vos tarifs. La commission darso est dégressive : 18 % la première année, 14 % à partir de 100 000 DZD de revenu mensuel, 10 % au-delà de 250 000 DZD. Vous gardez le reste — net."
+            },
+            {
+              "q": "À quelle fréquence suis-je payé ?",
+              "a": "Versement mensuel automatique sur votre compte bancaire algérien (RIB) ou CCP, autour du 5 de chaque mois pour le mois précédent."
+            },
+            {
+              "q": "Puis-je enseigner depuis l'étranger ?",
+              "a": "Oui, si vos cours sont en visio et destinés à la communauté algérienne. Le versement se fait sur compte algérien uniquement (RIB ou CCP)."
+            },
+            {
+              "q": "Comment refuser une réservation ?",
+              "a": "Depuis « Tableau de bord » → « Réservations », vous pouvez accepter ou refuser chaque demande. Aucun frais en cas de refus, mais un taux d'acceptation faible peut réduire votre visibilité."
+            },
+            {
+              "q": "Puis-je enseigner des matières religieuses (Coran, sciences islamiques) ?",
+              "a": "Oui. Ces matières sont soutenues par la plateforme. Une vérification supplémentaire de votre formation (Ijaza ou diplôme reconnu) peut être demandée pour figurer dans la catégorie « Sciences islamiques »."
+            }
+          ]
+        },
+        {
+          "id": "disputes",
+          "label": "Litiges",
+          "items": [
+            {
+              "q": "Comment ouvrir un litige ?",
+              "a": "Depuis la page de votre réservation, cliquez sur « Signaler un problème ». Décrivez la situation, joignez des pièces (captures, conversations) et envoyez. Un médiateur darso vous répond sous 48 h."
+            },
+            {
+              "q": "Combien de temps prend la médiation ?",
+              "a": "En moyenne 5 jours ouvrés. Les cas simples (absence, retard) sont tranchés en 24-48 h. Les cas complexes (qualité pédagogique contestée) peuvent demander une expertise indépendante."
+            },
+            {
+              "q": "Suis-je remboursé en cas de litige favorable ?",
+              "a": "Oui — remboursement intégral sous 5 jours ouvrés sur votre moyen de paiement initial. Si vous avez payé par mandat postal, le remboursement est versé sur le compte bancaire que vous indiquez."
+            },
+            {
+              "q": "Puis-je laisser un avis négatif ?",
+              "a": "Oui, vous êtes libre d'évaluer chaque cours après l'avoir suivi. Les avis sont publics, signés et modérés pour exclure les attaques personnelles."
+            }
+          ]
+        },
+        {
+          "id": "account",
+          "label": "Compte & profil",
+          "items": [
+            {
+              "q": "Comment modifier mes informations personnelles ?",
+              "a": "« Mon compte » → « Profil » → modifiez nom, photo, langues parlées, ville. Les modifications sont enregistrées immédiatement."
+            },
+            {
+              "q": "J'ai oublié mon mot de passe — comment le réinitialiser ?",
+              "a": "Sur la page de connexion, cliquez sur « Mot de passe oublié ». Un lien sécurisé vous est envoyé par e-mail, valable 30 minutes."
+            },
+            {
+              "q": "Comment supprimer mon compte ?",
+              "a": "« Mon compte » → « Paramètres » → « Supprimer mon compte ». La suppression est définitive sous 30 jours ; vos factures restent archivées 10 ans, conformément à la législation algérienne."
+            },
+            {
+              "q": "Puis-je changer de rôle (apprenant ↔ professeur) ?",
+              "a": "Oui — un même compte peut cumuler les deux rôles. Activez le rôle « Enseigner » depuis votre profil et complétez la vérification pédagogique."
+            }
+          ]
+        },
+        {
+          "id": "trust-safety",
+          "label": "Confiance & sécurité",
+          "items": [
+            {
+              "q": "Comment vérifiez-vous l'identité des professeurs ?",
+              "a": "Trois niveaux : pièce d'identité algérienne, diplôme ou justificatif de compétence, et entretien vidéo avec notre équipe. Les badges « ID vérifié » et « Diplôme vérifié » sont visibles sur chaque profil validé."
+            },
+            {
+              "q": "Mes données bancaires sont-elles sécurisées ?",
+              "a": "Oui. Aucun numéro de carte n'est stocké sur nos serveurs — nous utilisons un prestataire de paiement agréé Banque d'Algérie, conforme aux normes PCI-DSS."
+            },
+            {
+              "q": "Puis-je signaler un comportement inapproprié ?",
+              "a": "Oui, depuis n'importe quel profil ou message (icône drapeau). Les signalements sont traités sous 24 h et peuvent entraîner la suspension immédiate du compte concerné."
+            },
+            {
+              "q": "darso est-il adapté aux mineurs ?",
+              "a": "Oui, sous supervision parentale. Les comptes des moins de 16 ans doivent être créés par un parent, qui valide chaque réservation. Une charte spécifique « cours pour mineurs » s'applique aux professeurs."
+            }
+          ]
+        }
+      ]
+    },
+    "stillNeed": {
+      "title": "Vous n'avez pas trouvé ?",
+      "subtitle": "L'équipe support est basée à Alger et répond en français, en arabe et en kabyle.",
+      "ctaContact": "Contacter le support",
+      "ctaTrust": "Politique de confiance"
+    },
+    "toast": {
+      "searchTitle": "Recherche lancée",
+      "searchDescription": "« {query} » — fonction de recherche en cours d'intégration."
+    }
+  }
+}

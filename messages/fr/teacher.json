@@ -1,0 +1,850 @@
+{
+  "teacher": {
+  "shell": {
+    "viewAsStudent": "Mode élève",
+    "logout": "Déconnexion",
+    "search": "Rechercher dans le tableau de bord",
+    "more": "Plus",
+    "nav": {
+      "groupOverview": "Vue d'ensemble",
+      "groupLibrary": "Bibliothèque",
+      "groupInbox": "Boîte de réception",
+      "groupPerformance": "Performance",
+      "groupAgency": "Agence",
+      "home": "Tableau de bord",
+      "profile": "Profil",
+      "courses": "Cours",
+      "events": "Événements",
+      "onDemand": "À la demande",
+      "requests": "Demandes",
+      "applications": "Postuler",
+      "messages": "Messages",
+      "reviews": "Avis",
+      "subscription": "Abonnement",
+      "payouts": "Versements",
+      "analytics": "Analytiques",
+      "agencyAnalytics": "Analytiques studio",
+      "agency": "Agence"
+    },
+    "topRated": "Top Rated",
+    "responseLabel": "Répond en",
+    "responseHours": "{hours, plural, =0 {moins d'1 h} one {# h} other {# h}}",
+    "openSidebar": "Ouvrir la navigation",
+    "closeSidebar": "Fermer la navigation",
+    "notifications": {
+      "bellLabel": "Notifications",
+      "empty": "Tout est calme — aucune notification pour l'instant.",
+      "viewAll": "Tout afficher",
+      "markAllRead": "Tout lire",
+      "markAllReadToast": {
+        "title": "Notifications lues",
+        "desc": "Toutes vos notifications sont marquées comme lues."
+      }
+    }
+  },
+  "home": {
+    "indexLabel": "Section",
+    "greetingMorning": "Bonsoir",
+    "greetingDay": "Bonjour",
+    "todayDate": "{day} {month} · vue du jour",
+    "pulse": "Tu as {live} cours en direct, {upcoming} à venir, et {pending} demandes en attente.",
+    "today": {
+      "indexNum": "01",
+      "title": "Aujourd'hui",
+      "subtitle": "Ton programme du jour",
+      "live": "EN DIRECT",
+      "startsIn": "dans {min} min",
+      "minutesAgo": "il y a {min} min",
+      "duration": "{min} min",
+      "capacity": "{taken}/{total} places",
+      "start": "Démarrer",
+      "prepare": "Préparer",
+      "empty": "Aucun cours prévu. Une bonne occasion pour ajouter un créneau."
+    },
+    "inbox": {
+      "indexNum": "02",
+      "title": "Demandes fraîches",
+      "subtitle": "Réagis vite — les élèves comparent.",
+      "viewAll": "Tout voir",
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "empty": "Aucune demande en attente. Profite du calme."
+    },
+    "revenue": {
+      "indexNum": "03",
+      "title": "Mois en cours",
+      "subtitle": "Au rythme actuel, tu dépasses {threshold}.",
+      "tier": "{tier} · taux {rate}%",
+      "deltaUp": "+{value} vs mois passé",
+      "deltaDown": "−{value} vs mois passé",
+      "toNext": "Encore {amount} pour atteindre {tier}",
+      "weeks": "12 dernières semaines"
+    },
+    "reviews": {
+      "indexNum": "04",
+      "title": "Avis récents",
+      "subtitle": "Trois derniers commentaires de tes élèves.",
+      "reply": "Répondre",
+      "replied": "Réponse envoyée",
+      "viewAll": "Tous les avis"
+    },
+    "checklist": {
+      "indexNum": "05",
+      "title": "À faire cette semaine",
+      "subtitle": "Cinq actions pour gagner de l'avance.",
+      "go": "Faire"
+    },
+    "toasts": {
+      "requestAccepted": {
+        "title": "Demande acceptée",
+        "desc": "{name} sera prévenu·e dans la foulée."
+      },
+      "requestRejected": {
+        "title": "Demande refusée",
+        "desc": "{name} recevra une notification."
+      }
+    }
+  },
+  "landing": {
+    "eyebrow": "Enseigner sur darso",
+    "title": "Lancez votre activité d'enseignant — gratuit jusqu'au premier dinar gagné.",
+    "subtitle": "Une marketplace vivante, des élèves vérifiés, et un modèle de revenus qui s'améliore au fur et à mesure que vous enseignez. Pas d'abonnement, juste une commission qui baisse.",
+    "ctaPrimary": "Créer mon compte enseignant",
+    "ctaSecondary": "Voir le modèle de revenus",
+    "trustLine": "Paiements 100 % en DZD · Identité vérifiée · KYC algérien",
+    "previewBadge": "Modèle de revenus",
+    "previewRateLabel": "Votre commission actuelle",
+    "previewRate": "20 %",
+    "previewRateBlurb": "Baisse à 12 % au-delà de 100 000 DZD/mois.",
+    "previewTierCurrent": "Palier actuel · jusqu'à 60 000 DZD",
+    "previewTierCurrentRange": "0 → 60k",
+    "previewTierNext": "Prochain palier",
+    "previewTierNextLabel": "60k → 100k · 16 %",
+    "benefitsEyebrow": "Pourquoi darso",
+    "benefitsTitle": "Tout ce qu'il faut pour enseigner sérieusement.",
+    "points": [
+      "Profil public optimisé pour la recherche locale et bilingue (FR/AR).",
+      "Cours en direct, ateliers, cohortes, 1 :1 — vous choisissez le format.",
+      "Encaissements en DZD via Edahabia, CIB, mandat postal.",
+      "Tableau de bord avec demandes, revenus et avis en temps réel.",
+      "Outils anti-no-show : rappels, dépôt de garantie, médiation incluse.",
+      "Communauté de professeurs algériens — entraide & visibilité partagée."
+    ],
+    "stepsEyebrow": "Comment ça marche",
+    "stepsTitle": "De zéro à votre premier élève en 3 étapes.",
+    "steps": [
+      {
+        "title": "Créez votre profil",
+        "body": "Photo, matière, tarif, créneaux. Vérification d'identité (CNI ou passeport) en 24 h."
+      },
+      {
+        "title": "Publiez vos cours",
+        "body": "Cours 1 :1 ou cohorte. Aperçu public en un clic — le wizard vous guide."
+      },
+      {
+        "title": "Recevez vos premières demandes",
+        "body": "Les élèves vous contactent, vous acceptez, vous donnez le cours. Paiement déposé après la séance."
+      }
+    ],
+    "ctaStripTitle": "Vous avez quelque chose à enseigner ?",
+    "ctaStripBlurb": "Rejoignez les centaines de professeurs algériens qui transforment leur expertise en revenu.",
+    "ctaStripTime": "5 minutes pour créer votre profil.",
+    "ctaStripButton": "Commencer"
+  },
+  "profile": {
+    "title": "Ton profil public",
+    "subtitle": "Ce que les élèves voient avant de te contacter.",
+    "preview": "Aperçu public",
+    "save": "Enregistrer",
+    "tabs": {
+      "profile": "Profil",
+      "verification": "Vérification",
+      "pricing": "Tarifs & disponibilités",
+      "languages": "Langues & matières",
+      "topRated": "Top Rated"
+    },
+    "fields": {
+      "displayName": "Nom affiché",
+      "headline": "Phrase d'accroche",
+      "headlineHint": "120 caractères max — courte, concrète, sans buzzwords.",
+      "bio": "À propos",
+      "bioHint": "Présente ton parcours, ta méthode, le type d'élève qui s'épanouit avec toi.",
+      "city": "Wilaya",
+      "mode": "Mode d'enseignement",
+      "modeOnline": "En ligne",
+      "modeInPerson": "En présentiel",
+      "modeBoth": "Les deux",
+      "avatar": "Photo de profil",
+      "avatarHint": "PNG ou JPG, carrée, 800×800 px recommandé.",
+      "cover": "Bannière",
+      "coverHint": "Visible en haut de ta fiche publique."
+    },
+    "verification": {
+      "id": "Pièce d'identité",
+      "idDone": "Vérifiée",
+      "idStart": "Lancer la vérification",
+      "diploma": "Diplôme ou certification",
+      "diplomaHint": "PDF ou image. Visible uniquement par l'équipe darso.",
+      "diplomaSubmit": "Soumettre pour vérification",
+      "diplomaToastTitle": "Diplôme envoyé",
+      "diplomaToastDesc": "Nous examinerons ton document sous 48 h.",
+      "contact": "Numéro de téléphone",
+      "contactDone": "Confirmé par SMS"
+    },
+    "pricing": {
+      "hourly": "Tarif horaire (DZD)",
+      "hourlyHint": "Tu peux ajuster séance par séance plus tard.",
+      "discount": "Forfait 10 séances avec remise",
+      "discountValue": "Remise (%)",
+      "availability": "Disponibilité",
+      "weekdays": "En semaine",
+      "weekends": "Week-ends",
+      "evenings": "Soirées",
+      "instantBook": "Réservation instantanée",
+      "instantBookHint": "Permet aux élèves de réserver sans demander d'abord."
+    },
+    "languages": {
+      "title": "Langues parlées",
+      "subjectsTitle": "Matières enseignées",
+      "audience": "Public visé",
+      "kids": "Enfants",
+      "teens": "Adolescents",
+      "adults": "Adultes",
+      "pros": "Professionnels"
+    },
+    "topRated": {
+      "title": "Tier Top Rated",
+      "subtitle": "Trois critères à valider pour ton badge.",
+      "remaining": "{count, plural, =0 {Tous les critères sont validés} one {# critère encore à valider} other {# critères encore à valider}}",
+      "tip": "Réponds plus rapidement aux nouvelles demandes pour pousser le dernier critère."
+    }
+  },
+  "courses": {
+    "title": "Tes cours",
+    "subtitle": "Crée, mets à jour et archive ce que tu enseignes.",
+    "create": "Créer un cours",
+    "filters": {
+      "all": "Tout",
+      "published": "Publié",
+      "draft": "Brouillon",
+      "archived": "Archivé"
+    },
+    "thead": {
+      "title": "Cours",
+      "format": "Format",
+      "capacity": "Places",
+      "next": "Prochaine séance",
+      "revenue": "CA du mois",
+      "actions": "Actions"
+    },
+    "format": {
+      "cohort": "Cohorte",
+      "oneToOne": "1:1",
+      "event": "Événement",
+      "ondemand": "À la demande"
+    },
+    "actions": {
+      "edit": "Modifier",
+      "duplicate": "Dupliquer",
+      "archive": "Archiver",
+      "unarchive": "Désarchiver",
+      "publish": "Publier",
+      "viewPublic": "Voir la fiche publique",
+      "more": "Plus d'actions"
+    },
+    "empty": {
+      "title": "Aucun cours dans cette catégorie",
+      "subtitle": "Crée ton premier cours pour commencer à recevoir des élèves.",
+      "primary": "Créer un cours",
+      "secondary": "Voir les modèles"
+    },
+    "noNext": "Aucune séance planifiée",
+    "toasts": {
+      "editing": {
+        "title": "Ouverture de l'éditeur",
+        "desc": "Préparation du cours pour modification…"
+      },
+      "duplicated": {
+        "title": "Cours dupliqué",
+        "desc": "Un brouillon a été créé."
+      },
+      "published": {
+        "title": "Cours publié",
+        "desc": "Les élèves peuvent désormais le découvrir."
+      },
+      "archived": {
+        "title": "Cours archivé",
+        "desc": "Il n'apparaîtra plus dans le catalogue."
+      },
+      "unarchived": {
+        "title": "Cours restauré",
+        "desc": "Le cours est de nouveau visible."
+      }
+    },
+    "wizard": {
+      "toasts": {
+        "published": {
+          "title": "Cours publié",
+          "desc": "Ton cours apparaît désormais dans le catalogue."
+        },
+        "savedAsDraft": {
+          "title": "Brouillon enregistré",
+          "desc": "Tu pourras le publier quand tu seras prêt·e."
+        },
+        "missingFields": {
+          "title": "Champs requis",
+          "desc": "Renseigne au moins un titre et un prix supérieur à zéro."
+        },
+        "publishFailed": {
+          "title": "Échec de la publication",
+          "desc": "Réessaie dans un instant."
+        }
+      }
+    },
+    "edit": {
+      "tabs": {
+        "basic": "Bases",
+        "format": "Format",
+        "pricing": "Tarifs",
+        "description": "Description",
+        "content": "Contenu"
+      },
+      "fields": {
+        "titleFr": "Titre (français)",
+        "titleAr": "Titre (arabe)",
+        "status": "Statut",
+        "format": "Format",
+        "capacity": "Capacité maximum",
+        "price": "Prix par séance",
+        "priceHint": "En dinars algériens. Tu peux ajuster à tout moment.",
+        "summary": "Résumé court",
+        "summaryPlaceholder": "Une phrase d'accroche (≤ 140 caractères).",
+        "summaryHint": "Affiché en sous-titre sur la carte du cours.",
+        "description": "Description longue",
+        "descriptionPlaceholder": "Méthode, prérequis, ce que les élèves apprendront…",
+        "descriptionHint": "Affichée sur la fiche publique du cours.",
+        "weeks": "Plan hebdomadaire",
+        "weeksHint": "Un titre par semaine — l'ordre est respecté.",
+        "weekPlaceholder": "Semaine {n} — thème",
+        "addWeek": "Ajouter une semaine",
+        "outcomes": "Objectifs d'apprentissage",
+        "outcomesHint": "Ce que l'élève saura faire à la fin du cours.",
+        "outcomePlaceholder": "Décrire un acquis concret",
+        "addOutcome": "Ajouter un objectif"
+      },
+      "status": {
+        "draft": "Brouillon",
+        "published": "Publié",
+        "archived": "Archivé"
+      },
+      "format": {
+        "cohort": "Cohorte",
+        "oneToOne": "1:1",
+        "event": "Événement",
+        "ondemand": "À la demande"
+      },
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "cancel": "Annuler",
+      "delete": "Supprimer le cours",
+      "deleteDialog": {
+        "title": "Supprimer ce cours ?",
+        "body": "Cette action retirera « {title} » de ton catalogue. Les élèves déjà inscrits resteront facturés selon leur contrat.",
+        "cancel": "Garder",
+        "confirm": "Supprimer définitivement"
+      },
+      "toasts": {
+        "saved": {
+          "title": "Cours mis à jour",
+          "desc": "Les changements sont visibles immédiatement."
+        },
+        "deleted": {
+          "title": "Cours supprimé",
+          "desc": "Le cours a été retiré de ton catalogue."
+        },
+        "missingFields": {
+          "title": "Champs requis",
+          "desc": "Vérifie le titre et le prix avant d'enregistrer."
+        },
+        "deleteFailed": {
+          "title": "Suppression impossible",
+          "desc": "Le cours n'existe plus ou a déjà été supprimé."
+        }
+      }
+    }
+  },
+  "newCourse": {
+    "title": "Nouveau cours",
+    "subtitle": "Cinq étapes pour mettre ton cours en ligne.",
+    "saveDraft": "Brouillon",
+    "step": "Étape {current} sur {total}",
+    "steps": {
+      "basics": "Bases",
+      "details": "Détails",
+      "format": "Format & planning",
+      "pricing": "Tarifs",
+      "publish": "Publier"
+    },
+    "basics": {
+      "titleLabel": "Titre du cours",
+      "titleHint": "Court, précis. Pas de superlatifs.",
+      "summary": "Résumé en une phrase",
+      "category": "Catégorie",
+      "audience": "Public",
+      "language": "Langue principale"
+    },
+    "details": {
+      "description": "Description longue",
+      "descriptionHint": "Méthode, prérequis, ce qu'on construit ensemble.",
+      "syllabus": "Programme",
+      "syllabusItem": "Semaine {n}",
+      "addWeek": "Ajouter une semaine",
+      "outcomes": "À la fin de ce cours, l'élève saura…",
+      "addOutcome": "Ajouter une compétence"
+    },
+    "format": {
+      "title": "Format",
+      "oneToOne": "Cours 1:1",
+      "oneToOneHint": "Sessions privées à la demande",
+      "cohort": "Cohorte en groupe",
+      "cohortHint": "Plusieurs élèves, calendrier fixe",
+      "event": "Événement live",
+      "eventHint": "Une date, une session",
+      "ondemand": "À la demande",
+      "ondemandHint": "Vidéos pré-enregistrées",
+      "schedule": "Aperçu du planning",
+      "capacity": "Taille maximum du groupe"
+    },
+    "pricing": {
+      "price": "Prix",
+      "priceHint": "Tarif par séance pour 1:1, par cohorte pour les groupes.",
+      "discount": "Activer une promo de lancement",
+      "discountValue": "Réduction (%)"
+    },
+    "publish": {
+      "title": "Tout est prêt ?",
+      "checklist": "Avant publication, vérifie le titre, la description et le tarif.",
+      "publish": "Publier le cours",
+      "publishLater": "Garder en brouillon"
+    }
+  },
+  "editCourse": {
+    "title": "Modifier le cours",
+    "subtitle": "Toutes les sections de la création en un seul écran.",
+    "viewPublic": "Voir la fiche publique"
+  },
+  "events": {
+    "title": "Événements live",
+    "subtitle": "Sessions uniques, ateliers, marathons.",
+    "create": "Créer un événement",
+    "thead": {
+      "date": "Date",
+      "title": "Événement",
+      "places": "Places",
+      "price": "Tarif",
+      "actions": "Actions"
+    },
+    "empty": "Aucun événement programmé.",
+    "emptyState": {
+      "title": "Aucun événement à l'affiche",
+      "body": "Programme un atelier ou une session live pour rassembler tes élèves autour d'un format court.",
+      "primary": "Créer un événement",
+      "secondary": "Voir l'agenda"
+    },
+    "actions": {
+      "duplicate": "Dupliquer",
+      "cancel": "Annuler l'événement",
+      "more": "Plus d'actions"
+    },
+    "toasts": {
+      "duplicated": {
+        "title": "Événement dupliqué",
+        "desc": "Un brouillon a été créé à partir de cet événement."
+      },
+      "cancelled": {
+        "title": "Événement annulé",
+        "desc": "Les participants seront notifiés sous peu."
+      }
+    }
+  },
+  "requests": {
+    "title": "Demandes d'élèves",
+    "subtitle": "Réponds vite : la première réponse remporte la séance dans 70 % des cas.",
+    "tabs": {
+      "pending": "En attente",
+      "accepted": "Acceptées",
+      "rejected": "Refusées"
+    },
+    "accept": "Approuver",
+    "reject": "Refuser",
+    "viewProfile": "Voir le profil",
+    "confirm": {
+      "acceptTitle": "Accepter cette demande ?",
+      "acceptBody": "L'élève recevra un message et pourra réserver immédiatement.",
+      "acceptCta": "Confirmer",
+      "rejectTitle": "Refuser cette demande ?",
+      "rejectBody": "L'élève sera notifié et tu pourras laisser un mot court (optionnel).",
+      "rejectCta": "Refuser",
+      "cancel": "Annuler",
+      "note": "Note pour l'élève (optionnel)"
+    },
+    "empty": {
+      "pending": "Toutes les demandes ont été traitées. Tu peux respirer.",
+      "accepted": "Aucune demande acceptée pour le moment.",
+      "rejected": "Aucune demande refusée pour le moment."
+    },
+    "toasts": {
+      "accepted": {
+        "title": "Demande acceptée",
+        "desc": "{name} pourra réserver immédiatement."
+      },
+      "rejected": {
+        "title": "Demande refusée",
+        "desc": "{name} a été notifié·e."
+      }
+    }
+  },
+  "reviews": {
+    "title": "Avis reçus",
+    "subtitle": "Lis chaque commentaire, réponds quand le ton est juste.",
+    "filter": "Filtrer par note",
+    "filters": {
+      "all": "Tout",
+      "fiveStars": "5 étoiles",
+      "fourStars": "4 étoiles",
+      "threeAndUnder": "≤ 3 étoiles"
+    },
+    "reply": "Répondre",
+    "cancel": "Annuler",
+    "send": "Envoyer la réponse",
+    "yourReply": "Ta réponse",
+    "yourReplyPlaceholder": "Reste sobre et précis. Évite les justifications longues.",
+    "empty": "Aucun avis correspondant à ce filtre.",
+    "emptyState": {
+      "title": "Pas d'avis dans cette catégorie",
+      "bodyAll": "Les premiers avis arriveront après tes prochaines séances. Ils façonnent ta réputation publique.",
+      "bodyFiltered": "Ajuste le filtre par note pour voir les avis disponibles, ou commence par « Tout »."
+    },
+    "replyByLabel": "Ta réponse",
+    "toasts": {
+      "replyPosted": {
+        "title": "Réponse publiée",
+        "desc": "L'élève recevra une notification."
+      },
+      "replyEmpty": {
+        "title": "Message vide",
+        "desc": "Écris quelques mots avant d'envoyer."
+      }
+    }
+  },
+  "subscription": {
+    "title": "Votre abonnement évolue avec vos revenus.",
+    "subtitle": "Pas d'abonnement fixe, pas de pénalité quand tu ralentis.",
+    "currentTier": "Palier actuel",
+    "thisMonth": "Ce mois",
+    "rate": "Taux",
+    "toNext": "Pour atteindre le palier suivant",
+    "simulator": {
+      "title": "Simulateur",
+      "subtitle": "Fais glisser le curseur pour voir le taux appliqué à un revenu cible.",
+      "ifEarn": "Si je gagne",
+      "rateBecomes": "mon taux est de",
+      "tierName": "Palier",
+      "perMonth": "/ mois"
+    },
+    "invoices": {
+      "title": "Factures",
+      "subtitle": "Six derniers mois.",
+      "thead": {
+        "id": "Référence",
+        "date": "Date",
+        "description": "Description",
+        "amount": "Montant",
+        "status": "Statut"
+      },
+      "paid": "Payée",
+      "pending": "En attente",
+      "download": "Télécharger"
+    },
+    "payment": {
+      "title": "Moyen de paiement",
+      "subtitle": "Prélèvement automatique le 1er de chaque mois.",
+      "card": "Carte CIB · •• 4218",
+      "change": "Modifier",
+      "changeTitle": "Changer le moyen de paiement",
+      "changeBody": "L'ajout d'une nouvelle carte ou Edahabia arrivera prochainement.",
+      "close": "Fermer"
+    },
+    "cancel": {
+      "trigger": "Annuler mon abonnement",
+      "title": "Annuler ton abonnement ?",
+      "body": "Tu garderas ton profil public, mais tes cours seront archivés et tu ne pourras plus recevoir de nouvelles demandes.",
+      "keep": "Garder mon abonnement",
+      "confirm": "Confirmer l'annulation",
+      "retention": "Tu peux aussi mettre ton compte en pause pendant 3 mois, sans frais.",
+      "typeToConfirm": "Tape {word} pour confirmer.",
+      "confirmWord": "ANNULER"
+    },
+    "toasts": {
+      "invoiceDownloaded": {
+        "title": "Facture téléchargée",
+        "desc": "Facture {id} enregistrée sur votre appareil."
+      },
+      "paymentChange": {
+        "title": "Bientôt disponible",
+        "desc": "L'ajout d'un nouveau moyen de paiement arrive bientôt."
+      },
+      "cancelRequested": {
+        "title": "Annulation programmée",
+        "desc": "Ton abonnement prendra fin le {date}."
+      },
+      "kept": {
+        "title": "Abonnement maintenu",
+        "desc": "Aucun changement appliqué."
+      }
+    }
+  },
+  "agency": {
+    "title": "Studio Numidia",
+    "subtitle": "Le studio que tu pilotes — membres, revenus, image publique.",
+    "members": "{count, plural, =0 {Aucun membre} one {# membre} other {# membres}}",
+    "founded": "Fondée il y a {months} mois",
+    "totalMonth": "CA collectif du mois",
+    "profile": {
+      "title": "Profil de l'agence",
+      "logo": "Logo",
+      "logoHint": "Carrée, fond transparent recommandé.",
+      "name": "Nom de l'agence",
+      "bio": "À propos"
+    },
+    "membersTable": {
+      "title": "Membres",
+      "subtitle": "Voir les revenus et la part de chaque enseignant.",
+      "invite": "Inviter un enseignant",
+      "thead": {
+        "member": "Membre",
+        "subject": "Matière",
+        "revenue": "CA du mois",
+        "split": "Part",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewProfile": "Voir le profil",
+        "editSplit": "Modifier la part",
+        "remove": "Retirer du studio"
+      }
+    },
+    "invite": {
+      "title": "Inviter un enseignant",
+      "subtitle": "Il recevra un lien d'invitation par email.",
+      "email": "Email",
+      "name": "Nom (optionnel)",
+      "subject": "Matière",
+      "splitDefault": "Part par défaut (%)",
+      "send": "Envoyer l'invitation",
+      "cancel": "Annuler"
+    },
+    "inbox": {
+      "title": "Boîte commune",
+      "subtitle": "Les conversations partagées du studio.",
+      "openInMessages": "Ouvrir dans Messages",
+      "unread": "Non lus",
+      "participants": "{count} participants"
+    },
+    "split": {
+      "title": "Répartition des revenus",
+      "subtitle": "La somme doit toujours faire 100 %.",
+      "total": "Total réparti",
+      "save": "Enregistrer la répartition"
+    },
+    "pendingBadge": "Invitation envoyée",
+    "toasts": {
+      "profileSaved": {
+        "title": "Profil de l'agence enregistré",
+        "desc": "Les modifications sont visibles immédiatement."
+      },
+      "splitSaved": {
+        "title": "Répartition enregistrée",
+        "desc": "Le nouveau partage entre en vigueur ce mois-ci."
+      },
+      "memberRemoved": {
+        "title": "Membre retiré",
+        "desc": "{name} ne fait plus partie de l'agence."
+      },
+      "invitePending": {
+        "title": "Invitation envoyée",
+        "desc": "{email} recevra un email d'ici peu."
+      },
+      "inviteInvalid": {
+        "title": "Email invalide",
+        "desc": "Vérifie le format de l'adresse avant d'envoyer."
+      },
+      "editingSplit": {
+        "title": "Modification de la part",
+        "desc": "Ajuste le curseur dans le tableau ci-dessous."
+      }
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Activation du compte",
+    "title": "Préparons votre espace d'enseignement",
+    "subtitle": "Quatre étapes pour publier sereinement. Vos informations restent privées et ne servent qu'à la vérification.",
+    "stepLabel": "Étape {n} sur {total}",
+    "stepShort": "{n}/{total}",
+    "back": "Retour",
+    "next": "Continuer",
+    "skip": "Passer pour le moment",
+    "finish": "Activer mon profil",
+    "finishing": "Finalisation…",
+    "completeToast": {
+      "title": "Profil activé",
+      "desc": "Bienvenue dans darso. Votre tableau de bord est prêt."
+    },
+    "secureNote": "Les pièces téléversées sont chiffrées et ne s'affichent qu'à l'équipe vérification.",
+    "errors": {
+      "idMissing": "Ajoutez une pièce d'identité pour continuer.",
+      "diplomaMissing": "Téléversez au moins un diplôme ou certificat.",
+      "bankMissing": "Renseignez l'IBAN et le titulaire du compte.",
+      "termsMissing": "Acceptez les deux conditions pour terminer."
+    },
+    "stepNav": {
+      "identity": "Identité",
+      "diploma": "Diplômes",
+      "payout": "Paiement",
+      "terms": "Conditions"
+    },
+    "steps": {
+      "identity": {
+        "title": "Vérification d'identité",
+        "hint": "Téléversez une pièce d'identité officielle et capturez un selfie pour confirmer que c'est bien vous.",
+        "idTypeLabel": "Type de document",
+        "idTypePassport": "Passeport",
+        "idTypeNational": "Carte d'identité nationale",
+        "idTypeLicense": "Permis de conduire",
+        "idNumberLabel": "Numéro du document",
+        "idNumberPlaceholder": "Ex. 123 456 789",
+        "uploadLabel": "Pièce d'identité (recto)",
+        "uploadHint": "PDF, JPG ou PNG · 8 Mo max",
+        "selfieLabel": "Selfie de vérification",
+        "selfieHint": "Cadrez votre visage dans un endroit bien éclairé.",
+        "selfieCapture": "Capturer un selfie",
+        "selfieDone": "Selfie capturé",
+        "selfieRetake": "Reprendre",
+        "selfieToast": {
+          "title": "Selfie enregistré",
+          "desc": "Image temporaire ajoutée au dossier."
+        }
+      },
+      "diploma": {
+        "title": "Diplômes et expertise",
+        "hint": "Aidez-nous à comprendre votre champ d'expertise pour bien vous référencer.",
+        "uploadLabel": "Diplôme principal",
+        "uploadHint": "PDF ou image · ajoutez d'autres certificats plus tard",
+        "subjectsLabel": "Matières enseignées",
+        "subjectsHint": "Sélectionnez jusqu'à 5 spécialités.",
+        "experienceLabel": "Années d'expérience",
+        "experiencePlaceholder": "Ex. 8",
+        "languagesLabel": "Langues d'enseignement",
+        "languagesHint": "Au moins une langue de cours active."
+      },
+      "payout": {
+        "title": "Configuration des paiements",
+        "hint": "Vos gains sont transférés une fois par semaine. Les coordonnées sont vérifiées avant le premier virement.",
+        "holderLabel": "Titulaire du compte",
+        "holderPlaceholder": "Nom complet tel qu'il apparaît sur le RIB",
+        "bankLabel": "Banque",
+        "bankPlaceholder": "Sélectionnez une banque",
+        "ibanLabel": "RIB / IBAN (20 chiffres)",
+        "ibanPlaceholder": "DZ12 0000 0000 0000 0000 0000",
+        "currencyLabel": "Devise de versement",
+        "currencyDzd": "Dinar algérien (DZD)",
+        "currencyEur": "Euro (EUR) — bientôt",
+        "scheduleLabel": "Cadence de virement",
+        "scheduleWeekly": "Hebdomadaire",
+        "scheduleMonthly": "Mensuelle",
+        "feeNote": "Aucun frais de transfert pour la première année."
+      },
+      "terms": {
+        "title": "Conditions et engagements",
+        "hint": "Prenez un instant pour lire le résumé de notre accord enseignant.",
+        "scrollHint": "Faites défiler pour tout lire",
+        "agreementTitle": "Résumé de l'accord enseignant",
+        "agreementParagraphs": [
+          "darso met en relation des élèves et des enseignants vérifiés en Algérie. En activant votre profil, vous confirmez exercer une activité d'enseignement légitime et accepter de respecter le code de conduite de la plateforme.",
+          "La commission appliquée sur chaque réservation est dégressive : 12 % jusqu'à 25 000 DA mensuels, puis 8 % jusqu'à 50 000 DA, et 6 % au-delà. Les paiements sont reversés sous 7 jours via le compte que vous avez renseigné.",
+          "Les contenus que vous publiez (cours, supports, photos de profil) restent votre propriété. Vous accordez à darso une licence non exclusive pour les afficher dans le cadre du service.",
+          "En cas de litige, darso peut suspendre temporairement les versements le temps de l'enquête. La décision finale est rendue sous 14 jours ouvrés et notifiée par email.",
+          "Vous pouvez désactiver votre compte à tout moment depuis Paramètres → Compte. Les réservations en cours doivent être honorées ou remboursées intégralement avant fermeture définitive.",
+          "En cochant les cases ci-dessous, vous confirmez avoir lu et accepté l'intégralité des conditions ainsi que l'exactitude des informations renseignées."
+        ],
+        "acceptTerms": "J'accepte les conditions enseignant et la structure de commission.",
+        "acceptAccuracy": "Je confirme que les informations fournies sont exactes."
+      },
+      "subjects": {
+        "math": "Mathématiques",
+        "physics": "Physique-Chimie",
+        "biology": "SVT",
+        "french": "Français",
+        "arabic": "Arabe",
+        "english": "Anglais",
+        "history": "Histoire-Géo",
+        "philosophy": "Philosophie",
+        "programming": "Programmation",
+        "music": "Musique",
+        "quran": "Coran & tajwid",
+        "ielts": "Préparation IELTS"
+      },
+      "languages": {
+        "fr": "Français",
+        "ar": "Arabe",
+        "en": "Anglais",
+        "kab": "Kabyle",
+        "es": "Espagnol"
+      },
+      "banks": {
+        "bna": "BNA — Banque Nationale d'Algérie",
+        "bea": "BEA — Banque Extérieure d'Algérie",
+        "bdl": "BDL — Banque de Développement Local",
+        "cnep": "CNEP-Banque",
+        "cpa": "CPA — Crédit Populaire d'Algérie",
+        "agb": "AGB — Gulf Bank Algérie",
+        "natixis": "Natixis Algérie",
+        "sgalgerie": "Société Générale Algérie"
+      }
+    }
+  },
+  "common": {
+    "back": "Retour",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "loading": "Chargement…",
+    "perMonth": "/ mois",
+    "status": {
+      "draft": "Brouillon",
+      "published": "Publié",
+      "archived": "Archivé"
+    }
+  },
+  "toasts": {
+    "profileSaved": {
+      "title": "Profil enregistré",
+      "desc": "Ton profil public est à jour."
+    },
+    "comingSoon": {
+      "title": "Bientôt disponible",
+      "desc": "Cette fonctionnalité arrive dans une prochaine version."
+    }
+  },
+  "ondemand": {
+    "toasts": {
+      "comingSoon": {
+        "title": "Bientôt disponible",
+        "desc": "Le créateur de séries arrive dans une prochaine version."
+      }
+    }
+  }
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "legal": {
+    "shared": {
+      "lastUpdated": "Dernière mise à jour : 1ᵉʳ juin 2026",
+      "tocTitle": "Sur cette page",
+      "tocMobileOpen": "Sommaire",
+      "tocMobileClose": "Fermer le sommaire",
+      "backToTop": "Retour en haut",
+      "downloadPdf": "Télécharger en PDF",
+      "questions": "Une question juridique ?",
+      "questionsBody": "Notre Délégué à la protection des données et notre service juridique répondent à toute demande sous 30 jours, conformément à la loi.",
+      "contactDpo": "Écrire au DPO",
+      "contactEmail": "dpo@darso.dz",
+      "breadcrumbLegal": "Légal"
+    },
+    "trust": {
+      "meta": {
+        "title": "Confiance & sécurité",
+        "description": "Comment darso vérifie les professeurs, protège vos paiements et arbitre les litiges."
+      },
+      "hero": {
+        "eyebrow": "Confiance & sécurité",
+        "title": "Une marketplace humaine — vérifiée, médiée, transparente.",
+        "subtitle": "darso est un tiers de confiance entre apprenants et professeurs algériens. Chaque profil est vérifié, chaque paiement est sécurisé, chaque litige est médié par notre équipe.",
+        "stats": [
+          { "value": "58", "label": "wilayas couvertes" },
+          { "value": "100 %", "label": "professeurs vérifiés" },
+          { "value": "48 h", "label": "délai de médiation" },
+          { "value": "5 j", "label": "remboursement garanti" }
+        ]
+      },
+      "verification": {
+        "eyebrow": "Vérification",
+        "title": "Trois niveaux de contrôle, un seul standard.",
+        "subtitle": "Aucun professeur ne peut accepter de réservation sans avoir franchi la totalité du parcours de vérification.",
+        "steps": [
+          {
+            "badge": "ID vérifié",
+            "title": "Identité officielle",
+            "body": "Pièce d'identité algérienne (CNI biométrique ou passeport) confrontée à un selfie en direct. Le badge « ID vérifié » apparaît sur le profil dès validation."
+          },
+          {
+            "badge": "Diplôme vérifié",
+            "title": "Compétence pédagogique",
+            "body": "Diplôme, attestation employeur, ou — pour les disciplines artistiques et religieuses — référent reconnu (Ijaza, conservatoire, fédération sportive). Notre équipe de revue lit chaque dossier."
+          },
+          {
+            "badge": "Entretien vidéo",
+            "title": "Posture & sécurité",
+            "body": "Visio de 15 minutes avec un membre de l'équipe darso : maîtrise du sujet, posture pédagogique, charte de bonne conduite. Validation finale ou retour étayé."
+          }
+        ]
+      },
+      "disputes": {
+        "eyebrow": "Médiation",
+        "title": "Quand quelque chose ne va pas, on tranche.",
+        "subtitle": "Un processus en quatre étapes, calé sur la loi 09-03 relative à la protection du consommateur.",
+        "steps": [
+          {
+            "title": "Vous signalez",
+            "body": "Depuis votre réservation, ouvrez un litige en moins d'une minute. Joignez captures, conversations, preuves."
+          },
+          {
+            "title": "On reçoit & on écoute",
+            "body": "Un médiateur darso contacte les deux parties sous 48 h. Récit des faits, pièces, attentes : tout est documenté."
+          },
+          {
+            "title": "On arbitre",
+            "body": "Décision motivée sous 5 jours ouvrés en moyenne. Pour les cas techniques, intervention d'un expert pédagogique indépendant."
+          },
+          {
+            "title": "On exécute",
+            "body": "Remboursement intégral, partiel ou cours offert — selon décision. Versement sous 5 jours ouvrés sur votre moyen de paiement initial."
+          }
+        ]
+      },
+      "conduct": {
+        "eyebrow": "Charte",
+        "title": "Code de bonne conduite",
+        "subtitle": "Adopté par chaque professeur, attendu de chaque apprenant.",
+        "items": [
+          {
+            "title": "Respect mutuel",
+            "body": "Aucune forme de harcèlement, de discrimination ou d'attaque personnelle n'est tolérée. Signalement → suspension immédiate."
+          },
+          {
+            "title": "Ponctualité",
+            "body": "Les cours commencent à l'heure annoncée. Trois retards non justifiés en 30 jours déclenchent une revue du compte."
+          },
+          {
+            "title": "Confidentialité",
+            "body": "Le contenu des cours, les échanges privés et les données personnelles partagées restent confidentiels — même après la fin de la relation pédagogique."
+          },
+          {
+            "title": "Honnêteté pédagogique",
+            "body": "Pas de promesse irréaliste, pas de fausse qualification, pas de copie de contenu protégé. Chaque cours doit être à la hauteur de sa fiche."
+          }
+        ]
+      },
+      "data": {
+        "eyebrow": "Données",
+        "title": "Vos données, notre responsabilité.",
+        "subtitle": "darso applique le standard le plus strict : minimisation, chiffrement, hébergement local pour les données sensibles.",
+        "points": [
+          {
+            "label": "Hébergement",
+            "value": "Datacenters certifiés en Algérie pour l'identité et les paiements, en Europe pour les contenus pédagogiques."
+          },
+          {
+            "label": "Chiffrement",
+            "value": "TLS 1.3 en transit, AES-256 au repos. Aucun mot de passe en clair, aucun numéro de carte stocké."
+          },
+          {
+            "label": "Conservation",
+            "value": "Factures : 10 ans (obligation comptable). Messages : 3 ans. Profil supprimé : 30 jours puis effacement définitif."
+          },
+          {
+            "label": "Vos droits",
+            "value": "Accès, rectification, opposition, portabilité, effacement — sur simple demande au DPO, traités sous 30 jours."
+          }
+        ],
+        "ctaPrivacy": "Lire la politique de confidentialité",
+        "ctaCookies": "Lire la politique de cookies"
+      },
+      "founders": {
+        "eyebrow": "Équipe",
+        "title": "Une équipe joignable, pas un service client anonyme.",
+        "subtitle": "Une question qui dépasse le support ? Écrivez aux fondateurs.",
+        "email": "founders@darso.dz",
+        "address": "Rue Hassiba Ben Bouali, Alger 16000",
+        "cta": "Nous contacter"
+      }
+    },
+    "terms": {
+      "meta": {
+        "title": "Conditions d'utilisation",
+        "description": "Le cadre contractuel entre vous et darso."
+      },
+      "hero": {
+        "eyebrow": "Conditions générales d'utilisation",
+        "title": "Conditions d'utilisation",
+        "subtitle": "Le présent document régit l'accès et l'usage de la plateforme darso, exploitée par darso SARL, immatriculée au registre du commerce d'Alger."
+      },
+      "toc": [
+        { "id": "acceptance", "label": "1. Acceptation" },
+        { "id": "account", "label": "2. Inscription au compte" },
+        { "id": "services", "label": "3. Description des services" },
+        { "id": "bookings", "label": "4. Réservations et paiements" },
+        { "id": "cancellations", "label": "5. Annulations et remboursements" },
+        { "id": "conduct", "label": "6. Conduite des utilisateurs" },
+        { "id": "ip", "label": "7. Propriété intellectuelle" },
+        { "id": "disputes", "label": "8. Règlement des litiges" },
+        { "id": "liability", "label": "9. Limitation de responsabilité" },
+        { "id": "termination", "label": "10. Résiliation" },
+        { "id": "modifications", "label": "11. Modifications" },
+        { "id": "law", "label": "12. Droit applicable" },
+        { "id": "contact", "label": "13. Contact" }
+      ],
+      "sections": [
+        {
+          "id": "acceptance",
+          "title": "1. Acceptation des conditions",
+          "paragraphs": [
+            "En accédant à la plateforme darso (accessible sur darso.dz et ses applications mobiles), vous reconnaissez avoir lu, compris et accepté sans réserve les présentes Conditions Générales d'Utilisation (« CGU »).",
+            "Si vous n'acceptez pas l'une de ces clauses, l'usage de la plateforme vous est interdit. Toute utilisation ultérieure vaut acceptation des éventuelles modifications publiées sur cette page."
+          ]
+        },
+        {
+          "id": "account",
+          "title": "2. Inscription au compte",
+          "paragraphs": [
+            "L'accès aux fonctions de réservation, de messagerie et de publication nécessite la création d'un compte personnel. L'inscription est gratuite et ouverte à toute personne physique majeure ou, pour les mineurs de 16 ans révolus, accompagnée du consentement écrit d'un responsable légal.",
+            "Vous vous engagez à fournir des informations exactes, complètes et à jour. Toute fausse déclaration constitue un motif de suspension immédiate du compte, sans préjudice des recours judiciaires.",
+            "Vous êtes seul responsable de la confidentialité de vos identifiants de connexion. darso ne saurait être tenue pour responsable des conséquences d'une utilisation frauduleuse résultant d'un défaut de garde."
+          ]
+        },
+        {
+          "id": "services",
+          "title": "3. Description des services",
+          "paragraphs": [
+            "darso est une marketplace pédagogique mettant en relation des apprenants et des professeurs indépendants exerçant en Algérie. La plateforme propose la réservation de cours individuels, d'ateliers collectifs, d'événements en direct et de cours à la demande.",
+            "darso n'est pas l'employeur des professeurs et n'intervient pas dans le contenu pédagogique des séances. Les professeurs exercent en tant qu'indépendants et conservent l'entière responsabilité de leurs prestations."
+          ]
+        },
+        {
+          "id": "bookings",
+          "title": "4. Réservations et paiements",
+          "paragraphs": [
+            "Les prix sont affichés en dinars algériens (DZD), toutes taxes comprises. Les moyens de paiement acceptés incluent Edahabia, CIB, BaridiMob et — pour les apprenants de la diaspora — Visa et Mastercard.",
+            "Le montant est pré-autorisé au moment de la réservation puis débité après confirmation du professeur, généralement sous douze heures. Si le professeur refuse, aucune somme n'est prélevée et la pré-autorisation est libérée sous trois jours ouvrés.",
+            "Une facture conforme au Code de commerce algérien est émise pour chaque réservation confirmée et reste disponible dans l'espace « Mon compte » pendant dix ans."
+          ]
+        },
+        {
+          "id": "cancellations",
+          "title": "5. Annulations et remboursements",
+          "paragraphs": [
+            "Annulation par l'apprenant : gratuite jusqu'à 24 heures avant le cours ; 50 % retenus entre 24 h et 2 h ; intégralité due moins de 2 h avant, sauf cas de force majeure dûment justifié.",
+            "Annulation par le professeur : remboursement intégral et automatique de l'apprenant. Les annulations répétées peuvent entraîner une réduction de visibilité, voire la suspension du compte enseignant.",
+            "En cas d'absence du professeur constatée par notre équipe, le remboursement intégral est crédité sous cinq jours ouvrés et un avoir équivalent est offert à l'apprenant à titre commercial."
+          ]
+        },
+        {
+          "id": "conduct",
+          "title": "6. Conduite des utilisateurs",
+          "paragraphs": [
+            "Les utilisateurs s'engagent à utiliser la plateforme de bonne foi, dans le respect des lois algériennes et de l'ordre public. Sont notamment prohibés : le harcèlement, la diffamation, la diffusion de contenus à caractère pornographique, violent, raciste ou attentatoire aux symboles de l'État, et toute tentative de contournement de la plateforme (paiement hors-plateforme, échange de coordonnées avant réservation).",
+            "darso se réserve le droit de suspendre tout compte en violation des présentes, sans préavis lorsque la sécurité d'autres utilisateurs est en jeu."
+          ]
+        },
+        {
+          "id": "ip",
+          "title": "7. Propriété intellectuelle",
+          "paragraphs": [
+            "La marque darso, le logo, l'interface, le code source, les bases de données et l'ensemble des éléments graphiques de la plateforme sont la propriété exclusive de darso SARL et protégés par la loi algérienne n° 03-05 du 19 juillet 2003 relative aux droits d'auteur et droits voisins.",
+            "Les contenus pédagogiques (supports de cours, vidéos, exercices) restent la propriété de leurs auteurs respectifs. Les professeurs concèdent à darso une licence non exclusive et gratuite d'hébergement, de représentation et de promotion sur la plateforme."
+          ]
+        },
+        {
+          "id": "disputes",
+          "title": "8. Règlement des litiges entre utilisateurs",
+          "paragraphs": [
+            "Tout différend entre un apprenant et un professeur doit faire l'objet d'une tentative de résolution amiable via la fonction « Litige » de la plateforme. Un médiateur darso analyse les pièces et propose une issue motivée sous cinq jours ouvrés.",
+            "La décision du médiateur est exécutoire au sens des présentes CGU. Elle n'éteint pas le droit des parties à saisir les juridictions compétentes."
+          ]
+        },
+        {
+          "id": "liability",
+          "title": "9. Limitation de responsabilité",
+          "paragraphs": [
+            "darso met tout en œuvre pour assurer la disponibilité et la sécurité de la plateforme, sans garantir une accessibilité ininterrompue. La responsabilité de darso ne saurait être engagée en cas d'interruption résultant d'une cause extérieure (panne réseau, maintenance, force majeure).",
+            "darso n'est en aucun cas partie au contrat pédagogique liant l'apprenant et le professeur. La responsabilité de darso, si elle devait être engagée, est plafonnée au montant des sommes effectivement versées par l'utilisateur sur les douze derniers mois."
+          ]
+        },
+        {
+          "id": "termination",
+          "title": "10. Résiliation",
+          "paragraphs": [
+            "L'utilisateur peut clôturer son compte à tout moment depuis « Mon compte » → « Paramètres » → « Supprimer mon compte ». La suppression devient définitive après trente jours, période durant laquelle le compte peut être restauré.",
+            "darso se réserve le droit de résilier un compte en cas de manquement grave aux présentes CGU, par notification écrite. Les sommes dues à l'utilisateur lui sont reversées sous trente jours, déduction faite des éventuelles sommes dues à darso."
+          ]
+        },
+        {
+          "id": "modifications",
+          "title": "11. Modifications des CGU",
+          "paragraphs": [
+            "Les présentes CGU peuvent être modifiées à tout moment pour s'adapter aux évolutions légales, techniques ou commerciales. Toute modification substantielle fait l'objet d'une notification par e-mail et d'un préavis de trente jours.",
+            "À défaut de refus exprès dans ce délai, les nouvelles conditions s'appliquent automatiquement."
+          ]
+        },
+        {
+          "id": "law",
+          "title": "12. Droit applicable et juridiction",
+          "paragraphs": [
+            "Les présentes CGU sont régies par le droit algérien, et notamment la loi 09-03 du 25 février 2009 relative à la protection du consommateur, le Code civil et le Code de commerce.",
+            "Tout litige relatif à leur interprétation ou à leur exécution relève, à défaut de résolution amiable, de la compétence exclusive des tribunaux d'Alger."
+          ]
+        },
+        {
+          "id": "contact",
+          "title": "13. Contact",
+          "paragraphs": [
+            "darso SARL — Rue Hassiba Ben Bouali, Alger 16000, Algérie.",
+            "Service juridique : legal@darso.dz · Délégué à la protection des données : dpo@darso.dz · Service client : hello@darso.dz."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "meta": {
+        "title": "Politique de confidentialité",
+        "description": "Quelles données nous collectons, comment nous les utilisons et vos droits."
+      },
+      "hero": {
+        "eyebrow": "Données personnelles",
+        "title": "Politique de confidentialité",
+        "subtitle": "darso s'engage à protéger votre vie privée. Cette politique explique, en clair, les données que nous collectons et l'usage que nous en faisons."
+      },
+      "toc": [
+        { "id": "collected", "label": "1. Données collectées" },
+        { "id": "purposes", "label": "2. Finalités d'utilisation" },
+        { "id": "sharing", "label": "3. Partage avec des tiers" },
+        { "id": "cookies", "label": "4. Cookies" },
+        { "id": "retention", "label": "5. Durée de conservation" },
+        { "id": "rights", "label": "6. Vos droits" },
+        { "id": "transfers", "label": "7. Transferts internationaux" },
+        { "id": "children", "label": "8. Mineurs" },
+        { "id": "security", "label": "9. Sécurité" },
+        { "id": "dpo", "label": "10. Contact DPO" }
+      ],
+      "sections": [
+        {
+          "id": "collected",
+          "title": "1. Données que nous collectons",
+          "paragraphs": [
+            "Données d'identité : nom, prénom, adresse e-mail, numéro de téléphone, photo de profil (facultative), wilaya de résidence.",
+            "Données de compte : préférences linguistiques, rôle (apprenant ou professeur), historique de cours, avis publiés.",
+            "Données de paiement : nous ne stockons aucun numéro de carte bancaire. Notre prestataire de paiement (agréé Banque d'Algérie) traite les transactions et nous retourne uniquement un identifiant chiffré.",
+            "Données techniques : adresse IP, type de navigateur, système d'exploitation, horodatage des connexions — strictement nécessaires à la sécurité et au fonctionnement de la plateforme."
+          ]
+        },
+        {
+          "id": "purposes",
+          "title": "2. Comment nous utilisons vos données",
+          "paragraphs": [
+            "Fournir le service : créer votre compte, traiter vos réservations, transmettre vos messages, émettre vos factures.",
+            "Garantir la sécurité : détecter les fraudes, prévenir les abus, vérifier l'identité des professeurs.",
+            "Améliorer la plateforme : statistiques d'usage anonymisées, optimisation des recommandations, A/B tests sur les parcours.",
+            "Communications essentielles : confirmations, rappels, notifications de litige. Vous pouvez vous désinscrire à tout moment des communications non essentielles (newsletter, promotions)."
+          ]
+        },
+        {
+          "id": "sharing",
+          "title": "3. Partage avec des tiers",
+          "paragraphs": [
+            "Vos données ne sont jamais vendues. Elles sont partagées uniquement avec : (a) le prestataire de paiement pour traiter les transactions ; (b) notre hébergeur certifié ; (c) les autorités algériennes sur réquisition judiciaire dûment motivée.",
+            "Lorsqu'un professeur accepte votre réservation, votre prénom, votre wilaya et votre photo lui sont communiqués pour préparer le cours. Aucun autre détail n'est partagé sans votre consentement explicite."
+          ]
+        },
+        {
+          "id": "cookies",
+          "title": "4. Cookies et traceurs",
+          "paragraphs": [
+            "Nous utilisons des cookies strictement nécessaires (session, sécurité, panier), des cookies de préférence (langue, thème) et des cookies analytiques anonymisés.",
+            "Aucun cookie publicitaire tiers n'est déposé sans votre consentement explicite. Voir notre politique cookies détaillée pour le tableau complet et la procédure de gestion."
+          ]
+        },
+        {
+          "id": "retention",
+          "title": "5. Durée de conservation",
+          "paragraphs": [
+            "Compte actif : tant que vous utilisez la plateforme.",
+            "Compte supprimé : effacement définitif sous 30 jours, sauf obligation légale.",
+            "Factures : 10 ans (obligation comptable et fiscale).",
+            "Messages : 3 ans après le dernier échange.",
+            "Logs de connexion : 12 mois pour des raisons de sécurité."
+          ]
+        },
+        {
+          "id": "rights",
+          "title": "6. Vos droits",
+          "paragraphs": [
+            "Conformément à la loi 18-07 du 10 juin 2018 relative à la protection des personnes physiques dans le traitement des données à caractère personnel, vous disposez des droits suivants : accès, rectification, effacement, opposition, limitation du traitement, portabilité.",
+            "Pour exercer ces droits, écrivez au DPO à dpo@darso.dz en justifiant votre identité. Nous répondons sous trente jours. En cas de désaccord, vous pouvez saisir l'Autorité nationale de protection des données à caractère personnel (ANPDP)."
+          ]
+        },
+        {
+          "id": "transfers",
+          "title": "7. Transferts internationaux",
+          "paragraphs": [
+            "Les données sensibles (identité, paiements) sont hébergées en Algérie. Certaines données techniques (logs anonymisés, contenus pédagogiques) peuvent être hébergées sur des serveurs européens présentant un niveau de protection équivalent (clauses contractuelles types, certifications ISO 27001)."
+          ]
+        },
+        {
+          "id": "children",
+          "title": "8. Mineurs",
+          "paragraphs": [
+            "La plateforme est ouverte aux mineurs à partir de 16 ans sous supervision parentale. Pour les enfants en dessous de cet âge, le compte est obligatoirement créé par un responsable légal qui valide chaque réservation.",
+            "Aucune donnée d'un mineur n'est utilisée à des fins de profilage publicitaire."
+          ]
+        },
+        {
+          "id": "security",
+          "title": "9. Mesures de sécurité",
+          "paragraphs": [
+            "Chiffrement TLS 1.3 pour toutes les communications. Stockage chiffré AES-256 au repos. Mots de passe hachés en argon2id. Authentification à deux facteurs disponible.",
+            "Tests d'intrusion semestriels par un cabinet indépendant. Plan de continuité d'activité testé deux fois par an."
+          ]
+        },
+        {
+          "id": "dpo",
+          "title": "10. Contact du Délégué à la protection des données",
+          "paragraphs": [
+            "Délégué à la protection des données : Mᵐᵉ Lila Mokrane.",
+            "E-mail : dpo@darso.dz · Adresse : Rue Hassiba Ben Bouali, Alger 16000.",
+            "Réponse garantie sous trente jours pour toute demande relative à vos données."
+          ]
+        }
+      ]
+    },
+    "cookies": {
+      "meta": {
+        "title": "Politique de cookies",
+        "description": "Quels cookies darso utilise et comment les gérer."
+      },
+      "hero": {
+        "eyebrow": "Cookies",
+        "title": "Politique de cookies",
+        "subtitle": "Cette page liste l'ensemble des cookies déposés sur votre appareil lorsque vous utilisez darso, leur finalité et leur durée de vie."
+      },
+      "toc": [
+        { "id": "what", "label": "1. Qu'est-ce qu'un cookie ?" },
+        { "id": "used", "label": "2. Cookies utilisés" },
+        { "id": "third-party", "label": "3. Cookies tiers" },
+        { "id": "manage", "label": "4. Gérer les cookies" },
+        { "id": "updates", "label": "5. Mises à jour" }
+      ],
+      "sections": [
+        {
+          "id": "what",
+          "title": "1. Qu'est-ce qu'un cookie ?",
+          "paragraphs": [
+            "Un cookie est un petit fichier texte déposé par un site web sur votre navigateur. Il permet au site de mémoriser des informations (langue, panier, connexion) entre deux visites.",
+            "Certains cookies sont strictement nécessaires au fonctionnement du site ; d'autres servent à analyser l'usage, mémoriser vos préférences ou afficher des contenus personnalisés. Vous pouvez à tout moment refuser ou supprimer les cookies non essentiels."
+          ]
+        },
+        {
+          "id": "used",
+          "title": "2. Cookies que nous utilisons",
+          "table": {
+            "headers": ["Cookie", "Catégorie", "Finalité", "Durée"],
+            "rows": [
+              { "name": "darso_session", "category": "Essentiel", "purpose": "Maintien de la session connectée", "duration": "Session" },
+              { "name": "darso_csrf", "category": "Essentiel", "purpose": "Protection anti-CSRF des formulaires", "duration": "Session" },
+              { "name": "darso_lang", "category": "Préférence", "purpose": "Mémorisation de la langue choisie (FR/AR)", "duration": "1 an" },
+              { "name": "darso_theme", "category": "Préférence", "purpose": "Thème clair/sombre", "duration": "1 an" },
+              { "name": "darso_analytics", "category": "Analytique", "purpose": "Statistiques d'usage anonymisées (Plausible self-hosted)", "duration": "30 jours" },
+              { "name": "darso_consent", "category": "Essentiel", "purpose": "Mémorisation du choix RGPD/cookies", "duration": "6 mois" }
+            ]
+          },
+          "paragraphs": [
+            "Les cookies essentiels ne nécessitent pas de consentement ; ils sont indispensables au service. Les cookies analytiques sont anonymisés à la source : aucune adresse IP complète n'est conservée."
+          ]
+        },
+        {
+          "id": "third-party",
+          "title": "3. Cookies tiers",
+          "paragraphs": [
+            "darso n'utilise aucun cookie publicitaire tiers (pas de Google Ads, pas de Meta Pixel, pas de Criteo). Notre analyse d'audience est réalisée via Plausible Analytics, auto-hébergé sur nos serveurs.",
+            "Les vidéos pédagogiques sont diffusées via notre propre infrastructure ; aucune intégration YouTube ou Vimeo n'est faite sans votre consentement explicite."
+          ]
+        },
+        {
+          "id": "manage",
+          "title": "4. Comment gérer vos cookies",
+          "paragraphs": [
+            "Vous pouvez à tout moment modifier vos préférences depuis le bandeau en bas de page (lien « Cookies ») ou directement dans les paramètres de votre navigateur.",
+            "Procédure rapide : Chrome → Paramètres → Confidentialité et sécurité → Cookies ; Firefox → Préférences → Vie privée et sécurité ; Safari → Préférences → Confidentialité ; Edge → Paramètres → Cookies et autorisations de site.",
+            "Le refus des cookies essentiels rendrait la plateforme inutilisable (impossibilité de se connecter, de réserver, etc.)."
+          ]
+        },
+        {
+          "id": "updates",
+          "title": "5. Mises à jour de cette politique",
+          "paragraphs": [
+            "Toute modification de cette politique est signalée par un bandeau sur le site et — pour les utilisateurs connectés — par e-mail au moins quinze jours avant son entrée en vigueur.",
+            "L'historique des versions est consultable sur demande auprès du DPO."
+          ]
+        }
+      ]
+    }
+  }
+}

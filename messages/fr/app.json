@@ -1,0 +1,456 @@
+{
+  "app": {
+    "common": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "week": "Cette semaine",
+      "earlier": "Plus tôt",
+      "tomorrow": "Demain",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "lastActive": "Vu {label}",
+      "noContent": "Rien à afficher pour le moment.",
+      "open": "Ouvrir",
+      "back": "Retour",
+      "send": "Envoyer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "save": "Enregistrer",
+      "loading": "Chargement…",
+      "all": "Tout",
+      "more": "Plus",
+      "hours": "{n, plural, one {# heure} other {# heures}}",
+      "minutes": "{n, plural, one {# minute} other {# minutes}}",
+      "min": "min",
+      "fileSize": "{kb} Ko"
+    },
+    "calendar": {
+      "title": "Calendrier",
+      "subtitle": "Vos cours, plages libres et indisponibilités — au même endroit.",
+      "eyebrow": "Agenda",
+      "tabs": {
+        "week": "Semaine",
+        "month": "Mois",
+        "list": "Liste"
+      },
+      "today": "Aujourd'hui",
+      "previousWeek": "Semaine précédente",
+      "nextWeek": "Semaine suivante",
+      "previousMonth": "Mois précédent",
+      "nextMonth": "Mois suivant",
+      "status": {
+        "booked": "Réservé",
+        "available": "Disponible",
+        "blocked": "Indisponible",
+        "pending": "À confirmer"
+      },
+      "mode": {
+        "online": "En ligne",
+        "in-person": "En présentiel"
+      },
+      "format": {
+        "1to1": "Cours 1:1",
+        "cohort": "Cohorte",
+        "event": "Atelier"
+      },
+      "legend": "Légende",
+      "withTeacher": "avec {name}",
+      "sessionsLeft": "{n, plural, one {# séance restante} other {# séances restantes}}",
+      "block": {
+        "title": "Bloquer une plage",
+        "subtitle": "Indiquez une fenêtre où vous n'êtes pas disponible.",
+        "start": "Début",
+        "end": "Fin",
+        "reason": "Motif (facultatif)",
+        "reasonPlaceholder": "Trajet, examen, prière…",
+        "recurring": "Répéter chaque semaine",
+        "submit": "Bloquer cette plage",
+        "openSheet": "Bloquer une plage"
+      },
+      "toasts": {
+        "blockAdded": {
+          "title": "Plage bloquée",
+          "desc": "Vous êtes indisponible de {from} à {to}."
+        },
+        "invalid": {
+          "title": "Plage invalide",
+          "desc": "L'heure de début doit précéder l'heure de fin."
+        }
+      },
+      "month": {
+        "events": "{n, plural, one {# événement} other {# événements}}",
+        "popoverTitle": "{day}",
+        "noEvents": "Aucune séance ce jour."
+      },
+      "list": {
+        "empty": "Rien à venir cette semaine. Profitez-en pour explorer.",
+        "exploreCta": "Explorer la marketplace",
+        "emptyState": {
+          "title": "Aucune séance à venir",
+          "body": "Réservez un cours, un live ou un événement — il apparaîtra ici avec un rappel.",
+          "primary": "Découvrir des cours",
+          "secondary": "Voir le calendrier"
+        }
+      },
+      "week": {
+        "headerNote": "Semaine {weekNumber} · Africa/Algiers",
+        "hourAxisLabel": "Heure",
+        "weekdaysShort": ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
+      },
+      "popover": {
+        "join": "Rejoindre le cours",
+        "details": "Détails"
+      },
+      "event": {
+        "kind": {
+          "booking": "Séance réservée",
+          "availability": "Plage libre",
+          "blocked": "Indisponible"
+        },
+        "actions": {
+          "openBooking": "Ouvrir la réservation",
+          "cancelBooking": "Annuler la réservation",
+          "editBlock": "Modifier la plage",
+          "editBlockHint": "Pour modifier, supprimez puis recréez la plage.",
+          "removeBlock": "Supprimer la plage",
+          "addBlock": "Bloquer ce créneau"
+        },
+        "toasts": {
+          "cancelComingSoon": {
+            "title": "Annulation bientôt disponible",
+            "desc": "La gestion des annulations arrive dans une prochaine mise à jour."
+          },
+          "editComingSoon": {
+            "title": "Édition bientôt disponible",
+            "desc": "La modification des plages bloquées arrive dans une prochaine mise à jour."
+          },
+          "bookingCancelled": {
+            "title": "Réservation annulée",
+            "desc": "{title} — un remboursement éventuel apparaîtra dans vos paiements."
+          },
+          "blockRemoved": {
+            "title": "Plage supprimée",
+            "desc": "Le créneau est de nouveau disponible à la réservation."
+          },
+          "removeFailed": {
+            "title": "Suppression impossible",
+            "desc": "Cette plage n'a pas pu être supprimée. Réessayez."
+          }
+        }
+      },
+      "studentRail": {
+        "title": "Réservations à venir",
+        "empty": "Aucune séance confirmée. Réservez un cours pour le retrouver ici.",
+        "emptyState": {
+          "title": "Aucune séance confirmée",
+          "body": "Réservez auprès d'un prof — la séance apparaîtra ici avec son rappel.",
+          "primary": "Trouver un prof"
+        },
+        "viewAll": "Voir mes paiements"
+      }
+    },
+    "messages": {
+      "title": "Messages",
+      "subtitle": "Conversations 1:1 et cohortes — gardez le fil entre deux séances.",
+      "tabs": {
+        "all": "Tout",
+        "oneToOne": "1:1",
+        "cohorts": "Cohortes"
+      },
+      "search": "Rechercher dans les messages",
+      "newMessage": "Nouveau message",
+      "empty": {
+        "title": "Choisissez une conversation",
+        "body": "Sélectionnez un fil sur la gauche, ou démarrez-en un nouveau depuis le profil d'un prof.",
+        "cta": "Découvrir des professeurs"
+      },
+      "emptyFiltered": {
+        "title": "Aucune conversation",
+        "body": "Aucun fil ne correspond à votre recherche."
+      },
+      "thread": {
+        "info": "Détails",
+        "joinCall": "Rejoindre l'appel",
+        "mute": "Mettre en sourdine",
+        "unmute": "Réactiver",
+        "viewCourse": "Voir le cours lié",
+        "participants": "{n, plural, one {# participant} other {# participants}}",
+        "membersTitle": "Membres",
+        "linkedTitle": "Cours lié",
+        "settingsTitle": "Préférences"
+      },
+      "composer": {
+        "placeholder": "Écrivez un message…",
+        "attach": "Joindre un fichier",
+        "emoji": "Emoji",
+        "send": "Envoyer"
+      },
+      "dateSep": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier"
+      },
+      "status": {
+        "sent": "Envoyé",
+        "delivered": "Reçu",
+        "read": "Lu"
+      },
+      "kind": {
+        "1to1": "1:1",
+        "cohort": "Cohorte",
+        "event": "Atelier"
+      }
+    },
+    "chat": {
+      "toasts": {
+        "videoComingSoon": {
+          "title": "Appels vidéo bientôt",
+          "desc": "Les appels vidéo arrivent dans une prochaine mise à jour."
+        }
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Suivez vos cours, vos messages et vos paiements — sans bruit inutile.",
+      "markAllRead": "Tout marquer comme lu",
+      "tabs": {
+        "all": "Tout",
+        "bookings": "Cours",
+        "messages": "Messages",
+        "reviews": "Avis",
+        "billing": "Facturation"
+      },
+      "sections": {
+        "today": "Aujourd'hui",
+        "week": "Cette semaine",
+        "earlier": "Plus tôt"
+      },
+      "empty": {
+        "title": "Vous êtes à jour",
+        "body": "Tout ce qui arrivera — réservations, messages, paiements — apparaîtra ici.",
+        "bodyFiltered": "Aucune notification dans la catégorie « {filter} ».",
+        "openPreferences": "Régler les préférences"
+      },
+      "row": {
+        "markRead": "Marquer comme lu",
+        "muteType": "Mettre ce type en sourdine",
+        "options": "Options"
+      },
+      "type": {
+        "booking": "Réservation",
+        "message": "Message",
+        "review": "Avis",
+        "system": "Système",
+        "billing": "Facturation",
+        "dispute": "Dossier"
+      },
+      "ago": {
+        "now": "à l'instant",
+        "minutes": "il y a {n} min",
+        "hours": "il y a {n} h",
+        "days": "il y a {n} j"
+      },
+      "toasts": {
+        "muted": {
+          "title": "Type mis en sourdine",
+          "desc": "Les notifications « {type} » sont désormais silencieuses."
+        }
+      }
+    },
+    "disputes": {
+      "title": "Résolution de litiges",
+      "subtitle": "Un cadre serein pour clarifier les désaccords — médiation gérée par darso.",
+      "tabs": {
+        "open": "Ouverts",
+        "resolved": "Résolus",
+        "all": "Tous"
+      },
+      "list": {
+        "openedAt": "Ouvert {date}",
+        "lastActivity": "Dernière activité {time}",
+        "against": "avec {name}",
+        "empty": {
+          "title": "Aucun dossier",
+          "body": "Vous n'avez aucun litige en cours. C'est plutôt bon signe.",
+          "learnMore": "Comprendre la médiation"
+        }
+      },
+      "state": {
+        "open": "Ouvert",
+        "awaiting-response": "Attente de réponse",
+        "in-mediation": "En médiation",
+        "resolved": "Résolu",
+        "refunded": "Remboursé",
+        "rejected": "Rejeté"
+      },
+      "detail": {
+        "id": "Dossier",
+        "amount": "Montant en jeu",
+        "openedBy": "Ouvert par",
+        "claimTitle": "Réclamation",
+        "evidence": "Pièces jointes",
+        "noEvidence": "Aucune pièce jointe.",
+        "timeline": "Historique",
+        "actions": "Actions",
+        "messages": "Échanges",
+        "parties": "Parties",
+        "you": "Vous",
+        "mediator": "Médiation darso"
+      },
+      "actor": {
+        "student": "Étudiant",
+        "teacher": "Professeur",
+        "mediator": "Médiateur darso",
+        "system": "Système"
+      },
+      "actions": {
+        "respond": {
+          "title": "Envoyer une réponse",
+          "placeholder": "Apportez votre version des faits…",
+          "submit": "Envoyer la réponse"
+        },
+        "mediation": {
+          "title": "Proposer la médiation",
+          "submit": "Demander un médiateur",
+          "dialogTitle": "Demander un médiateur darso",
+          "dialogBody": "Un médiateur neutre rejoindra le dossier sous 24 h. La conversation reste privée."
+        },
+        "resolve": {
+          "title": "Marquer comme résolu",
+          "refundLabel": "Remboursement proposé",
+          "submit": "Confirmer la résolution"
+        },
+        "withdraw": "Retirer le dossier"
+      },
+      "composer": {
+        "placeholder": "Répondre à ce dossier…",
+        "send": "Envoyer"
+      },
+      "toasts": {
+        "mediationSent": {
+          "title": "Demande de médiation envoyée",
+          "desc": "Un médiateur darso rejoindra le dossier sous 24 h."
+        },
+        "mediationEmpty": {
+          "title": "Message requis",
+          "desc": "Ajoutez un mot avant d'envoyer la demande."
+        },
+        "refundProposalSent": {
+          "title": "Proposition de remboursement envoyée",
+          "desc": "Vous proposez {pct}% ({amount}). L'autre partie sera notifiée."
+        },
+        "proposalLabel": "Proposition en cours : {pct}% ({amount})"
+      },
+      "open": {
+        "cta": "Ouvrir un dossier",
+        "title": "Ouvrir un dossier de litige",
+        "subtitle": "Décrivez le problème — un médiateur darso lira votre dossier sous 24 h. Restez factuel et concis.",
+        "subjectLabel": "Sujet concerné",
+        "subjectOther": "Autre — pas lié à une réservation",
+        "reasonLabel": "Motif",
+        "reasons": {
+          "teacherNoShow": "Prof absent ou en retard",
+          "qualityIssue": "Problème de qualité",
+          "paymentIssue": "Problème de paiement",
+          "other": "Autre"
+        },
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Expliquez ce qui s'est passé, quand, et ce que vous attendez comme suite (minimum 20 caractères).",
+        "attachmentsLabel": "Pièces jointes",
+        "attachmentsHint": "Glissez vos fichiers ici — bientôt disponible.",
+        "cancel": "Annuler",
+        "submit": "Ouvrir le dossier",
+        "submitting": "Envoi…",
+        "toasts": {
+          "opened": {
+            "title": "Dossier ouvert",
+            "desc": "Votre dossier {id} est enregistré. Vous y êtes redirigé."
+          },
+          "signInRequired": {
+            "title": "Connexion requise",
+            "desc": "Connectez-vous pour ouvrir un dossier de litige."
+          },
+          "descriptionTooShort": {
+            "title": "Description trop courte",
+            "desc": "Ajoutez au moins {min} caractères pour que le médiateur comprenne le contexte."
+          }
+        }
+      },
+      "recentBookings": {
+        "reportProblem": "Signaler un problème"
+      }
+    },
+    "call": {
+      "header": {
+        "eyebrow": "Salle d'apprentissage",
+        "duration": "Durée {time}"
+      },
+      "participants": {
+        "label": "Participants",
+        "you": "Vous",
+        "host": "Hôte",
+        "coHost": "Co-enseignant·e",
+        "student": "Élève",
+        "speaking": "Parle"
+      },
+      "controls": {
+        "mute": "Couper le micro",
+        "unmute": "Réactiver le micro",
+        "camera": "Couper la caméra",
+        "cameraOff": "Réactiver la caméra",
+        "screenShare": "Partager l'écran",
+        "screenShareStop": "Arrêter le partage",
+        "chat": "Conversation",
+        "participants": "Participants",
+        "more": "Plus d'options",
+        "end": "Quitter la salle",
+        "endTooltip": "Mettre fin à votre participation"
+      },
+      "chat": {
+        "title": "Conversation",
+        "tabChat": "Messages",
+        "tabParticipants": "Participants",
+        "placeholder": "Écrivez un message…",
+        "send": "Envoyer",
+        "sent": {
+          "title": "Message envoyé",
+          "desc": "Visible par tous les participants."
+        },
+        "empty": "La conversation s'efface à la fin de la séance."
+      },
+      "end": {
+        "toast": {
+          "title": "Séance terminée",
+          "desc": "Merci. Le résumé arrivera dans vos notifications."
+        }
+      },
+      "generic": {
+        "title": "Salle d'apprentissage",
+        "hint": "Cette salle est une démonstration — aucun flux audio ou vidéo réel n'est diffusé."
+      },
+      "screen": {
+        "label": "Partage d'écran",
+        "placeholder": "Aperçu du tableau partagé"
+      },
+      "leaveConfirm": {
+        "title": "Quitter la salle ?",
+        "desc": "Vous pourrez rejoindre à nouveau tant que la séance n'est pas terminée.",
+        "cancel": "Rester",
+        "confirm": "Quitter"
+      },
+      "mockMessages": {
+        "m1": "Bienvenue — on commence dans deux minutes, le temps que tout le monde se connecte.",
+        "m2": "Bonjour ! Vous m'entendez bien ?",
+        "m3": "Très bien, oui. Je partage le PDF dans la conversation.",
+        "m4": "Merci, je l'ouvre.",
+        "m5": "On reprend à l'exercice 3 de la semaine dernière.",
+        "m6": "Question — pour la dérivée, on garde la notation de Lagrange ?"
+      },
+      "mockNames": {
+        "self": "Vous",
+        "teacher": "Khalil Bensaïd",
+        "coTeacher": "Sara Belkacem",
+        "student": "Yacine R."
+      }
+    }
+  }
+}

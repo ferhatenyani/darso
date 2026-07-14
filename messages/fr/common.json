@@ -1,0 +1,321 @@
+{
+  "brand": {
+    "name": "darso",
+    "tagline": "Apprenez de l'Algérie. Enseignez à l'Algérie."
+  },
+  "nav": {
+    "browse": "Découvrir",
+    "discoverEyebrow": "Explorer la marketplace",
+    "categories": "Catégories",
+    "teachers": "Professeurs",
+    "requests": "Demandes",
+    "liveNow": "En direct",
+    "liveNowSub": "Cours qui commencent dans l'heure",
+    "howItWorks": "Comment ça marche",
+    "becomeTeacher": "Enseigner sur darso",
+    "becomeTeacherSub": "Lancez votre activité, gratuit jusqu'au premier dinar gagné",
+    "signIn": "Se connecter",
+    "signUp": "Créer un compte",
+    "postRequest": "Poster une demande",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "switchRole": {
+      "learn": "Apprendre",
+      "teach": "Enseigner"
+    },
+    "language": "Langue",
+    "search": "Rechercher",
+    "searchPlaceholder": "Que voulez-vous apprendre ?",
+    "userMenu": {
+      "openLabel": "Ouvrir le menu utilisateur",
+      "account": "Mon compte",
+      "dashboard": "Tableau de bord",
+      "signOut": "Se déconnecter",
+      "teacherTagline": "Espace enseignant"
+    },
+    "discover": {
+      "subjects": "Par matière",
+      "format": "Par format",
+      "audience": "Par public",
+      "city": "Par wilaya",
+      "viewAll": "Tout parcourir",
+      "formatItems": {
+        "oneToOne": { "name": "Cours 1:1", "blurb": "Sessions privées à votre rythme" },
+        "cohort": { "name": "Cohortes en ligne", "blurb": "Apprendre en groupe sur plusieurs semaines" },
+        "event": { "name": "Ateliers & événements", "blurb": "Des sessions live, une date, une fois" },
+        "onDemand": { "name": "Cours à la demande", "blurb": "Vidéos pré-enregistrées, accès à vie" }
+      },
+      "audienceItems": {
+        "kids": { "name": "Enfants", "blurb": "Primaire & CEM" },
+        "lycee": { "name": "Lycéens & Bac", "blurb": "Programmes nationaux" },
+        "students": { "name": "Étudiants", "blurb": "Universitaires & post-bac" },
+        "adults": { "name": "Adultes & pros", "blurb": "Reconversion, compétences" }
+      },
+      "viewSubjects": "Toutes les matières",
+      "viewCities": "Toutes les wilayas"
+    }
+  },
+  "home": {
+    "hero": {
+      "nowLabel": "Maintenant",
+      "nowDetail": "{live, plural, =0 {Aucun cours en direct} one {# cours en direct} other {# cours en direct}} · {soon, plural, =0 {0 commence} one {# commence dans l'heure} other {# commencent dans l'heure}}",
+      "titleLead": "Apprenez",
+      "titleAccent": "avec les meilleurs Algériens",
+      "titleTail": "qui enseignent en live.",
+      "subtitle": "darso est une marketplace de cours en direct — cohortes en ligne, ateliers en présentiel, cours 1:1. Pas de vidéos pré-fabriquées : des professeurs vérifiés, en chair et en os, qui enseignent en arabe, en français ou en anglais.",
+      "searchPlaceholder": "Une matière, un professeur, une wilaya…",
+      "searchHint": "Appuyez sur",
+      "searchHintKey": "Entrée",
+      "searchHintTail": "pour chercher",
+      "topRatedLabel": "Top Rated ce mois",
+      "popularChips": ["Maths", "IELTS", "Physique", "Coran", "Piano"],
+      "ticker": {
+        "joinPrefix": "EN DIRECT",
+        "dot": "·"
+      }
+    },
+    "livePanel": {
+      "eyebrow": "Aujourd'hui sur darso",
+      "subtitle": "Cours en direct & places ouvertes",
+      "live": "EN COURS",
+      "inMin": "dans {min} min",
+      "places": "{taken}/{total} places",
+      "duration": "{min} min",
+      "reserve": "Réserver",
+      "join": "Rejoindre",
+      "viewAll": "Tous les cours du jour"
+    },
+    "categories": {
+      "eyebrow": "Catégories",
+      "title": "Apprenez ce que vous voulez",
+      "subtitle": "Du soutien scolaire à la programmation, des langues à la musique.",
+      "viewAll": "Voir toutes les catégories",
+      "items": {
+        "school": { "name": "Soutien scolaire", "blurb": "Primaire, CEM, Lycée, Bac" },
+        "languages": { "name": "Langues", "blurb": "Anglais, Français, Arabe, Espagnol" },
+        "code": { "name": "Programmation", "blurb": "Web, mobile, data, IA" },
+        "design": { "name": "Design & créa", "blurb": "Graphisme, UI/UX, motion" },
+        "business": { "name": "Business & carrière", "blurb": "Marketing, finance, soft skills" },
+        "music": { "name": "Musique", "blurb": "Piano, guitare, oud, chant" },
+        "religion": { "name": "Sciences religieuses", "blurb": "Coran, tajwid, fiqh" },
+        "exams": { "name": "Examens & concours", "blurb": "Bac, IELTS, TOEFL, ENS" }
+      },
+      "countLabel": "{count, plural, =0 {Aucun professeur} one {# professeur} other {# professeurs}}"
+    },
+    "search": {
+      "label": "Rechercher",
+      "subjectLabel": "Matière",
+      "locationLabel": "Wilaya",
+      "modeLabel": "Mode",
+      "mode": {
+        "any": "En ligne ou en présentiel",
+        "online": "En ligne",
+        "inPerson": "En présentiel"
+      },
+      "submit": "Trouver un professeur"
+    },
+    "teachers": {
+      "eyebrow": "Professeurs en vue",
+      "title": "Des professeurs vérifiés près de chez vous",
+      "subtitle": "Identité, diplômes et avis — vous savez à qui vous avez affaire.",
+      "viewAll": "Tous les professeurs",
+      "perHour": "/h",
+      "from": "À partir de",
+      "reviews": "{count, plural, =0 {Aucun avis} one {# avis} other {# avis}}",
+      "lessons": "{count, plural, =0 {0 cours donné} one {# cours donné} other {# cours donnés}}",
+      "badges": {
+        "topRated": "Top Rated",
+        "idVerified": "Identité vérifiée",
+        "contactVerified": "Contact vérifié",
+        "newRising": "Nouveau & prometteur"
+      },
+      "responseTime": "Répond en {hours} h en moyenne",
+      "speaks": "Parle",
+      "book": "Voir le profil"
+    },
+    "how": {
+      "eyebrow": "Comment ça marche",
+      "title": "Trouvez, réservez, apprenez.",
+      "subtitle": "Trois étapes, zéro friction. Pas besoin de carte bancaire pour commencer.",
+      "steps": {
+        "browse": {
+          "title": "Cherchez ou postez",
+          "body": "Parcourez les professeurs et cours, ou postez votre demande et laissez les professeurs vous trouver."
+        },
+        "book": {
+          "title": "Choisissez et réservez",
+          "body": "Lisez les avis, comparez les tarifs, réservez un créneau et payez en toute sécurité."
+        },
+        "learn": {
+          "title": "Apprenez et évaluez",
+          "body": "Suivez votre cours en ligne ou en personne, puis évaluez votre professeur."
+        }
+      }
+    },
+    "teacherCta": {
+      "eyebrow": "Vous êtes professeur ?",
+      "title": "Lancez votre activité d'enseignement sur darso",
+      "subtitle": "Gratuit jusqu'à votre premier dinar gagné. Ensuite, un abonnement transparent qui s'ajuste à vos revenus — jamais plus.",
+      "points": [
+        "Créez votre profil et vos cours en 10 minutes",
+        "Recevez des demandes d'élèves prêts à apprendre",
+        "Gérez réservations, paiements et avis depuis un seul tableau de bord"
+      ],
+      "primary": "Devenir professeur",
+      "secondary": "Voir les tarifs",
+      "preview": {
+        "modelLabel": "Modèle d'abonnement",
+        "currentRate": "8 %",
+        "currentRateLabel": "de vos revenus actuels",
+        "tierCurrent": "Palier actuel",
+        "tierCurrentRange": "25 000 – 50 000 DA",
+        "tierNext": "Prochain palier",
+        "tierNextLabel": "6 % à partir de 50 k DA"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Témoignages",
+      "title": "Ils apprennent (et enseignent) sur darso",
+      "items": [
+        {
+          "quote": "J'ai trouvé un prof de math en 24 h pour préparer le Bac de ma fille. Sérieux, ponctuel, et les notes ont vraiment grimpé.",
+          "name": "Yasmine B.",
+          "role": "Parent · Alger"
+        },
+        {
+          "quote": "Le tableau de bord prof est clair. Je gère mes cohortes, mes paiements et mes avis sans jongler entre dix outils.",
+          "name": "Karim S.",
+          "role": "Professeur de coding · Oran"
+        },
+        {
+          "quote": "J'ai posté une demande pour des cours d'IELTS. J'ai reçu 6 candidatures en une journée. J'ai choisi la mieux notée — résultat 7.5.",
+          "name": "Lina M.",
+          "role": "Étudiante · Constantine"
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "La marketplace algérienne de l'apprentissage.",
+      "learn": "Apprendre",
+      "teach": "Enseigner",
+      "company": "darso",
+      "support": "Support",
+      "links": {
+        "browseTeachers": "Trouver un professeur",
+        "browseCourses": "Parcourir les cours",
+        "postRequest": "Poster une demande",
+        "howItWorksLearn": "Comment réserver",
+        "becomeTeacher": "Devenir professeur",
+        "pricing": "Tarifs & abonnement",
+        "teacherResources": "Ressources pédagogiques",
+        "about": "À propos",
+        "press": "Presse",
+        "careers": "Carrières",
+        "blog": "Blog",
+        "help": "Centre d'aide",
+        "trustSafety": "Confiance & sécurité",
+        "contact": "Nous contacter",
+        "disputes": "Résolution de litiges"
+      },
+      "legal": {
+        "rights": "© {year} darso. Tous droits réservés.",
+        "terms": "Conditions",
+        "privacy": "Confidentialité",
+        "cookies": "Cookies"
+      },
+      "madeIn": "Conçu à Alger ✦ pour toute l'Algérie"
+    }
+  },
+  "comingSoon": {
+    "badge": "Bientôt disponible",
+    "etaLabel": "Date prévue",
+    "backHome": "Retour à l'accueil",
+    "browse": "Explorer la marketplace",
+    "relatedTitle": "En attendant, découvrez"
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher un professeur, un cours, un événement…",
+    "ariaLabel": "Recherche globale",
+    "eyebrow": "Recherche globale",
+    "noQuery": "Que cherchez-vous aujourd'hui ?",
+    "resultsFor": "Résultats pour",
+    "totalCount": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
+    "results": {
+      "teachers": "Professeurs",
+      "courses": "Cours",
+      "events": "Événements",
+      "viewAll": "Tout voir",
+      "count": "{count, plural, =0 {0} one {#} other {#}}"
+    },
+    "empty": {
+      "shortTitle": "Tapez pour commencer",
+      "short": "Saisissez au moins deux caractères, ou parcourez ces catégories pour vous lancer.",
+      "jumpEyebrow": "Sauter directement vers",
+      "jumpTeachers": "Professeurs",
+      "jumpCourses": "Cours",
+      "jumpLive": "En direct",
+      "jumpRequests": "Demandes",
+      "noResultsTitle": "Aucun résultat",
+      "noResults": "Aucun résultat pour « {q} » — essayez un autre terme.",
+      "suggestionEyebrow": "Idées de recherche"
+    },
+    "row": {
+      "teacherMeta": "{subject} · {city}",
+      "courseMeta": "{subject} · {teacher}",
+      "eventMeta": "{format} · {date}",
+      "openLabel": "Ouvrir"
+    },
+    "wilayas": {
+      "any": "Toute l'Algérie",
+      "adrar": "Adrar",
+      "chlef": "Chlef",
+      "laghouat": "Laghouat",
+      "oumElBouaghi": "Oum El Bouaghi",
+      "batna": "Batna",
+      "bejaia": "Béjaïa",
+      "biskra": "Biskra",
+      "bechar": "Béchar",
+      "blida": "Blida",
+      "bouira": "Bouira",
+      "tamanrasset": "Tamanrasset",
+      "tebessa": "Tébessa",
+      "tlemcen": "Tlemcen",
+      "tiaret": "Tiaret",
+      "tiziOuzou": "Tizi Ouzou",
+      "alger": "Alger",
+      "djelfa": "Djelfa",
+      "jijel": "Jijel",
+      "setif": "Sétif",
+      "saida": "Saïda",
+      "skikda": "Skikda",
+      "sidiBelAbbes": "Sidi Bel Abbès",
+      "annaba": "Annaba",
+      "guelma": "Guelma",
+      "constantine": "Constantine",
+      "medea": "Médéa",
+      "mostaganem": "Mostaganem",
+      "msila": "M'Sila",
+      "mascara": "Mascara",
+      "ouargla": "Ouargla",
+      "oran": "Oran",
+      "elBayadh": "El Bayadh",
+      "illizi": "Illizi",
+      "bordjBouArreridj": "Bordj Bou Arreridj",
+      "boumerdes": "Boumerdès",
+      "elTarf": "El Tarf",
+      "tindouf": "Tindouf",
+      "tissemsilt": "Tissemsilt",
+      "elOued": "El Oued",
+      "khenchela": "Khenchela",
+      "soukAhras": "Souk Ahras",
+      "tipaza": "Tipaza",
+      "mila": "Mila",
+      "ainDefla": "Aïn Defla",
+      "naama": "Naâma",
+      "ainTemouchent": "Aïn Témouchent",
+      "ghardaia": "Ghardaïa",
+      "relizane": "Relizane"
+    }
+  }
+}
