@@ -25,11 +25,15 @@ export function AuthStage() {
       aria-hidden="false"
       className="relative isolate h-full overflow-hidden bg-primary text-primary-foreground"
     >
-      {/* Background composition — grid + gigantic faint mark */}
-      <div aria-hidden className="absolute inset-0 bg-grid opacity-[0.12]" />
+      {/* Background composition — restrained: grid + one soft accent light. Never a rainbow gradient. */}
+      <div aria-hidden className="absolute inset-0 bg-grid opacity-[0.08]" />
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-dark opacity-95"
+        className="absolute -end-32 -top-32 h-80 w-80 rounded-full bg-accent/15 blur-[110px] float-slow"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"
       />
       <span
         aria-hidden

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, GraduationCap, Sparkles } from "lucide-react";
+import { Search, GraduationCap, Sparkles, ArrowRight } from "lucide-react";
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
@@ -34,7 +34,7 @@ export function HomeHero() {
 
   return (
     <section className="relative isolate overflow-hidden border-b border-border bg-background">
-      {/* Subtle background: dotted grid + accent hairline at top */}
+      {/* Backgrounds: dotted grid + accent hairline + editorial corner tick */}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 bg-dots opacity-70 [mask-image:radial-gradient(80%_60%_at_50%_0%,black,transparent_80%)]"
@@ -46,23 +46,35 @@ export function HomeHero() {
         {/* LEFT — Copy + search + dual toggle */}
         <div className="lg:col-span-7 xl:col-span-7">
           {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[12px] font-medium text-ink-2">
+          <div
+            className="anim-fade-up inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[12px] font-medium text-ink-2"
+            style={{ animationDelay: "0ms" }}
+          >
             <span className="ink-rule" />
             La marketplace de l'apprentissage
           </div>
 
           {/* Headline */}
-          <h1 className="mt-6 text-[38px] font-bold leading-[1.02] tracking-[-0.02em] text-foreground sm:text-[46px] md:text-[54px] lg:text-[60px] xl:text-[68px] text-balance">
+          <h1
+            className="anim-fade-up mt-6 text-[38px] font-bold leading-[1.02] tracking-[-0.02em] text-foreground sm:text-[46px] md:text-[54px] lg:text-[60px] xl:text-[68px] text-balance"
+            style={{ animationDelay: "80ms" }}
+          >
             Apprenez ce qui vous fait avancer,{" "}
             <span className="relative inline-block">
               <span className="relative z-10">avec des enseignants</span>
-              <span aria-hidden className="absolute inset-x-0 bottom-1 -z-0 h-[10px] bg-accent-soft" />
+              <span
+                aria-hidden
+                className="anim-underline absolute inset-x-0 bottom-1 -z-0 h-[10px] bg-accent-soft"
+              />
             </span>{" "}
             qui s'engagent.
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-5 max-w-2xl text-[15.5px] leading-relaxed text-ink-2 md:text-[17px]">
+          <p
+            className="anim-fade-up mt-5 max-w-2xl text-[15.5px] leading-relaxed text-ink-2 md:text-[17px]"
+            style={{ animationDelay: "180ms" }}
+          >
             Trouvez un cours particulier, une cohorte en ligne ou un atelier en direct. Payez en sécurité,
             réservez sans engagement, et changez de professeur si nécessaire.
           </p>
@@ -71,7 +83,8 @@ export function HomeHero() {
           <div
             role="tablist"
             aria-label="Vous voulez apprendre ou enseigner ?"
-            className="mt-8 inline-flex rounded-[var(--radius-md)] border border-border bg-surface p-1"
+            className="anim-fade-up mt-8 inline-flex rounded-[var(--radius-md)] border border-border bg-surface p-1"
+            style={{ animationDelay: "260ms" }}
           >
             <button
               type="button"
@@ -79,7 +92,7 @@ export function HomeHero() {
               aria-selected={mode === "learn"}
               onClick={() => setMode("learn")}
               className={cn(
-                "inline-flex items-center gap-2 rounded-[var(--radius-xs)] px-3.5 py-2 text-[13.5px] font-medium transition-all duration-150",
+                "inline-flex h-10 items-center gap-2 rounded-[var(--radius-xs)] px-4 text-[13.5px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus",
                 mode === "learn"
                   ? "bg-background text-foreground shadow-e1"
                   : "text-ink-2 hover:text-foreground",
@@ -94,7 +107,7 @@ export function HomeHero() {
               aria-selected={mode === "teach"}
               onClick={() => setMode("teach")}
               className={cn(
-                "inline-flex items-center gap-2 rounded-[var(--radius-xs)] px-3.5 py-2 text-[13.5px] font-medium transition-all duration-150",
+                "inline-flex h-10 items-center gap-2 rounded-[var(--radius-xs)] px-4 text-[13.5px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus",
                 mode === "teach"
                   ? "bg-background text-foreground shadow-e1"
                   : "text-ink-2 hover:text-foreground",
@@ -111,7 +124,8 @@ export function HomeHero() {
               <form
                 onSubmit={onSubmit}
                 aria-label="Rechercher un cours ou un professeur"
-                className="mt-4 flex items-stretch gap-2 rounded-[var(--radius-lg)] border border-border-strong bg-card p-1.5 shadow-e1 transition-shadow focus-within:shadow-e2 focus-within:border-accent max-w-2xl"
+                className="anim-fade-up mt-4 flex items-stretch gap-2 rounded-[var(--radius-lg)] border border-border-strong bg-card p-1.5 shadow-e1 transition-all duration-300 focus-within:border-accent focus-within:shadow-e2 max-w-2xl"
+                style={{ animationDelay: "340ms" }}
               >
                 <span className="ms-2 grid h-11 w-9 place-items-center text-ink-3">
                   <Search className="h-[18px] w-[18px]" aria-hidden />
@@ -125,20 +139,28 @@ export function HomeHero() {
                 />
                 <button
                   type="submit"
-                  className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] bg-accent px-4 text-[14px] font-semibold text-accent-foreground transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus"
+                  className="group inline-flex h-11 items-center gap-1.5 rounded-[var(--radius-xs)] bg-accent px-4 text-[14px] font-semibold text-accent-foreground transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus"
                 >
                   Rechercher
+                  <ArrowRight
+                    className="h-3.5 w-3.5 rtl-flip transition-transform duration-300 group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
                 </button>
               </form>
 
               {/* Popular chips */}
-              <div className="mt-4 flex flex-wrap items-center gap-1.5">
+              <div
+                className="anim-fade-up mt-4 flex flex-wrap items-center gap-1.5"
+                style={{ animationDelay: "420ms" }}
+              >
                 <span className="text-[12px] font-medium text-ink-3 me-1">Populaire :</span>
-                {POPULAR.map((p) => (
+                {POPULAR.map((p, i) => (
                   <Link
                     key={p.q}
                     href={`/browse?q=${encodeURIComponent(p.q)}` as never}
-                    className="rounded-full border border-border bg-background px-3 py-1 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-accent hover:bg-accent-soft/60 hover:text-accent"
+                    className="rounded-full border border-border bg-background px-3 py-1 text-[12.5px] font-medium text-ink-2 transition-all duration-200 hover:-translate-y-[1px] hover:border-accent hover:bg-accent-soft/60 hover:text-accent focus-visible:outline-none focus-visible:shadow-focus"
+                    style={{ animationDelay: `${460 + i * 40}ms` }}
                   >
                     {p.label}
                   </Link>
@@ -146,7 +168,10 @@ export function HomeHero() {
               </div>
             </>
           ) : (
-            <div className="mt-4 max-w-2xl rounded-[var(--radius-lg)] border border-border-strong bg-card p-6 shadow-e1">
+            <div
+              className="anim-fade-up mt-4 max-w-2xl rounded-[var(--radius-lg)] border border-border-strong bg-card p-6 shadow-e1"
+              style={{ animationDelay: "340ms" }}
+            >
               <p className="text-[15px] leading-relaxed text-ink-2">
                 Publiez vos cours en 10 minutes. Recevez des demandes d'élèves. Gérez réservations et
                 paiements depuis un seul tableau de bord.
@@ -154,13 +179,17 @@ export function HomeHero() {
               <div className="mt-5 flex flex-wrap gap-2">
                 <Link
                   href={routes.teachLanding()}
-                  className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"
+                  className="group inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:shadow-focus"
                 >
                   Devenir enseignant
+                  <ArrowRight
+                    className="h-3.5 w-3.5 rtl-flip transition-transform duration-300 group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
                 </Link>
                 <Link
                   href={routes.teachPricing()}
-                  className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] border border-border bg-background px-5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong hover:bg-surface"
+                  className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] border border-border bg-background px-5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-none focus-visible:shadow-focus"
                 >
                   Voir les tarifs
                 </Link>
@@ -181,9 +210,12 @@ export function HomeHero() {
 /** Editorial brand illustration — geometric, no stock, no gradient orbs. */
 function HeroBrandMark() {
   return (
-    <div className="relative aspect-square w-full max-w-[520px]">
+    <div
+      className="anim-fade-up relative aspect-square w-full max-w-[520px]"
+      style={{ animationDelay: "260ms", animationDuration: "900ms" }}
+    >
       {/* Base surface tile */}
-      <div className="absolute inset-0 rounded-[var(--radius-xl)] border border-border bg-surface" />
+      <div className="absolute inset-0 rounded-[var(--radius-xl)] border border-border bg-surface shadow-e1" />
       {/* Grid pattern inside */}
       <div className="absolute inset-6 rounded-[var(--radius-lg)] bg-grid-sm opacity-60" />
       {/* Editorial corner mark */}
@@ -198,7 +230,10 @@ function HeroBrandMark() {
         <p className="font-mono text-[13px] uppercase tracking-widest text-ink-3">
           À vous de jouer
         </p>
-        <p className="mt-3 text-[92px] font-black leading-none tracking-tighter text-foreground/85">
+        <p
+          className="anim-count-in mt-3 text-[92px] font-black leading-none tracking-tighter text-foreground/90"
+          style={{ animationDelay: "480ms" }}
+        >
           01
         </p>
         <p className="mt-3 max-w-[320px] mx-auto text-[13px] leading-relaxed text-ink-2">
@@ -209,7 +244,7 @@ function HeroBrandMark() {
       <div className="absolute inset-x-6 bottom-6 flex items-center gap-3">
         <span className="h-8 w-8 rounded-[var(--radius-xs)] bg-primary" />
         <span className="h-2 flex-1 rounded-full bg-border" />
-        <span className="h-2 w-8 rounded-full bg-accent" />
+        <span className="h-2 w-8 rounded-full bg-accent float-slow" />
       </div>
     </div>
   );

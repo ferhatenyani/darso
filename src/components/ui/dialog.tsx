@@ -46,8 +46,9 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close
         className={cn(
-          "absolute end-4 top-4 inline-flex h-8 w-8 items-center justify-center",
-          "rounded-[var(--radius-xs)] text-ink-3 hover:bg-surface hover:text-ink-2 focus-visible:outline-none",
+          "absolute end-4 top-4 inline-flex h-9 w-9 items-center justify-center",
+          "rounded-[var(--radius-xs)] text-ink-3 transition-colors hover:bg-surface hover:text-ink-2",
+          "focus-visible:outline-none focus-visible:shadow-focus",
         )}
       >
         <X className="h-4 w-4" />

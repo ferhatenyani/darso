@@ -418,11 +418,82 @@
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
+  @keyframes marquee-x-r {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
   .animate-marquee {
     animation: marquee-x 28s linear infinite;
   }
-  html[dir="rtl"] .animate-marquee {
+  .animate-marquee-r {
+    animation: marquee-x-r 28s linear infinite;
+  }
+  html[dir="rtl"] .animate-marquee,
+  html[dir="rtl"] .animate-marquee-r {
     animation-direction: reverse;
+  }
+
+  /* Section entrance — hover / focus polish */
+  @keyframes shimmer-line {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .shimmer-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(47, 111, 235, 0.35), transparent);
+    transform: translateX(-100%);
+    animation: shimmer-line 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(0, -6px, 0); }
+  }
+  .float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  @keyframes accent-underline-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  .anim-underline {
+    transform-origin: 0 50%;
+    animation: accent-underline-grow 900ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+  html[dir="rtl"] .anim-underline {
+    transform-origin: 100% 50%;
+  }
+
+  @keyframes fade-up-in {
+    from { opacity: 0; transform: translate3d(0, 12px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .anim-fade-up {
+    animation: fade-up-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes count-in {
+    from { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.96); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  }
+  .anim-count-in {
+    animation: count-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer-line::after,
+    .float-slow,
+    .anim-underline,
+    .anim-fade-up,
+    .anim-count-in {
+      animation: none !important;
+    }
+    .anim-underline { transform: scaleX(1); }
+    .anim-fade-up { opacity: 1; transform: none; }
+    .anim-count-in { opacity: 1; transform: none; }
   }
 
   /* Editorial accents */

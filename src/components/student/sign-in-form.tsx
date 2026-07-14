@@ -2,7 +2,7 @@
 
 import { useState, useTransition, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Mail, Lock, AlertCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/brand/logo";
@@ -16,11 +16,6 @@ import { demoAccounts } from "@/lib/mock/students";
 import { signInWithAccountId, signInWithEmail } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-/**
- * Map the public demo-account entries (which carry email + role) to the
- * mock auth account ids. The Lina / Khalil rows are the in-catalog demos;
- * any agency entry is filtered out as part of the agency rip.
- */
 const DEMO_ACCOUNT_MAP: Record<string, string> = {
   "demo-student": "acc-lina",
   "demo-teacher": "acc-khalil",
@@ -35,11 +30,11 @@ export function SignInForm({ next }: { next?: string }) {
   const Back = locale === "ar" ? ArrowRight : ArrowLeft;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  // Only show the in-catalog demos — drops `demo-agency` per agency RIP.
   const visibleDemos = demoAccounts.filter((d) => DEMO_ACCOUNT_MAP[d.id]);
 
   function handleSubmit(e: FormEvent) {
@@ -47,7 +42,6 @@ export function SignInForm({ next }: { next?: string }) {
     setError(null);
     startTransition(async () => {
       const result = await signInWithEmail(email, next);
-      // server action redirects on success; only returns on error
       if (result && result.ok === false) {
         setError(t("errorUnknownEmail"));
       }
@@ -68,12 +62,15 @@ export function SignInForm({ next }: { next?: string }) {
     <div className="relative flex min-h-dvh flex-col bg-background">
       {/* Top bar: logo + back */}
       <header className="flex items-center justify-between border-b border-border px-6 py-5 md:px-12">
-        <Link href="/" className="inline-flex items-center">
+        <Link
+          href="/"
+          className="inline-flex items-center transition-transform hover:-translate-y-[0.5px] focus-visible:outline-none focus-visible:shadow-focus focus-visible:rounded-[var(--radius-xs)]"
+        >
           <Logo />
         </Link>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-foreground"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus focus-visible:rounded-[var(--radius-xs)]"
         >
           <Back className="h-4 w-4" />
           {tCommon("back")}
@@ -83,18 +80,32 @@ export function SignInForm({ next }: { next?: string }) {
       <div className="flex flex-1 items-start justify-center overflow-y-auto px-6 py-10 md:px-12 md:py-14">
         <div className="w-full max-w-md">
           {/* Editorial header */}
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+          <p
+            className="anim-fade-up text-[10px] font-semibold uppercase tracking-[0.22em] text-accent"
+            style={{ animationDelay: "0ms" }}
+          >
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 text-[34px] font-bold leading-[1.05] tracking-tight text-foreground md:text-[40px]">
+          <h1
+            className="anim-fade-up mt-3 text-[34px] font-bold leading-[1.05] tracking-tight text-foreground md:text-[40px]"
+            style={{ animationDelay: "90ms" }}
+          >
             <span className="block">{t("title")}</span>
           </h1>
-          <p className="mt-3 text-[14.5px] leading-relaxed text-ink-2 text-pretty">
+          <p
+            className="anim-fade-up mt-3 text-[14.5px] leading-relaxed text-ink-2 text-pretty"
+            style={{ animationDelay: "180ms" }}
+          >
             {t("subtitle")}
           </p>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="mt-8 grid gap-5" noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className="anim-fade-up mt-8 grid gap-5"
+            style={{ animationDelay: "260ms" }}
+            noValidate
+          >
             <div className="grid gap-2">
               <Label htmlFor="email">{t("email")}</Label>
               <div className="relative">
@@ -124,7 +135,10 @@ export function SignInForm({ next }: { next?: string }) {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password")}</Label>
-                <Link href={"/forgot" as never} className="text-[12.5px] font-medium text-accent hover:underline">
+                <Link
+                  href={"/forgot" as never}
+                  className="text-[12.5px] font-medium text-accent hover:underline focus-visible:outline-none focus-visible:shadow-focus focus-visible:rounded-[var(--radius-xs)]"
+                >
                   {t("forgot")}
                 </Link>
               </div>
@@ -136,14 +150,23 @@ export function SignInForm({ next }: { next?: string }) {
                 />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPw ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   placeholder={t("passwordPlaceholder")}
-                  className="ps-9"
+                  className="ps-9 pe-11"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  aria-label={showPw ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  aria-pressed={showPw}
+                  onClick={() => setShowPw((v) => !v)}
+                  className="absolute end-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-[var(--radius-xs)] text-ink-3 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus"
+                >
+                  {showPw ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
+                </button>
               </div>
             </div>
 
@@ -161,7 +184,7 @@ export function SignInForm({ next }: { next?: string }) {
             {error && (
               <p
                 role="alert"
-                className="flex items-start gap-2 rounded-[var(--radius-md)] border border-danger/30 bg-danger/[0.06] px-3 py-2.5 text-[12.5px] text-danger"
+                className="anim-fade-up flex items-start gap-2 rounded-[var(--radius-md)] border border-danger/30 bg-danger/[0.06] px-3 py-2.5 text-[12.5px] text-danger"
               >
                 <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
                 <span>{error}</span>
@@ -170,21 +193,25 @@ export function SignInForm({ next }: { next?: string }) {
 
             <Button type="submit" size="lg" disabled={pending} className="w-full">
               {pending ? tCommon("loading") : t("submit")}
-              {!pending && <Arrow className="h-4 w-4" />}
+              {!pending && <Arrow className="h-4 w-4 rtl-flip" />}
             </Button>
           </form>
 
           {/* Divider */}
-          <div className="my-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-ink-3">
+          <div
+            className="anim-fade-up my-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-ink-3"
+            style={{ animationDelay: "340ms" }}
+          >
             <Separator className="flex-1" />
             <span>{tCommon("or")}</span>
             <Separator className="flex-1" />
           </div>
 
-          {/* Demo accounts — a real darso pattern */}
+          {/* Demo accounts */}
           <section
             aria-labelledby="demo-heading"
-            className="rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-surface/60 p-4"
+            className="anim-fade-up rounded-[var(--radius-lg)] border border-dashed border-border-strong bg-surface/60 p-4"
+            style={{ animationDelay: "420ms" }}
           >
             <div className="mb-3 flex items-baseline justify-between">
               <h2 id="demo-heading" className="text-[13px] font-semibold text-foreground">
@@ -204,11 +231,15 @@ export function SignInForm({ next }: { next?: string }) {
                       onClick={() => signInAs(accountId)}
                       disabled={pending}
                       className={cn(
-                        "group flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-border bg-card p-2.5 text-start transition-all",
-                        "hover:border-accent hover:shadow-e1 disabled:opacity-60",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                        "group relative flex w-full items-center gap-3 overflow-hidden rounded-[var(--radius-md)] border border-border bg-card p-2.5 text-start transition-all duration-300",
+                        "hover:-translate-y-[1px] hover:border-accent hover:shadow-e2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0",
+                        "focus-visible:outline-none focus-visible:shadow-focus",
                       )}
                     >
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-2.5 top-0 h-[2px] origin-left scale-x-0 rounded-full bg-accent transition-transform duration-500 group-hover:scale-x-100"
+                      />
                       <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-3 tabular">
                         № {String(i + 1).padStart(2, "0")}
                       </span>
@@ -223,7 +254,7 @@ export function SignInForm({ next }: { next?: string }) {
                         </p>
                         <p className="truncate text-[11.5px] text-ink-3">{a.hint[lang]}</p>
                       </div>
-                      <Arrow className="h-4 w-4 text-ink-3 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                      <Arrow className="h-4 w-4 text-ink-3 transition-all duration-300 group-hover:text-accent group-hover:translate-x-0.5 rtl-flip" />
                     </button>
                   </li>
                 );
@@ -232,13 +263,24 @@ export function SignInForm({ next }: { next?: string }) {
           </section>
 
           {/* Footer */}
-          <p className="mt-8 text-[13px] text-ink-2">
+          <p
+            className="anim-fade-up mt-8 text-[13px] text-ink-2"
+            style={{ animationDelay: "500ms" }}
+          >
             {t("noAccount")}{" "}
-            <Link href="/sign-up" className="font-semibold text-accent hover:underline">
+            <Link
+              href="/sign-up"
+              className="font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:shadow-focus focus-visible:rounded-[var(--radius-xs)]"
+            >
               {t("createAccount")}
             </Link>
           </p>
-          <p className="mt-4 text-[11.5px] leading-relaxed text-ink-3">{t("footerLegal")}</p>
+          <p
+            className="anim-fade-up mt-4 text-[11.5px] leading-relaxed text-ink-3"
+            style={{ animationDelay: "560ms" }}
+          >
+            {t("footerLegal")}
+          </p>
         </div>
       </div>
     </div>

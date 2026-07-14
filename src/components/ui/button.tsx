@@ -11,7 +11,7 @@ const buttonVariants = cva(
     "rounded-[var(--radius-xs)] font-medium",
     "transition-[background,color,box-shadow,border-color,transform] duration-[180ms] ease-out",
     "disabled:pointer-events-none disabled:opacity-50",
-    "focus-visible:outline-none",
+    "focus-visible:outline-none focus-visible:shadow-focus",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
   ].join(" "),
   {
