@@ -22,12 +22,15 @@ const COMPACT_RATIO_THRESHOLD = 1.15;
  *   2. Passes a stable `layout` inputProp so scenes can re-lay out for wide vs.
  *      compact container aspect ratios.
  *
- * numberOfSharedAudioTags={0}: the composition has zero audio content, so we
- * tell the Player to skip pre-mounting its shared <audio> pool. That pool
- * creates an AudioContext on mount, which Chrome blocks on refresh (no fresh
- * user gesture), gating the render loop. Setting to 0 avoids AudioContext
- * entirely — Player boots and plays unconditionally, first load and refresh
- * alike. Bump back to the default (5) if you ever add <Audio>/<Video>.
+ * Audio suppression (composition has zero audio content):
+ *   - numberOfSharedAudioTags={0}: skip the shared <audio> tag pool.
+ *   - initiallyMuted={true}: this is what actually gates AudioContext
+ *     creation. Remotion's shouldCreateAudioContext =
+ *       audioEnabled && !playerMuted && mediaVolume > 0
+ *     so as long as the player boots muted, no AudioContext is instantiated,
+ *     and Chrome's autoplay policy has nothing to gate the render loop on.
+ *   Both together mirror Remotion's own thumbnail preview pattern. Bump back
+ *   to defaults (5 tags, unmuted) if you ever add <Audio>/<Video>.
  */
 export function HeroVideoPlayer() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -90,6 +93,7 @@ export function HeroVideoPlayer() {
         compositionWidth={HERO_WIDTH}
         compositionHeight={HERO_HEIGHT}
         numberOfSharedAudioTags={0}
+        initiallyMuted
         inputProps={inputProps}
         style={style}
         loop
