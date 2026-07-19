@@ -131,14 +131,14 @@ function HeroCard() {
       ref={wrapperRef}
       className="relative w-full h-[calc(100dvh-160px)] min-h-[380px] max-h-[500px] sm:min-h-[440px] sm:max-h-[600px] md:h-[calc(100dvh-220px)] lg:max-h-[680px]"
     >
-        {/* Dark container — the Remotion composition is the background. */}
+        {/* Light container — the Remotion composition provides the motion. */}
         <div
           ref={shapeRef}
-          className="absolute inset-0 overflow-hidden bg-[#0E1116]"
+          className="absolute inset-0 overflow-hidden bg-[#F7F7F5]"
           style={{
             borderRadius: CORNER_R,
             filter:
-              "drop-shadow(0 30px 60px rgba(10, 11, 14, 0.18)) drop-shadow(0 8px 16px rgba(10, 11, 14, 0.08))",
+              "drop-shadow(0 30px 60px rgba(10, 11, 14, 0.14)) drop-shadow(0 8px 16px rgba(10, 11, 14, 0.06))",
           }}
         >
           <div className="absolute inset-0">

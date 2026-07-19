@@ -5,13 +5,9 @@ import {
   HERO_FPS,
   HERO_HEIGHT,
   HERO_WIDTH,
+  type HeroLayout,
 } from "./HeroComposition";
 
-/**
- * Remotion Studio / render entry.
- * Reachable via `npx remotion studio src/remotion/index.ts`
- * or `npx remotion render Hero out/hero.mp4`.
- */
 export const RemotionRoot: React.FC = () => (
   <>
     <Composition
@@ -21,6 +17,7 @@ export const RemotionRoot: React.FC = () => (
       fps={HERO_FPS}
       width={HERO_WIDTH}
       height={HERO_HEIGHT}
+      defaultProps={{ layout: "wide" as HeroLayout }}
     />
   </>
 );
