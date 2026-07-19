@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   AbsoluteFill,
   interpolate,
@@ -8,65 +8,52 @@ import {
 } from "remotion";
 
 /* --------------------------------------------------------------------------
- * Darso — Hero composition · "The Value Loop" (v5)
+ * Darso — Hero composition · "The Value Loop" (v6, illustration-driven)
  *
- * 780 frames · 26s @ 30fps · seamless loop
- *   1 · Browse            (0–135)   iPhone 16 Pro, typing search, dropdown
- *   2 · Cards             (135–285) 5-lesson deck deals in, holds, drops out
- *   3 · Calendar          (285–405) weekly (wide) or 3-day rolling (compact)
- *   4 · Vase              (405–585) fills amber to 90%, then blue top 10%,
- *                                   labelled arrows explain the split
- *   5 · Faces             (585–690) two minimalist silhouettes + sine link
- *   6 · Dark finale       (690–780) black canvas, Caveat wordmark, CTA hold
+ * 750 frames · 25s @ 30fps · seamless loop
+ *   1 · Rafiki browse         (0–120)   woman browsing courses, Sofia card
+ *   2 · Painting course       (120–225) man teaching, screen pulse
+ *   3 · 1-1 sessions          (225–330) two figures at a desk, focused study
+ *   4 · Plan your week        (330–435) two figures + calendar, planning
+ *   5 · Scale to agency       (435–540) partnership scene, puzzle click
+ *   6 · Fair-share vase       (540–675) amber 90% + blue top 10% + arrows
+ *   7 · Dark finale           (675–750) Caveat wordmark, CTA, fade back
  * -------------------------------------------------------------------------- */
 
 export const HERO_WIDTH = 1600;
 export const HERO_HEIGHT = 1000;
 export const HERO_FPS = 30;
-export const HERO_DURATION = 810;
+export const HERO_DURATION = 750;
 export type HeroLayout = "wide" | "compact";
 
 /* ---------- Palette ---------- */
 
 const BG = "#F7F7F5";
 const SURFACE = "#FFFFFF";
-const SURFACE_2 = "#F1F1EC";
-const HAIRLINE = "rgba(14, 17, 22, 0.09)";
 const INK = "#0E1116";
 const INK_2 = "#5A6070";
-const INK_3 = "#8F949E";
 const INK_BLACK = "#111111";
 
 const COOL = "#4E88F5";
 const COOL_2 = "#2F6FEB";
-const COOL_SOFT = "rgba(47, 111, 235, 0.14)";
 
 const WARM = "#F0A014";
 const WARM_2 = "#D48604";
-const WARM_SOFT = "rgba(240, 160, 20, 0.18)";
-const WARM_GHOST = "rgba(240, 160, 20, 0.15)";
 
-const PLATFORM = "#8C7A4A";
+/* Springs */
+const ELASTIC_SOFT = { damping: 14, stiffness: 110, mass: 0.9 } as const;
+const POP = { damping: 12, stiffness: 170, mass: 0.9 } as const;
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-/* ---------- Springs (elastic, generous overshoot) ---------- */
-
-const ELASTIC = { damping: 10, stiffness: 140, mass: 0.9 } as const;
-const ELASTIC_SOFT = { damping: 14, stiffness: 110, mass: 0.9 } as const;
-const SETTLE = { damping: 22, stiffness: 100 } as const;
-const POP = { damping: 12, stiffness: 170, mass: 0.9 } as const;
-/** Smoother-than-ELASTIC arrival with just enough overshoot to feel alive. */
-const SMOOTH_ENTRY = { damping: 18, stiffness: 90, mass: 1 } as const;
-
-/* ---------- Scene windows ---------- */
-
-const S1 = { start: 0, end: 150 };
-const S2 = { start: 150, end: 300 };
-const S3 = { start: 300, end: 420 };
-const S4 = { start: 420, end: 615 };
-const S5 = { start: 615, end: 720 };
-const S6 = { start: 720, end: 810 };
+/* Scene windows */
+const S1 = { start: 0, end: 120 };
+const S2 = { start: 120, end: 225 };
+const S3 = { start: 225, end: 330 };
+const S4 = { start: 330, end: 435 };
+const S5 = { start: 435, end: 540 };
+const S6 = { start: 540, end: 675 };
+const S7 = { start: 675, end: 750 };
 const FADE = 14;
 
 function sceneOpacity(frame: number, start: number, end: number, fade = FADE) {
@@ -81,7 +68,16 @@ function sceneOpacity(frame: number, start: number, end: number, fade = FADE) {
   return Math.min(enter, exit);
 }
 
-/* ---------- Root ---------- */
+/* Storyset asset paths */
+const SVG_RAFIKI = "/svgs/Video tutorial-rafiki.svg";
+const SVG_PAINTING = "/svgs/Video tutorial-pana.svg";
+const SVG_STUDYING = "/svgs/Kids Studying from Home-bro.svg";
+const SVG_EVENTS = "/svgs/Events-pana.svg";
+const SVG_PARTNERSHIP = "/svgs/Partnership-pana.svg";
+
+/* --------------------------------------------------------------------------
+ * Root
+ * -------------------------------------------------------------------------- */
 
 export const HeroComposition: React.FC<{ layout?: HeroLayout }> = ({
   layout = "wide",
@@ -101,41 +97,51 @@ export const HeroComposition: React.FC<{ layout?: HeroLayout }> = ({
       <PaperGrain />
       {frame < S1.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S1.start, S1.end) }}>
-          <SceneBrowse localFrame={frame - S1.start} layout={layout} />
+          <SceneRafikiBrowse localFrame={frame - S1.start} layout={layout} />
         </AbsoluteFill>
       )}
       {frame > S2.start - FADE && frame < S2.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S2.start, S2.end) }}>
-          <SceneCards localFrame={frame - S2.start} layout={layout} />
+          <ScenePainting localFrame={frame - S2.start} layout={layout} />
         </AbsoluteFill>
       )}
       {frame > S3.start - FADE && frame < S3.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S3.start, S3.end) }}>
-          <SceneCalendar localFrame={frame - S3.start} layout={layout} />
+          <SceneSessions localFrame={frame - S3.start} layout={layout} />
         </AbsoluteFill>
       )}
       {frame > S4.start - FADE && frame < S4.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S4.start, S4.end) }}>
-          <SceneVase localFrame={frame - S4.start} layout={layout} />
+          <SceneCalendarPlanning
+            localFrame={frame - S4.start}
+            layout={layout}
+          />
         </AbsoluteFill>
       )}
       {frame > S5.start - FADE && frame < S5.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S5.start, S5.end) }}>
-          <SceneHandshake localFrame={frame - S5.start} layout={layout} />
+          <ScenePartnership localFrame={frame - S5.start} layout={layout} />
         </AbsoluteFill>
       )}
-      {frame > S6.start - FADE && (
+      {frame > S6.start - FADE && frame < S6.end + FADE && (
+        <AbsoluteFill style={{ opacity: sceneOpacity(frame, S6.start, S6.end) }}>
+          <SceneVase localFrame={frame - S6.start} layout={layout} />
+        </AbsoluteFill>
+      )}
+      {frame > S7.start - FADE && (
         <AbsoluteFill
-          style={{ opacity: sceneOpacity(frame, S6.start, S6.end, 8) }}
+          style={{ opacity: sceneOpacity(frame, S7.start, S7.end, 6) }}
         >
-          <SceneDarkFinale localFrame={frame - S6.start} layout={layout} />
+          <SceneDarkFinale localFrame={frame - S7.start} layout={layout} />
         </AbsoluteFill>
       )}
     </AbsoluteFill>
   );
 };
 
-/* ---------- Paper grain (below scenes) ---------- */
+/* --------------------------------------------------------------------------
+ * Paper grain — subtle, sits above the base bg and below scene content
+ * -------------------------------------------------------------------------- */
 
 const PaperGrain: React.FC = () => (
   <svg
@@ -146,13 +152,18 @@ const PaperGrain: React.FC = () => (
       height: "100%",
       pointerEvents: "none",
       mixBlendMode: "multiply",
-      opacity: 0.55,
+      opacity: 0.3,
     }}
     aria-hidden
   >
     <defs>
       <filter id="paperNoise" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" />
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.9"
+          numOctaves="2"
+          seed="7"
+        />
         <feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0.10 0" />
       </filter>
     </defs>
@@ -160,1299 +171,603 @@ const PaperGrain: React.FC = () => (
   </svg>
 );
 
-/* ---------- Hand-inked primitives ---------- */
+/* --------------------------------------------------------------------------
+ * StorysetSvg — loads a Storyset SVG via fetch, injects it inline, then
+ * addresses named `<g id="...">` layers each frame with inline styles.
+ * -------------------------------------------------------------------------- */
 
-const InkedRect: React.FC<{
-  width: number;
-  height: number;
-  radius?: number;
-  fill?: string;
-  stroke?: string;
-  strokeMid?: number;
-  strokeCorner?: number;
-  overshoot?: number;
-  shadow?: string;
+type LayerStyles = {
+  transform?: string;
+  transformOrigin?: string;
+  opacity?: string | number;
+};
+
+const svgCache: Record<string, string> = {};
+
+const StorysetSvg: React.FC<{
+  src: string;
+  animations?: Record<string, LayerStyles>;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+}> = ({ src, animations, style, children }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [svgText, setSvgText] = useState<string | null>(svgCache[src] ?? null);
+
+  useEffect(() => {
+    if (svgCache[src]) {
+      setSvgText(svgCache[src]);
+      return;
+    }
+    let cancelled = false;
+    fetch(src)
+      .then((r) => r.text())
+      .then((text) => {
+        svgCache[src] = text;
+        if (!cancelled) setSvgText(text);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [src]);
+
+  useLayoutEffect(() => {
+    if (!animations || !containerRef.current) return;
+    const root = containerRef.current;
+    Object.entries(animations).forEach(([id, styles]) => {
+      const el = root.querySelector<SVGGElement>(`[id="${id}"]`);
+      if (!el) return;
+      if (styles.transform !== undefined) el.style.transform = styles.transform;
+      if (styles.transformOrigin !== undefined)
+        el.style.transformOrigin = styles.transformOrigin;
+      if (styles.opacity !== undefined)
+        el.style.opacity = String(styles.opacity);
+    });
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        ...style,
+      }}
+    >
+      {svgText && (
+        <div
+          style={{ width: "100%", height: "100%" }}
+          dangerouslySetInnerHTML={{ __html: svgText }}
+        />
+      )}
+      {children}
+    </div>
+  );
+};
+
+/* --------------------------------------------------------------------------
+ * Reusable copy block that sits at the top of each illustrated scene
+ * -------------------------------------------------------------------------- */
+
+const SceneCopy: React.FC<{
+  eyebrow: string;
+  main: string;
+  localFrame: number;
+  layout: HeroLayout;
+  eyebrowAt?: [number, number];
+  mainAt?: [number, number];
 }> = ({
-  width,
-  height,
-  radius = 26,
-  fill = SURFACE,
-  stroke = INK,
-  strokeMid = 1.7,
-  strokeCorner = 2.5,
-  overshoot = 3,
-  shadow,
-}) => {
-  const w = width;
-  const h = height;
-  const r = Math.min(radius, w / 2, h / 2);
-  const o = overshoot;
-  const body = `M ${r} 0 L ${w - r} 0 Q ${w} 0 ${w} ${r} L ${w} ${h - r} Q ${w} ${h} ${w - r} ${h} L ${r} ${h} Q 0 ${h} 0 ${h - r} L 0 ${r} Q 0 0 ${r} 0 Z`;
-  return (
-    <svg
-      viewBox={`${-6} ${-6} ${w + 12} ${h + 12}`}
-      width={w}
-      height={h}
-      style={{ overflow: "visible", filter: shadow ? `drop-shadow(${shadow})` : undefined }}
-    >
-      <path d={body} fill={fill} />
-      <path d={`M ${r - o} 0 L ${w - r + o} 0`} stroke={stroke} strokeWidth={strokeMid} strokeLinecap="round" fill="none" />
-      <path d={`M ${w} ${r - o} L ${w} ${h - r + o}`} stroke={stroke} strokeWidth={strokeMid} strokeLinecap="round" fill="none" />
-      <path d={`M ${w - r + o} ${h} L ${r - o} ${h}`} stroke={stroke} strokeWidth={strokeMid} strokeLinecap="round" fill="none" />
-      <path d={`M 0 ${h - r + o} L 0 ${r - o}`} stroke={stroke} strokeWidth={strokeMid} strokeLinecap="round" fill="none" />
-      <path d={`M ${r} 0 Q 0 0 0 ${r}`} stroke={stroke} strokeWidth={strokeCorner} strokeLinecap="round" fill="none" />
-      <path d={`M ${w - r} 0 Q ${w} 0 ${w} ${r}`} stroke={stroke} strokeWidth={strokeCorner} strokeLinecap="round" fill="none" />
-      <path d={`M ${w} ${h - r} Q ${w} ${h} ${w - r} ${h}`} stroke={stroke} strokeWidth={strokeCorner} strokeLinecap="round" fill="none" />
-      <path d={`M ${r} ${h} Q 0 ${h} 0 ${h - r}`} stroke={stroke} strokeWidth={strokeCorner} strokeLinecap="round" fill="none" />
-    </svg>
-  );
-};
-
-const InkedCircle: React.FC<{
-  size: number;
-  fill?: string;
-  stroke?: string;
-  strokeWidth?: number;
-  shadow?: string;
-}> = ({ size, fill = SURFACE, stroke = INK, strokeWidth = 2.4, shadow }) => {
-  const r = size / 2;
-  return (
-    <svg
-      viewBox={`${-6} ${-6} ${size + 12} ${size + 12}`}
-      width={size}
-      height={size}
-      style={{ overflow: "visible", filter: shadow ? `drop-shadow(${shadow})` : undefined }}
-    >
-      <circle cx={r} cy={r} r={r} fill={fill} />
-      <path d={`M 0 ${r} A ${r} ${r - 0.5} 0 0 1 ${size} ${r}`} fill="none" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" />
-      <path d={`M ${size} ${r} A ${r - 0.4} ${r} 0 0 1 0 ${r}`} fill="none" stroke={stroke} strokeWidth={strokeWidth - 0.2} strokeLinecap="round" />
-    </svg>
-  );
-};
-
-/* ==========================================================================
- * Scene 1 · Browse — iPhone 16 Pro, typing search, dropdown, teacher card
- * ========================================================================== */
-
-const SEARCH_TARGET = "Cours de...";
-const SEARCH_SUGGESTIONS = [
-  "Cours de langues",
-  "Cours de piano",
-  "Cours de développement",
-];
-
-// Local frames (150 total). Card lands early so it can rest on screen ~45f.
-const T1_CURSOR_APPEARS = 30;
-const T1_TYPING_START = 48;
-const T1_TYPING_PER_CHAR = 3;
-const T1_TYPING_END = T1_TYPING_START + SEARCH_TARGET.length * T1_TYPING_PER_CHAR; // 48 + 33 = 81
-const T1_DROPDOWN_OPEN = 84;
-const T1_SELECT_LANGUES = 98;
-const T1_CARD_LANDS = 108;
-
-const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
+  eyebrow,
+  main,
   localFrame,
   layout,
+  eyebrowAt = [8, 28],
+  mainAt = [18, 38],
 }) => {
-  const { fps } = useVideoConfig();
-
-  const phoneIn = spring({ frame: localFrame, fps, config: ELASTIC_SOFT });
-  const phoneY = interpolate(phoneIn, [0, 1], [90, 0]);
-  const phoneScale = 0.9 + phoneIn * 0.1;
-
-  const headingIn = spring({ frame: localFrame - 10, fps, config: SETTLE });
-  const searchIn = spring({ frame: localFrame - 18, fps, config: SETTLE });
-
-  const cursorVisible = (() => {
-    if (localFrame < T1_CURSOR_APPEARS) return false;
-    if (localFrame < T1_TYPING_START) {
-      const t = localFrame - T1_CURSOR_APPEARS;
-      return t % 12 < 6;
-    }
-    return true;
-  })();
-
-  const typedCount = Math.max(
-    0,
-    Math.min(
-      SEARCH_TARGET.length,
-      Math.floor((localFrame - T1_TYPING_START) / T1_TYPING_PER_CHAR),
-    ),
-  );
-  const typedText = SEARCH_TARGET.slice(0, typedCount);
-  const showPlaceholder = typedCount === 0 && localFrame < T1_TYPING_START;
-
-  const dropdownOpen = spring({
-    frame: localFrame - T1_DROPDOWN_OPEN,
-    fps,
-    config: SETTLE,
+  const eIn = interpolate(localFrame, eyebrowAt, [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: (t) => cubicBezier(EASE_OUT, t),
   });
-  const dropdownFade = interpolate(
-    localFrame,
-    [T1_SELECT_LANGUES + 4, T1_SELECT_LANGUES + 18],
-    [1, 0],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-  );
-
-  const langHighlight = interpolate(
-    localFrame,
-    [T1_SELECT_LANGUES, T1_SELECT_LANGUES + 14],
-    [0, 1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-  );
-
-  const cardSpring = spring({
-    frame: localFrame - T1_CARD_LANDS,
-    fps,
-    config: ELASTIC_SOFT,
+  const mIn = interpolate(localFrame, mainAt, [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: (t) => cubicBezier(EASE_OUT, t),
   });
-  const cardY = interpolate(cardSpring, [0, 1], [180, 0]);
-  const cardScale = 0.94 + cardSpring * 0.06;
-  const pulse =
-    cardSpring > 0.5 ? 1 + Math.sin((localFrame - T1_CARD_LANDS) * 0.34) * 0.04 : 1;
-
-  // Narrower phone reduces visual weight and protects against vertical crop
-  // on short/wide desktop containers.
-  const phoneW = layout === "wide" ? 300 : 350;
-  const phoneH = layout === "wide" ? 520 : 600;
-  const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2;
-  const innerW = phoneW - 44;
 
   return (
     <div
       style={{
         position: "absolute",
-        left: cx,
-        top: cy,
-        width: phoneW,
-        height: phoneH,
-        transform: `translate(-50%, calc(-50% + ${phoneY}px)) scale(${phoneScale})`,
-        opacity: phoneIn,
+        left: "50%",
+        top: 130,
+        transform: "translate(-50%, 0)",
+        textAlign: "center",
+        width: layout === "wide" ? 960 : 700,
+        maxWidth: "92%",
+        padding: "0 24px",
+        boxSizing: "border-box",
       }}
     >
-      <IPhoneFrame width={phoneW} height={phoneH}>
-        {/* Heading row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            opacity: headingIn,
-            transform: `translateY(${(1 - headingIn) * 10}px)`,
-          }}
-        >
-          <div style={{ fontSize: 24, fontWeight: 700, color: INK, letterSpacing: "-0.02em" }}>
-            Explorer
-          </div>
-          <div style={{ position: "relative", width: 32, height: 32 }}>
-            <InkedCircle size={32} fill={SURFACE_2} strokeWidth={1.6} />
-            <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
-              <SearchGlyph size={13} color={INK_2} />
-            </div>
-          </div>
-        </div>
-
-        {/* Search input */}
-        <div
-          style={{
-            marginTop: 12,
-            opacity: searchIn,
-            transform: `translateY(${(1 - searchIn) * 10}px)`,
-            position: "relative",
-          }}
-        >
-          <InkedRect
-            width={innerW}
-            height={46}
-            radius={14}
-            fill={SURFACE_2}
-            strokeMid={1.1}
-            strokeCorner={1.6}
-            overshoot={2}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              padding: "0 16px",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <SearchGlyph size={14} color={INK_2} />
-            {showPlaceholder ? (
-              <span
-                style={{
-                  color: INK_3,
-                  fontSize: 13,
-                  letterSpacing: "-0.005em",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                Quel cours vous intéresse ?
-              </span>
-            ) : (
-              <span
-                style={{
-                  color: INK,
-                  fontSize: 13,
-                  letterSpacing: "-0.005em",
-                  fontWeight: 500,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {typedText}
-                {cursorVisible && (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 2,
-                      height: 16,
-                      background: INK,
-                      marginLeft: 1,
-                      verticalAlign: "middle",
-                    }}
-                  />
-                )}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Dropdown suggestions */}
-        {dropdownOpen > 0.01 && dropdownFade > 0.01 && (
-          <div
-            style={{
-              marginTop: 8,
-              position: "relative",
-              transformOrigin: "top",
-              transform: `scaleY(${dropdownOpen})`,
-              opacity: dropdownFade,
-            }}
-          >
-            <InkedRect
-              width={innerW}
-              height={124}
-              radius={16}
-              fill={SURFACE}
-              strokeMid={1.1}
-              strokeCorner={1.6}
-              overshoot={2}
-              shadow="0 10px 20px -12px rgba(14,17,22,0.14)"
-            />
-            <div style={{ position: "absolute", inset: 0, padding: 8 }}>
-              {SEARCH_SUGGESTIONS.map((s, i) => {
-                const rowIn = interpolate(
-                  localFrame,
-                  [T1_DROPDOWN_OPEN + i * 4, T1_DROPDOWN_OPEN + i * 4 + 10],
-                  [0, 1],
-                  { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-                );
-                const isSelected = i === 0 && langHighlight > 0;
-                return (
-                  <div
-                    key={s}
-                    style={{
-                      padding: "9px 14px",
-                      borderRadius: 10,
-                      background: isSelected
-                        ? `rgba(47, 111, 235, ${0.10 * langHighlight})`
-                        : "transparent",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      opacity: rowIn,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <SearchGlyph size={12} color={INK_3} />
-                    <span
-                      style={{
-                        fontSize: 12.5,
-                        color: isSelected ? COOL_2 : INK_2,
-                        fontWeight: isSelected ? 700 : 500,
-                        letterSpacing: "-0.005em",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {s}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* "Langues" persistent row — richer design: iconbadge + title + social-proof subtitle */}
-        {langHighlight > 0.05 && (
-          <div
-            style={{
-              marginTop: 12,
-              position: "relative",
-              opacity: langHighlight,
-              transform: `translateY(${(1 - langHighlight) * 8}px)`,
-              overflow: "hidden",
-            }}
-          >
-            <InkedRect
-              width={innerW}
-              height={72}
-              radius={16}
-              fill={COOL_SOFT}
-              stroke={COOL}
-              strokeMid={1.4}
-              strokeCorner={2}
-              overshoot={2}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                padding: "0 14px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                overflow: "hidden",
-              }}
-            >
-              {/* Icon inside a soft coloured disc — no way to overflow the row */}
-              <div
-                style={{
-                  position: "relative",
-                  width: 40,
-                  height: 40,
-                  flex: "0 0 40px",
-                }}
-              >
-                <InkedCircle
-                  size={40}
-                  fill="rgba(255,255,255,0.85)"
-                  stroke={COOL_2}
-                  strokeWidth={1.5}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "grid",
-                    placeItems: "center",
-                  }}
-                >
-                  <CategoryIcon kind="globe" accent={COOL_2} size={18} />
-                </div>
-              </div>
-              {/* Title + subtitle */}
-              <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
-                <div
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: INK,
-                    letterSpacing: "-0.01em",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  Langues
-                </div>
-                <div
-                  style={{
-                    fontSize: 11.5,
-                    color: INK_2,
-                    marginTop: 2,
-                    letterSpacing: "-0.005em",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  240 cours · 18 langues
-                </div>
-              </div>
-              {/* Chevron */}
-              <span
-                style={{
-                  color: COOL_2,
-                  fontSize: 20,
-                  flex: "0 0 auto",
-                  marginLeft: 4,
-                  lineHeight: 1,
-                }}
-              >
-                ›
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Teacher card — more premium spacing & typography */}
-        {cardSpring > 0.01 && (
-          <div
-            style={{
-              position: "relative",
-              transform: `translateY(${cardY}px) scale(${cardScale})`,
-              opacity: cardSpring,
-              marginTop: "auto",
-              overflow: "hidden",
-            }}
-          >
-            <InkedRect
-              width={innerW}
-              height={116}
-              radius={20}
-              fill={SURFACE}
-              shadow="0 12px 24px -14px rgba(14,17,22,0.18)"
-              overshoot={2}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                padding: 16,
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    width: 40,
-                    height: 40,
-                    flex: "0 0 40px",
-                  }}
-                >
-                  <InkedCircle size={40} fill={COOL} strokeWidth={1.8} />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "grid",
-                      placeItems: "center",
-                      color: "white",
-                      fontSize: 16,
-                      fontWeight: 700,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    S
-                  </div>
-                </div>
-                <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: INK,
-                      letterSpacing: "-0.01em",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    Sofia
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: INK_2,
-                      marginTop: 2,
-                      letterSpacing: "-0.005em",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    Espagnol · 15+ ans d'expérience
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
-                    flex: "0 0 auto",
-                  }}
-                >
-                  <StarIcon size={12} color={WARM_2} />
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: INK_2,
-                      letterSpacing: "-0.005em",
-                    }}
-                  >
-                    4,9
-                  </span>
-                </div>
-              </div>
-              <div style={{ position: "relative", height: 40 }}>
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    transform: `scale(${pulse})`,
-                  }}
-                >
-                  <InkedRect
-                    width={innerW - 32}
-                    height={40}
-                    radius={12}
-                    fill={COOL}
-                    stroke={COOL_2}
-                    strokeMid={1.2}
-                    strokeCorner={1.6}
-                    overshoot={2}
-                  />
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "grid",
-                    placeItems: "center",
-                    color: "white",
-                    fontSize: 13.5,
-                    fontWeight: 700,
-                    letterSpacing: "-0.005em",
-                  }}
-                >
-                  Réserver
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </IPhoneFrame>
-    </div>
-  );
-};
-
-const IPhoneFrame: React.FC<{
-  width: number;
-  height: number;
-  children: React.ReactNode;
-}> = ({ width, height, children }) => {
-  const cornerR = Math.min(width * 0.14, 52);
-  const islandW = Math.min(width * 0.32, 118);
-  const islandH = Math.min(28, height * 0.045);
-  const islandTop = 12;
-  const islandX = width / 2 - islandW / 2;
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        width,
-        height,
-        overflow: "hidden",
-        borderRadius: cornerR,
-      }}
-    >
-      <div style={{ position: "absolute", inset: 0 }}>
-        <InkedRect
-          width={width}
-          height={height}
-          radius={cornerR}
-          fill={SURFACE}
-          strokeMid={1.8}
-          strokeCorner={2.6}
-          overshoot={2.5}
-          shadow="0 30px 50px -22px rgba(14,17,22,0.25)"
-        />
-      </div>
-      {/* Dynamic Island */}
       <div
         style={{
-          position: "absolute",
-          top: islandTop,
-          left: islandX,
-          width: islandW,
-          height: islandH,
-          borderRadius: islandH / 2,
-          background: INK,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingLeft: islandH * 0.4,
-          paddingRight: islandH * 0.4,
-        }}
-      >
-        <span
-          style={{
-            width: islandH * 0.28,
-            height: islandH * 0.28,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.15)",
-          }}
-        />
-        <span
-          style={{
-            width: islandH * 0.22,
-            height: islandH * 0.22,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.12)",
-          }}
-        />
-      </div>
-      {/* Side buttons */}
-      <div style={{ position: "absolute", left: 0, top: height * 0.16, width: 3, height: height * 0.055, background: INK, borderRadius: 2 }} />
-      <div style={{ position: "absolute", left: 0, top: height * 0.24, width: 3, height: height * 0.055, background: INK, borderRadius: 2 }} />
-      <div style={{ position: "absolute", right: 0, top: height * 0.19, width: 3, height: height * 0.08, background: INK, borderRadius: 2 }} />
-      {/* Content */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          paddingTop: islandTop + islandH + 18,
-          paddingLeft: 22,
-          paddingRight: 22,
-          paddingBottom: 22,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-};
-
-/* ==========================================================================
- * Scene 2 · Cards — 5-lesson deck, dealt in, held, then gravity-dropped
- * ========================================================================== */
-
-type LessonCardData = {
-  subject: string;
-  when: string;
-  who: string;
-  letter: string;
-  tone: string;
-  icon: "brush" | "note" | "code" | "globe";
-  rating: string;
-};
-
-const LESSONS: LessonCardData[] = [
-  { subject: "Espagnol", when: "Lun · 14h", who: "Sofia", letter: "S", tone: COOL, icon: "globe", rating: "4,9" },
-  { subject: "Piano", when: "Mar · 10h", who: "Karim", letter: "K", tone: WARM, icon: "note", rating: "4,8" },
-  { subject: "React", when: "Mer · 18h", who: "Yasmine", letter: "Y", tone: COOL, icon: "code", rating: "5,0" },
-  { subject: "Illustration", when: "Jeu · 16h", who: "Amine", letter: "A", tone: WARM, icon: "brush", rating: "4,7" },
-  { subject: "Anglais", when: "Ven · 11h", who: "Lina", letter: "L", tone: PLATFORM, icon: "globe", rating: "4,9" },
-];
-
-const CARDS_DEAL_AT = [12, 26, 40, 54, 68];
-const CARDS_HOLD_END = 112;
-const CARDS_DROP_START = 112;
-const CARDS_DROP_STAGGER = 3;
-
-const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
-  localFrame,
-  layout,
-}) => {
-  const { fps } = useVideoConfig();
-
-  const cardW = layout === "wide" ? 440 : 380;
-  const cardH = layout === "wide" ? 118 : 108;
-  const stackStep = layout === "wide" ? 38 : 34;
-  // Softer rotations so the deck feels dealt rather than tossed.
-  const rotations = [-3, 2, -1.5, 2.5, -2];
-
-  const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2;
-
-  return (
-    <>
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: cy - stackStep * (LESSONS.length - 1) * 0.6 - cardH * 0.7 - 26,
-          transform: "translate(-50%, -100%)",
           fontSize: 12,
           letterSpacing: "0.32em",
           textTransform: "uppercase",
           color: INK_2,
           fontWeight: 700,
-          opacity: interpolate(
-            localFrame,
-            [8, 26, CARDS_DROP_START - 6, CARDS_DROP_START + 6],
-            [0, 1, 1, 0],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          ),
-          whiteSpace: "nowrap",
+          opacity: eIn,
+          transform: `translateY(${(1 - eIn) * 8}px)`,
         }}
       >
-        Un catalogue vivant
+        {eyebrow}
       </div>
-
-      {LESSONS.map((lesson, i) => {
-        const dealAt = CARDS_DEAL_AT[i];
-        // Softer spring — less overshoot, no jittery landing. Each card
-        // arrives on the same trajectory so the deck reads as one motion.
-        const enter = spring({
-          frame: localFrame - dealAt,
-          fps,
-          config: SMOOTH_ENTRY,
-        });
-        const settledY =
-          cy -
-          ((LESSONS.length - 1) / 2) * stackStep * 0.6 +
-          i * stackStep * 0.6;
-
-        const dealRot = interpolate(enter, [0, 1], [rotations[i] - 6, rotations[i]]);
-        // Shorter entry travel = smoother arrival
-        const dealX = interpolate(enter, [0, 1], [320, 0]);
-        const dealY = interpolate(enter, [0, 1], [180, 0]);
-        const dealScale = 0.92 + enter * 0.08;
-
-        const dropAt = CARDS_DROP_START + i * CARDS_DROP_STAGGER;
-        const dropT = Math.max(0, localFrame - dropAt);
-        const gravity = 6.5;
-        const dropY = 0.5 * gravity * dropT * dropT;
-        const dropRot = dropT > 0 ? dropT * 0.55 * (i % 2 === 0 ? 1 : -1) : 0;
-        const dropOpacity = interpolate(dropT, [16, 26], [1, 0], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        });
-
-        // Single close ghost (-3f) instead of two — cleaner motion trail.
-        const ghost = spring({
-          frame: localFrame - dealAt - 3,
-          fps,
-          config: SMOOTH_ENTRY,
-        });
-
-        if (enter < 0.01) return null;
-
-        const renderGhost = (e: number, alpha: number) => {
-          const rDeg = interpolate(e, [0, 1], [rotations[i] - 6, rotations[i]]);
-          const xOff = interpolate(e, [0, 1], [320, 0]);
-          const yOff = interpolate(e, [0, 1], [180, 0]);
-          const sc = 0.92 + e * 0.08;
-          return (
-            <div
-              style={{
-                position: "absolute",
-                left: cx,
-                top: settledY,
-                width: cardW,
-                height: cardH,
-                transform: `translate(-50%, -50%) translate(${xOff}px, ${yOff}px) rotate(${rDeg}deg) scale(${sc})`,
-                opacity: alpha,
-                zIndex: i + 1,
-              }}
-            >
-              <LessonCard width={cardW} height={cardH} lesson={lesson} tintOverride={WARM_GHOST} />
-            </div>
-          );
-        };
-
-        return (
-          <div key={i}>
-            {dropT === 0 && ghost > 0.01 && renderGhost(ghost, 0.14)}
-            <div
-              style={{
-                position: "absolute",
-                left: cx,
-                top: settledY,
-                width: cardW,
-                height: cardH,
-                transform: `translate(-50%, -50%) translate(${dealX}px, ${dealY + dropY}px) rotate(${dealRot + dropRot}deg) scale(${dealScale})`,
-                opacity: dropOpacity,
-                zIndex: i + 1,
-              }}
-            >
-              <LessonCard width={cardW} height={cardH} lesson={lesson} />
-            </div>
-          </div>
-        );
-      })}
-    </>
-  );
-};
-
-const LessonCard: React.FC<{
-  width: number;
-  height: number;
-  lesson: LessonCardData;
-  tintOverride?: string;
-}> = ({ width, height, lesson, tintOverride }) => {
-  const fillColor = tintOverride ?? SURFACE;
-  const strokeColor = tintOverride ?? INK;
-  return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <InkedRect
-        width={width}
-        height={height}
-        radius={22}
-        fill={fillColor}
-        stroke={strokeColor}
-        shadow="0 14px 26px -16px rgba(14,17,22,0.28)"
-        overshoot={2.5}
-      />
-      {!tintOverride && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            padding: "0 22px",
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-            overflow: "hidden",
-          }}
-        >
-          <div style={{ position: "relative", width: 46, height: 46, flex: "0 0 46px" }}>
-            <InkedCircle size={46} fill={lesson.tone} strokeWidth={1.8} />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "grid",
-                placeItems: "center",
-                color: "white",
-                fontSize: 18,
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {lesson.letter}
-            </div>
-          </div>
-          <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
-            <div
-              style={{
-                fontSize: 17,
-                fontWeight: 700,
-                color: INK,
-                letterSpacing: "-0.02em",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {lesson.subject}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: INK_2,
-                marginTop: 3,
-                letterSpacing: "-0.005em",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {lesson.who} · {lesson.when}
-            </div>
-          </div>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 4, flex: "0 0 auto" }}>
-            <StarIcon size={13} color={WARM_2} />
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: INK_2,
-                letterSpacing: "-0.005em",
-              }}
-            >
-              {lesson.rating}
-            </span>
-          </div>
-        </div>
-      )}
+      <div
+        style={{
+          fontSize: layout === "wide" ? 34 : 24,
+          fontWeight: 700,
+          color: INK,
+          letterSpacing: "-0.03em",
+          marginTop: 12,
+          lineHeight: 1.1,
+          opacity: mIn,
+          transform: `translateY(${(1 - mIn) * 10}px)`,
+        }}
+      >
+        {main}
+      </div>
     </div>
   );
 };
 
-// Silence unused-index warning if we ever iterate CARDS_HOLD_END for pacing
-void CARDS_HOLD_END;
+/* --------------------------------------------------------------------------
+ * Illustration wrapper — smooth entry animation for each Storyset scene
+ * -------------------------------------------------------------------------- */
 
-/* ==========================================================================
- * Scene 3 · Calendar — weekly (wide) or 3-day rolling (compact)
- * ========================================================================== */
-
-const WEEKLY_DAYS = ["LUN", "MAR", "MER", "JEU", "VEN"];
-const ROLLING_DAYS = ["Aujourd'hui", "Demain", "Sam."];
-
-type Booking = {
-  col: number;
-  row: number;
-  label: string;
-  time: string;
-  delay: number;
-};
-
-const WEEKLY_BOOKINGS: Booking[] = [
-  { col: 0, row: 1, label: "Espagnol", time: "14h", delay: 6 },
-  { col: 1, row: 0, label: "Piano", time: "10h", delay: 14 },
-  { col: 2, row: 2, label: "React", time: "18h", delay: 22 },
-  { col: 3, row: 1, label: "Illustration", time: "16h", delay: 30 },
-  { col: 4, row: 3, label: "Yoga", time: "9h", delay: 38 },
-  { col: 2, row: 3, label: "Anglais", time: "20h", delay: 46 },
-];
-
-const ROLLING_BOOKINGS: Booking[] = [
-  { col: 0, row: 0, label: "Espagnol", time: "14h", delay: 6 },
-  { col: 1, row: 1, label: "Piano", time: "10h", delay: 16 },
-  { col: 0, row: 2, label: "React", time: "18h", delay: 26 },
-  { col: 2, row: 0, label: "Illustration", time: "16h", delay: 36 },
-  { col: 1, row: 2, label: "Yoga", time: "9h", delay: 44 },
-  { col: 2, row: 2, label: "Anglais", time: "20h", delay: 52 },
-];
-
-const SceneCalendar: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
-  localFrame,
-  layout,
-}) => {
+const IllustrationStage: React.FC<{
+  localFrame: number;
+  size: { w: number; h: number };
+  centerY?: number;
+  children: React.ReactNode;
+}> = ({ localFrame, size, centerY = HERO_HEIGHT / 2 + 60, children }) => {
   const { fps } = useVideoConfig();
-
-  const frameIn = spring({ frame: localFrame, fps, config: ELASTIC_SOFT });
-  const frameY = interpolate(frameIn, [0, 1], [60, 0]);
-  const frameScale = 0.94 + frameIn * 0.06;
-
-  const isRolling = layout === "compact";
-  const days = isRolling ? ROLLING_DAYS : WEEKLY_DAYS;
-  const bookings = isRolling ? ROLLING_BOOKINGS : WEEKLY_BOOKINGS;
-  const rowCount = isRolling ? 3 : 4;
-
-  const gridW = layout === "wide" ? 780 : 540;
-  const gridH = layout === "wide" ? 500 : 620;
-  const padX = 30;
-  const padTop = 76;
-  const padBottom = 30;
-  const innerW = gridW - padX * 2;
-  const innerH = gridH - padTop - padBottom;
-  const cellW = innerW / days.length;
-  const cellH = innerH / rowCount;
-
-  const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2;
+  const inSpring = spring({ frame: localFrame, fps, config: ELASTIC_SOFT });
+  const inY = interpolate(inSpring, [0, 1], [40, 0]);
+  const inScale = 0.94 + inSpring * 0.06;
 
   return (
     <div
       style={{
         position: "absolute",
-        left: cx,
-        top: cy,
-        width: gridW,
-        height: gridH,
-        transform: `translate(-50%, calc(-50% + ${frameY}px)) scale(${frameScale})`,
-        opacity: frameIn,
+        left: HERO_WIDTH / 2,
+        top: centerY,
+        width: size.w,
+        height: size.h,
+        transform: `translate(-50%, calc(-50% + ${inY}px)) scale(${inScale})`,
+        opacity: inSpring,
       }}
     >
-      <div style={{ position: "absolute", inset: 0 }}>
-        <InkedRect
-          width={gridW}
-          height={gridH}
-          radius={26}
-          fill={SURFACE}
-          shadow="0 26px 50px -22px rgba(14,17,22,0.20)"
-          overshoot={2.5}
-        />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          left: padX,
-          right: padX,
-          top: 22,
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 12,
-            letterSpacing: "0.32em",
-            textTransform: "uppercase",
-            color: INK_2,
-            fontWeight: 700,
-          }}
-        >
-          {isRolling ? "Prochains cours" : "Ma semaine"}
-        </div>
-        <div
-          style={{
-            fontSize: 12,
-            letterSpacing: "0.24em",
-            textTransform: "uppercase",
-            color: INK_3,
-            fontWeight: 600,
-          }}
-        >
-          {isRolling ? "3 jours" : "Semaine 42"}
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          left: padX,
-          top: 52,
-          width: innerW,
-          display: "flex",
-        }}
-      >
-        {days.map((d, i) => (
-          <div
-            key={d}
-            style={{
-              width: cellW,
-              textAlign: "center",
-              fontSize: 12,
-              letterSpacing: "0.14em",
-              fontWeight: 700,
-              color: i === 0 ? WARM_2 : INK_2,
-              textTransform: "uppercase",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              padding: "0 4px",
-            }}
-          >
-            {d}
-          </div>
-        ))}
-      </div>
-
-      <svg
-        width={innerW}
-        height={innerH}
-        viewBox={`0 0 ${innerW} ${innerH}`}
-        style={{
-          position: "absolute",
-          left: padX,
-          top: padTop,
-          overflow: "visible",
-        }}
-      >
-        {Array.from({ length: rowCount + 1 }).map((_, i) => (
-          <line key={`h${i}`} x1={0} y1={i * cellH} x2={innerW} y2={i * cellH} stroke={HAIRLINE} strokeWidth={1} />
-        ))}
-        {Array.from({ length: days.length + 1 }).map((_, i) => (
-          <line key={`v${i}`} x1={i * cellW} y1={0} x2={i * cellW} y2={innerH} stroke={HAIRLINE} strokeWidth={1} />
-        ))}
-        <rect x={0} y={0} width={cellW} height={innerH} fill={WARM_SOFT} opacity={0.5} />
-      </svg>
-
-      {bookings.map((b, i) => {
-        const enter = spring({ frame: localFrame - b.delay, fps, config: POP });
-        if (enter < 0.01) return null;
-        const bx = padX + b.col * cellW + cellW * 0.5;
-        const by = padTop + b.row * cellH + cellH * 0.5;
-        const bw = cellW * 0.82;
-        const bh = cellH * 0.78;
-        return (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: bx,
-              top: by,
-              width: bw,
-              height: bh,
-              transform: `translate(-50%, -50%) scale(${enter})`,
-              opacity: enter,
-            }}
-          >
-            <WaveBlock width={bw} height={bh} localFrame={localFrame} label={b.label} time={b.time} />
-          </div>
-        );
-      })}
-
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: -34,
-          textAlign: "center",
-          fontSize: 12,
-          letterSpacing: "0.28em",
-          textTransform: "uppercase",
-          color: INK_2,
-          fontWeight: 700,
-          opacity: interpolate(localFrame, [40, 60], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-        }}
-      >
-        Un agenda qui prend vie
-      </div>
-    </div>
-  );
-};
-
-const WaveBlock: React.FC<{
-  width: number;
-  height: number;
-  localFrame: number;
-  label: string;
-  time: string;
-}> = ({ width, height, localFrame, label, time }) => {
-  const w = width * 0.7;
-  const startX = width * 0.15;
-  const midY = height * 0.58;
-  const amp = height * 0.13;
-  const steps = 14;
-  const points: string[] = [];
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const x = startX + t * w;
-    const y = midY + Math.sin(t * Math.PI * 3 + localFrame * 0.14) * amp;
-    points.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
-  }
-  const wavePath = points.join(" ");
-
-  return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <InkedRect
-        width={width}
-        height={height}
-        radius={12}
-        fill={WARM_SOFT}
-        stroke={WARM_2}
-        strokeMid={1.1}
-        strokeCorner={1.6}
-        overshoot={1.5}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 8,
-          left: 10,
-          right: 10,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
-          overflow: "hidden",
-        }}
-      >
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: INK,
-            letterSpacing: "-0.005em",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "70%",
-          }}
-        >
-          {label}
-        </span>
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 700,
-            color: WARM_2,
-            letterSpacing: "0.08em",
-          }}
-        >
-          {time}
-        </span>
-      </div>
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        <path
-          d={wavePath}
-          fill="none"
-          stroke={WARM_2}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.95}
-        />
-      </svg>
+      {children}
     </div>
   );
 };
 
 /* ==========================================================================
- * Scene 4 · Vase — amber 90% + blue top 10% + labelled arrows (180 f)
+ * Scene 1 · Rafiki Browse — woman browsing, Sofia card slides in
  * ========================================================================== */
 
-// Local frames (195 total).
-//   0–25   title in
-//   25–105 amber fills 0 → 90%
-//   105–140 blue fills top 10% (visible split emerges)
-//   140–145 brief hold on the finished jar (reads before the arrows arrive)
-//   145–170 arrows draw in
-//   170–195 hold with everything on screen (~0.8s reading time)
-const T4_TITLE_IN = 8;
-const T4_FILL_START = 25;
-const T4_AMBER_END = 105;
-const T4_BLUE_END = 140;
-const T4_ARROWS_IN = 145;
+const SceneRafikiBrowse: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const { fps } = useVideoConfig();
 
-const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
-  localFrame,
-  layout,
-}) => {
-  const vaseH = layout === "wide" ? 300 : 250;
+  const bob = Math.sin(localFrame * 0.09) * 2.4;
+  const screenPulse = 0.9 + Math.sin(localFrame * 0.11) * 0.1;
+
+  const cardSpring = spring({
+    frame: localFrame - 60,
+    fps,
+    config: ELASTIC_SOFT,
+  });
+  const cardY = interpolate(cardSpring, [0, 1], [40, 0]);
+  const cardScale = 0.94 + cardSpring * 0.06;
+  const cardPulse =
+    cardSpring > 0.5 ? 1 + Math.sin((localFrame - 60) * 0.32) * 0.03 : 1;
+
+  const illustSize =
+    layout === "wide" ? { w: 540, h: 540 } : { w: 420, h: 420 };
+
+  const animations: Record<string, LayerStyles> = {
+    "freepik--Character--inject-238": {
+      transform: `translate(0px, ${bob}px)`,
+      transformOrigin: "50% 50%",
+    },
+    "freepik--background-complete--inject-238": {
+      opacity: String(screenPulse),
+    },
+  };
+
+  return (
+    <>
+      <SceneCopy
+        eyebrow="Explorez"
+        main="Trouvez l'enseignant qui vous ressemble."
+        localFrame={localFrame}
+        layout={layout}
+      />
+
+      <IllustrationStage localFrame={localFrame} size={illustSize}>
+        <StorysetSvg src={SVG_RAFIKI} animations={animations} />
+        {cardSpring > 0.01 && layout === "wide" && (
+          <div
+            style={{
+              position: "absolute",
+              left: "78%",
+              top: "42%",
+              width: 240,
+              transform: `translate(-50%, calc(-50% + ${cardY}px)) scale(${cardScale})`,
+              opacity: cardSpring,
+            }}
+          >
+            <FlatTeacherCard pulse={cardPulse} />
+          </div>
+        )}
+      </IllustrationStage>
+
+      {cardSpring > 0.01 && layout === "compact" && (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: HERO_HEIGHT * 0.5 + illustSize.h * 0.5 + 60,
+            width: 300,
+            transform: `translate(-50%, ${cardY}px) scale(${cardScale})`,
+            opacity: cardSpring,
+          }}
+        >
+          <FlatTeacherCard pulse={cardPulse} />
+        </div>
+      )}
+    </>
+  );
+};
+
+const FlatTeacherCard: React.FC<{ pulse?: number }> = ({ pulse = 1 }) => (
+  <div
+    style={{
+      background: SURFACE,
+      borderRadius: 22,
+      border: `2px solid ${INK}`,
+      padding: 14,
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+      boxShadow: "0 18px 30px -18px rgba(14,17,22,0.28)",
+    }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div
+        style={{
+          width: 42,
+          height: 42,
+          borderRadius: 21,
+          background: COOL,
+          border: `2px solid ${INK}`,
+          display: "grid",
+          placeItems: "center",
+          color: "white",
+          fontSize: 17,
+          fontWeight: 700,
+          letterSpacing: "-0.02em",
+          flex: "0 0 42px",
+        }}
+      >
+        S
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.01em",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          Sofia
+        </div>
+        <div
+          style={{
+            fontSize: 12,
+            color: INK_2,
+            marginTop: 2,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          Espagnol · ★ 4,9
+        </div>
+      </div>
+    </div>
+    <div
+      style={{
+        padding: "10px 14px",
+        borderRadius: 14,
+        background: COOL,
+        border: `2px solid ${COOL_2}`,
+        color: "white",
+        fontSize: 13,
+        fontWeight: 700,
+        textAlign: "center",
+        letterSpacing: "-0.005em",
+        transform: `scale(${pulse})`,
+        boxShadow: `0 0 0 ${(pulse - 1) * 240}px rgba(47, 111, 235, 0.14)`,
+      }}
+    >
+      Réserver
+    </div>
+  </div>
+);
+
+/* ==========================================================================
+ * Scene 2 · Painting course (pana) — man teaching/creating
+ * ========================================================================== */
+
+const ScenePainting: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const sway = Math.sin(localFrame * 0.08) * 3;
+  const videoPulse = 0.88 + Math.sin(localFrame * 0.12) * 0.12;
+
+  const illustSize =
+    layout === "wide" ? { w: 780, h: 520 } : { w: 560, h: 380 };
+
+  const animations: Record<string, LayerStyles> = {
+    "freepik--Character--inject-235": {
+      transform: `translate(0px, ${sway}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--Video--inject-235": {
+      opacity: String(videoPulse),
+    },
+  };
+
+  return (
+    <>
+      <SceneCopy
+        eyebrow="Tous les domaines"
+        main="Un enseignant pour chaque passion."
+        localFrame={localFrame}
+        layout={layout}
+      />
+      <IllustrationStage localFrame={localFrame} size={illustSize}>
+        <StorysetSvg src={SVG_PAINTING} animations={animations} />
+      </IllustrationStage>
+    </>
+  );
+};
+
+/* ==========================================================================
+ * Scene 3 · 1-1 Sessions (bro) — two figures at a desk
+ * ========================================================================== */
+
+const SceneSessions: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const bob1 = Math.sin(localFrame * 0.09) * 1.8;
+  const bob2 = Math.sin(localFrame * 0.09 + 0.6) * 1.8;
+  const devicePulse = 0.88 + Math.sin(localFrame * 0.13) * 0.12;
+
+  const illustSize =
+    layout === "wide" ? { w: 600, h: 480 } : { w: 460, h: 380 };
+
+  const animations: Record<string, LayerStyles> = {
+    "freepik--character-1--inject-229": {
+      transform: `translate(0px, ${bob1}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--character-2--inject-229": {
+      transform: `translate(0px, ${bob2}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--Device--inject-229": {
+      opacity: String(devicePulse),
+    },
+  };
+
+  return (
+    <>
+      <SceneCopy
+        eyebrow="Un cours, un cap"
+        main="Avancez à votre rythme, jamais seul."
+        localFrame={localFrame}
+        layout={layout}
+      />
+      <IllustrationStage localFrame={localFrame} size={illustSize}>
+        <StorysetSvg src={SVG_STUDYING} animations={animations} />
+      </IllustrationStage>
+    </>
+  );
+};
+
+/* ==========================================================================
+ * Scene 4 · Calendar planning (events-pana)
+ * ========================================================================== */
+
+const SceneCalendarPlanning: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const calRot = Math.sin(localFrame * 0.06) * 1.2;
+  const char1Bob = Math.sin(localFrame * 0.08) * 2;
+  const char2Bob = Math.sin(localFrame * 0.08 + 0.7) * 2;
+  const plantSway = Math.sin(localFrame * 0.05) * 1.5;
+
+  const illustSize =
+    layout === "wide" ? { w: 780, h: 520 } : { w: 560, h: 380 };
+
+  const animations: Record<string, LayerStyles> = {
+    "freepik--Calendar--inject-65": {
+      transform: `rotate(${calRot}deg)`,
+      transformOrigin: "50% 50%",
+    },
+    "freepik--character-1--inject-65": {
+      transform: `translate(0px, ${char1Bob}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--character-2--inject-65": {
+      transform: `translate(0px, ${char2Bob}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--Plant--inject-65": {
+      transform: `rotate(${plantSway}deg)`,
+      transformOrigin: "50% 100%",
+    },
+  };
+
+  return (
+    <>
+      <SceneCopy
+        eyebrow="Votre semaine"
+        main="Un agenda qui suit votre vie, pas l'inverse."
+        localFrame={localFrame}
+        layout={layout}
+      />
+      <IllustrationStage localFrame={localFrame} size={illustSize}>
+        <StorysetSvg src={SVG_EVENTS} animations={animations} />
+      </IllustrationStage>
+    </>
+  );
+};
+
+/* ==========================================================================
+ * Scene 5 · Partnership — agency scene, puzzle click + bulb glow
+ * ========================================================================== */
+
+const ScenePartnership: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const puzzleT = (localFrame * 0.02) % 1;
+  const puzzleScale = 1 + Math.sin(puzzleT * Math.PI * 2) * 0.02;
+  const bulbGlow = 0.75 + Math.sin(localFrame * 0.14) * 0.25;
+  const bubbleBob = Math.sin(localFrame * 0.09) * 2;
+  const charsBob = Math.sin(localFrame * 0.08) * 1.6;
+
+  const illustSize =
+    layout === "wide" ? { w: 780, h: 520 } : { w: 560, h: 380 };
+
+  const animations: Record<string, LayerStyles> = {
+    "freepik--Puzzle--inject-402": {
+      transform: `scale(${puzzleScale})`,
+      transformOrigin: "50% 50%",
+    },
+    "freepik--Characters--inject-402": {
+      transform: `translate(0px, ${charsBob}px)`,
+      transformOrigin: "50% 100%",
+    },
+    "freepik--light-bulb--inject-402": {
+      opacity: String(bulbGlow),
+      transformOrigin: "50% 50%",
+    },
+    "freepik--speech-bubble--inject-402": {
+      transform: `translate(0px, ${bubbleBob}px)`,
+      transformOrigin: "50% 50%",
+    },
+  };
+
+  return (
+    <>
+      <SceneCopy
+        eyebrow="Seul plus vite, ensemble plus loin"
+        main="Formez votre agence. Multipliez votre impact."
+        localFrame={localFrame}
+        layout={layout}
+      />
+      <IllustrationStage localFrame={localFrame} size={illustSize}>
+        <StorysetSvg src={SVG_PARTNERSHIP} animations={animations} />
+      </IllustrationStage>
+    </>
+  );
+};
+
+/* ==========================================================================
+ * Scene 6 · Vase — amber 90% + blue top 10% + labelled arrows (135 f)
+ * ========================================================================== */
+
+const T6_TITLE_IN = 6;
+const T6_FILL_START = 20;
+const T6_AMBER_END = 78;
+const T6_BLUE_END = 100;
+const T6_ARROWS_IN = 104;
+
+const SceneVase: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
+  const vaseH = layout === "wide" ? 300 : 240;
   const vaseW = vaseH * 0.78;
   const cx = HERO_WIDTH / 2;
   const cy = HERO_HEIGHT / 2 + 30;
 
-  const titleIn = interpolate(localFrame, [T4_TITLE_IN, T4_TITLE_IN + 22], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: (t) => cubicBezier(EASE_OUT, t),
-  });
-  const subIn = interpolate(localFrame, [T4_TITLE_IN + 10, T4_TITLE_IN + 30], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: (t) => cubicBezier(EASE_OUT, t),
-  });
+  const titleIn = interpolate(
+    localFrame,
+    [T6_TITLE_IN, T6_TITLE_IN + 20],
+    [0, 1],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: (t) => cubicBezier(EASE_OUT, t),
+    },
+  );
+  const subIn = interpolate(
+    localFrame,
+    [T6_TITLE_IN + 10, T6_TITLE_IN + 26],
+    [0, 1],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: (t) => cubicBezier(EASE_OUT, t),
+    },
+  );
 
-  // Two-phase fill:
-  //   amberPct 0 → 0.9 over T4_FILL_START → T4_AMBER_END
-  //   bluePct 0 → 0.1 over T4_AMBER_END → T4_BLUE_END
   const amberPct = interpolate(
     localFrame,
-    [T4_FILL_START, T4_AMBER_END],
+    [T6_FILL_START, T6_AMBER_END],
     [0, 0.9],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: (t) => cubicBezier(EASE_OUT, t) },
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: (t) => cubicBezier(EASE_OUT, t),
+    },
   );
   const bluePct = interpolate(
     localFrame,
-    [T4_AMBER_END, T4_BLUE_END],
+    [T6_AMBER_END, T6_BLUE_END],
     [0, 0.1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: (t) => cubicBezier(EASE_OUT, t) },
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: (t) => cubicBezier(EASE_OUT, t),
+    },
   );
 
   const arrowsIn = interpolate(
     localFrame,
-    [T4_ARROWS_IN, T4_ARROWS_IN + 18],
+    [T6_ARROWS_IN, T6_ARROWS_IN + 16],
     [0, 1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: (t) => cubicBezier(EASE_OUT, t) },
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: (t) => cubicBezier(EASE_OUT, t),
+    },
   );
 
   return (
@@ -1512,7 +827,6 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         </div>
       </div>
 
-      {/* Amphora */}
       <div
         style={{
           position: "absolute",
@@ -1532,7 +846,6 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         />
       </div>
 
-      {/* Labelled arrows */}
       {arrowsIn > 0.01 && (
         <VaseAnnotations
           cx={cx}
@@ -1583,7 +896,6 @@ const Amphora: React.FC<{
     Q 52 18 60 12 Z
   `;
 
-  // Sine-wobble edge sampled left→right (open polyline, no closing).
   const wobbleEdge = (yBase: number, direction: "ltr" | "rtl" = "ltr") => {
     const steps = 10;
     const amp = 2.5;
@@ -1598,8 +910,6 @@ const Amphora: React.FC<{
     return pts;
   };
 
-  // Amber fill: wobble top (when there's no blue above) or flat top (when
-  // capped by blue) — either way, closes down to the jar interior floor.
   const amberEdgeTop = hasBlue
     ? [
         { x: 0, y: amberTop },
@@ -1611,7 +921,6 @@ const Amphora: React.FC<{
       .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
       .join(" ") + ` L ${vbW} ${vbH} L 0 ${vbH} Z`;
 
-  // Blue band: wobble on top (blueTop), flat on bottom (amberTop).
   const blueTopEdge = wobbleEdge(blueTop, "ltr");
   const blueBottomEdge = [
     { x: vbW, y: amberTop },
@@ -1626,25 +935,26 @@ const Amphora: React.FC<{
     " Z";
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${vbW} ${vbH}`} style={{ overflow: "visible" }}>
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${vbW} ${vbH}`}
+      style={{ overflow: "visible" }}
+    >
       <defs>
         <clipPath id={clipId}>
           <path d={path} />
         </clipPath>
       </defs>
-      {/* Vase body */}
       <path d={path} fill={SURFACE} />
-      {/* Amber region — clipped to jar */}
       {amberPct > 0.01 && (
         <g clipPath={`url(#${clipId})`}>
           <path d={amberPath} fill={WARM} />
         </g>
       )}
-      {/* Blue band on top (only in the 10% cap), clipped to jar */}
       {hasBlue && (
         <g clipPath={`url(#${clipId})`}>
           <path d={bluePath} fill={COOL} />
-          {/* Crisp 2px separator marking the split */}
           <line
             x1={0}
             y1={amberTop}
@@ -1655,23 +965,13 @@ const Amphora: React.FC<{
           />
         </g>
       )}
-      {/* Vase outline drawn on top */}
       <path
         d={path}
         fill="none"
         stroke={INK}
-        strokeWidth={2.4}
+        strokeWidth={2}
         strokeLinejoin="round"
         strokeLinecap="round"
-      />
-      {/* Handful highlight tick on left belly */}
-      <path
-        d="M 32 130 Q 34 150 32 170"
-        fill="none"
-        stroke={INK}
-        strokeWidth={1.2}
-        strokeLinecap="round"
-        opacity={0.35}
       />
     </svg>
   );
@@ -1685,9 +985,8 @@ const VaseAnnotations: React.FC<{
   layout: HeroLayout;
   opacity: number;
 }> = ({ cx, cy, vaseW, vaseH, layout, opacity }) => {
-  // Arrow lines anchor to the vase and stretch outward to text labels
   const isWide = layout === "wide";
-  const labelDist = isWide ? 240 : 140;
+  const labelDist = isWide ? 230 : 130;
   const amberY = cy + vaseH * 0.18;
   const blueY = cy - vaseH * 0.42;
   const vaseLeftX = cx - vaseW * 0.35;
@@ -1698,9 +997,13 @@ const VaseAnnotations: React.FC<{
       <svg
         width={HERO_WIDTH}
         height={HERO_HEIGHT}
-        style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity,
+        }}
       >
-        {/* Left arrow — points into amber portion */}
         <path
           d={`M ${vaseLeftX - labelDist + 30} ${amberY} Q ${vaseLeftX - labelDist / 2} ${amberY - 8} ${vaseLeftX - 10} ${amberY}`}
           fill="none"
@@ -1716,7 +1019,6 @@ const VaseAnnotations: React.FC<{
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {/* Right arrow — points into blue portion */}
         <path
           d={`M ${vaseRightX + labelDist - 30} ${blueY} Q ${vaseRightX + labelDist / 2} ${blueY + 8} ${vaseRightX + 10} ${blueY}`}
           fill="none"
@@ -1734,7 +1036,6 @@ const VaseAnnotations: React.FC<{
         />
       </svg>
 
-      {/* Left label — Vos revenus */}
       <div
         style={{
           position: "absolute",
@@ -1758,7 +1059,9 @@ const VaseAnnotations: React.FC<{
             marginBottom: 4,
           }}
         >
-          <span style={{ width: 10, height: 10, borderRadius: 3, background: WARM }} />
+          <span
+            style={{ width: 10, height: 10, borderRadius: 3, background: WARM }}
+          />
           Votre part
         </div>
         <div
@@ -1785,7 +1088,6 @@ const VaseAnnotations: React.FC<{
         </div>
       </div>
 
-      {/* Right label — Votre contribution */}
       <div
         style={{
           position: "absolute",
@@ -1809,7 +1111,9 @@ const VaseAnnotations: React.FC<{
             marginBottom: 4,
           }}
         >
-          <span style={{ width: 10, height: 10, borderRadius: 3, background: COOL }} />
+          <span
+            style={{ width: 10, height: 10, borderRadius: 3, background: COOL }}
+          />
           Au collectif
         </div>
         <div
@@ -1840,372 +1144,25 @@ const VaseAnnotations: React.FC<{
 };
 
 /* ==========================================================================
- * Scene 5 · Handshake — two arms grip at center, glow pulses on the seam
- *   Copy: "Le savoir se partage. La confiance se construit."
+ * Scene 7 · Dark finale — Caveat wordmark from brand navbar
  * ========================================================================== */
 
-const SceneHandshake: React.FC<{
+const SceneDarkFinale: React.FC<{
   localFrame: number;
   layout: HeroLayout;
 }> = ({ localFrame, layout }) => {
   const { fps } = useVideoConfig();
 
-  const titleIn = interpolate(localFrame, [6, 26], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: (t) => cubicBezier(EASE_OUT, t),
-  });
-  const subIn = interpolate(localFrame, [18, 38], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: (t) => cubicBezier(EASE_OUT, t),
-  });
-
-  const leftIn = spring({
-    frame: localFrame - 20,
-    fps,
-    config: SMOOTH_ENTRY,
-  });
-  const rightIn = spring({
-    frame: localFrame - 26,
-    fps,
-    config: SMOOTH_ENTRY,
-  });
-
-  const labelIn = interpolate(localFrame, [56, 76], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2 + 20;
-  const illustrationW = layout === "wide" ? 780 : 560;
-  const illustrationH = illustrationW * 0.4;
-
-  // Both hands settled? Only then pulse
-  const gripSettled = Math.min(leftIn, rightIn) > 0.9;
-
-  return (
-    <>
-      {/* Title — parallel two-liner */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: cy - illustrationH * 0.5 - 130,
-          transform: "translate(-50%, 0)",
-          textAlign: "center",
-          width: "100%",
-          maxWidth: layout === "wide" ? 900 : 600,
-          padding: "0 24px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            fontSize: layout === "wide" ? 34 : 22,
-            fontWeight: 700,
-            color: INK,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            opacity: titleIn,
-            transform: `translateY(${(1 - titleIn) * 12}px)`,
-          }}
-        >
-          Le savoir se partage.
-        </div>
-        <div
-          style={{
-            fontSize: layout === "wide" ? 34 : 22,
-            fontWeight: 700,
-            color: INK_2,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            marginTop: 4,
-            opacity: subIn,
-            transform: `translateY(${(1 - subIn) * 12}px)`,
-          }}
-        >
-          La confiance se construit.
-        </div>
-      </div>
-
-      {/* Handshake illustration */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx,
-          top: cy,
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <HandshakeIllustration
-          width={illustrationW}
-          height={illustrationH}
-          leftDrawIn={leftIn}
-          rightDrawIn={rightIn}
-          pulseActive={gripSettled}
-          localFrame={localFrame}
-        />
-      </div>
-
-      {/* Labels flanking the handshake */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx - illustrationW * 0.42,
-          top: cy + illustrationH * 0.5 + 30,
-          transform: "translate(-50%, 0)",
-          fontSize: 12,
-          letterSpacing: "0.24em",
-          textTransform: "uppercase",
-          fontWeight: 700,
-          color: INK_2,
-          opacity: labelIn,
-        }}
-      >
-        Étudiant
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: cx + illustrationW * 0.42,
-          top: cy + illustrationH * 0.5 + 30,
-          transform: "translate(-50%, 0)",
-          fontSize: 12,
-          letterSpacing: "0.24em",
-          textTransform: "uppercase",
-          fontWeight: 700,
-          color: INK_2,
-          opacity: labelIn,
-        }}
-      >
-        Enseignant
-      </div>
-    </>
-  );
-};
-
-/** Two forearms grip at center; small thumb-bumps on top; gold pulse rings
- *  radiate from the seam once both hands are settled. */
-const HandshakeIllustration: React.FC<{
-  width: number;
-  height: number;
-  leftDrawIn: number;
-  rightDrawIn: number;
-  pulseActive: boolean;
-  localFrame: number;
-}> = ({ width, height, leftDrawIn, rightDrawIn, pulseActive, localFrame }) => {
-  // Design canvas
-  const vbW = 500;
-  const vbH = 200;
-  const cx = vbW / 2;
-  const cy = vbH / 2;
-  const armH = 46;
-  const gripH = 84;
-
-  // Where each grip ends. Slight overlap past centre so the seam reads.
-  const leftGripEnd = cx + 18;
-  const rightGripEnd = cx - 18;
-
-  const leftArm = `
-    M 0 ${cy - armH / 2}
-    L ${cx - 110} ${cy - armH / 2}
-    Q ${cx - 70} ${cy - armH / 2} ${cx - 48} ${cy - gripH / 2 + 10}
-    Q ${cx - 20} ${cy - gripH / 2 - 4} ${leftGripEnd - 12} ${cy - gripH / 2}
-    Q ${leftGripEnd} ${cy - gripH / 2} ${leftGripEnd} ${cy - gripH / 2 + 20}
-    L ${leftGripEnd} ${cy + gripH / 2 - 20}
-    Q ${leftGripEnd} ${cy + gripH / 2} ${leftGripEnd - 12} ${cy + gripH / 2}
-    Q ${cx - 20} ${cy + gripH / 2 + 4} ${cx - 48} ${cy + gripH / 2 - 10}
-    Q ${cx - 70} ${cy + armH / 2} ${cx - 110} ${cy + armH / 2}
-    L 0 ${cy + armH / 2}
-    Z
-  `;
-
-  const rightArm = `
-    M ${vbW} ${cy - armH / 2}
-    L ${cx + 110} ${cy - armH / 2}
-    Q ${cx + 70} ${cy - armH / 2} ${cx + 48} ${cy - gripH / 2 + 10}
-    Q ${cx + 20} ${cy - gripH / 2 - 4} ${rightGripEnd + 12} ${cy - gripH / 2}
-    Q ${rightGripEnd} ${cy - gripH / 2} ${rightGripEnd} ${cy - gripH / 2 + 20}
-    L ${rightGripEnd} ${cy + gripH / 2 - 20}
-    Q ${rightGripEnd} ${cy + gripH / 2} ${rightGripEnd + 12} ${cy + gripH / 2}
-    Q ${cx + 20} ${cy + gripH / 2 + 4} ${cx + 48} ${cy + gripH / 2 - 10}
-    Q ${cx + 70} ${cy + armH / 2} ${cx + 110} ${cy + armH / 2}
-    L ${vbW} ${cy + armH / 2}
-    Z
-  `;
-
-  // Thumb nubs sit on TOP of each grip
-  const leftThumb = `
-    M ${leftGripEnd - 46} ${cy - gripH / 2 + 8}
-    Q ${leftGripEnd - 36} ${cy - gripH / 2 - 16} ${leftGripEnd - 16} ${cy - gripH / 2 - 6}
-    L ${leftGripEnd - 12} ${cy - gripH / 2 + 4}
-    L ${leftGripEnd - 42} ${cy - gripH / 2 + 16}
-    Z
-  `;
-  const rightThumb = `
-    M ${rightGripEnd + 46} ${cy - gripH / 2 + 8}
-    Q ${rightGripEnd + 36} ${cy - gripH / 2 - 16} ${rightGripEnd + 16} ${cy - gripH / 2 - 6}
-    L ${rightGripEnd + 12} ${cy - gripH / 2 + 4}
-    L ${rightGripEnd + 42} ${cy - gripH / 2 + 16}
-    Z
-  `;
-
-  const leftOffset = (1 - leftDrawIn) * -220;
-  const rightOffset = (1 - rightDrawIn) * 220;
-
-  // Pulsing glow at the seam
-  const beat = pulseActive
-    ? (Math.sin(localFrame * 0.14) + 1) / 2
-    : 0;
-  const glowR = 22 + beat * 12;
-  const glowOp = pulseActive ? 0.35 + beat * 0.3 : 0;
-
-  // Continuous ripples emanating from the seam
-  const rippleRings = pulseActive
-    ? [0, 1, 2].map((i) => {
-        const phase = ((localFrame - 40) * 0.024 + i / 3) % 1;
-        return {
-          r: 12 + phase * 72,
-          op: (1 - phase) * 0.4,
-        };
-      })
-    : [];
-
-  return (
-    <svg
-      viewBox={`0 0 ${vbW} ${vbH}`}
-      width={width}
-      height={height}
-      style={{ overflow: "visible" }}
-    >
-      {/* Ripple rings under the seam */}
-      {rippleRings.map((r, i) => (
-        <circle
-          key={i}
-          cx={cx}
-          cy={cy}
-          r={r.r}
-          fill="none"
-          stroke={PLATFORM}
-          strokeWidth={2}
-          opacity={r.op}
-        />
-      ))}
-
-      {/* Left arm */}
-      <g transform={`translate(${leftOffset} 0)`} opacity={leftDrawIn}>
-        <path
-          d={leftArm}
-          fill={COOL}
-          stroke={INK}
-          strokeWidth={2.6}
-          strokeLinejoin="round"
-        />
-        <path
-          d={leftThumb}
-          fill={COOL}
-          stroke={INK}
-          strokeWidth={2.4}
-          strokeLinejoin="round"
-        />
-        {/* Finger ridges — small ticks on the grip inner face */}
-        {[0, 1, 2].map((i) => (
-          <line
-            key={i}
-            x1={leftGripEnd - 6}
-            y1={cy - 14 + i * 10}
-            x2={leftGripEnd - 26}
-            y2={cy - 14 + i * 10}
-            stroke={INK}
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            opacity={0.55}
-          />
-        ))}
-      </g>
-
-      {/* Right arm */}
-      <g transform={`translate(${rightOffset} 0)`} opacity={rightDrawIn}>
-        <path
-          d={rightArm}
-          fill={WARM}
-          stroke={INK}
-          strokeWidth={2.6}
-          strokeLinejoin="round"
-        />
-        <path
-          d={rightThumb}
-          fill={WARM}
-          stroke={INK}
-          strokeWidth={2.4}
-          strokeLinejoin="round"
-        />
-        {[0, 1, 2].map((i) => (
-          <line
-            key={i}
-            x1={rightGripEnd + 6}
-            y1={cy - 14 + i * 10}
-            x2={rightGripEnd + 26}
-            y2={cy - 14 + i * 10}
-            stroke={INK}
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            opacity={0.55}
-          />
-        ))}
-      </g>
-
-      {/* Central seam glow — sits over the grip, gently pulses */}
-      {pulseActive && (
-        <>
-          <circle
-            cx={cx}
-            cy={cy}
-            r={glowR + 14}
-            fill="rgba(140, 122, 74, 0.14)"
-            opacity={glowOp * 0.6}
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r={glowR}
-            fill="rgba(140, 122, 74, 0.28)"
-            opacity={glowOp}
-          />
-          <circle cx={cx} cy={cy} r={5} fill={PLATFORM} />
-        </>
-      )}
-    </svg>
-  );
-};
-
-/* ==========================================================================
- * Scene 6 · Dark finale — Caveat wordmark from brand navbar, extended hold
- * ========================================================================== */
-
-const SceneDarkFinale: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
-  localFrame,
-  layout,
-}) => {
-  const { fps } = useVideoConfig();
-
-  // 90 frames: fade to dark 0–8, hold 8–72, fade out 72–90
   const darkOpacity = interpolate(
     localFrame,
-    [0, 8, 72, 90],
+    [0, 6, 56, 75],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
-
-  // Wordmark pops in with elastic overshoot then stays
-  const markIn = spring({ frame: localFrame - 6, fps, config: POP });
-
-  // CTA fades in after wordmark, holds
+  const markIn = spring({ frame: localFrame - 5, fps, config: POP });
   const ctaOpacity = interpolate(
     localFrame,
-    [20, 34, 72, 90],
+    [16, 28, 56, 75],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
@@ -2214,7 +1171,9 @@ const SceneDarkFinale: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
 
   return (
     <>
-      <AbsoluteFill style={{ backgroundColor: INK_BLACK, opacity: darkOpacity }} />
+      <AbsoluteFill
+        style={{ backgroundColor: INK_BLACK, opacity: darkOpacity }}
+      />
       <div
         style={{
           position: "absolute",
@@ -2252,7 +1211,6 @@ const SceneDarkFinale: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   );
 };
 
-/** Reproduces the navbar wordmark (Caveat, -4° tilt) on dark. */
 const CaveatWordmark: React.FC<{ size: number }> = ({ size }) => (
   <div
     style={{
@@ -2271,68 +1229,6 @@ const CaveatWordmark: React.FC<{ size: number }> = ({ size }) => (
     darso
   </div>
 );
-
-/* ==========================================================================
- * Small icons
- * ========================================================================== */
-
-const SearchGlyph: React.FC<{ size?: number; color?: string }> = ({
-  size = 18,
-  color = INK,
-}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <circle cx={11} cy={11} r={7} stroke={color} strokeWidth={2} />
-    <path d="M20 20l-3.5-3.5" stroke={color} strokeWidth={2} strokeLinecap="round" />
-  </svg>
-);
-
-const StarIcon: React.FC<{ size?: number; color?: string }> = ({
-  size = 12,
-  color = WARM_2,
-}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path d="M12 2 L14.5 8.5 L21.5 9.2 L16.4 14 L18 21 L12 17.5 L6 21 L7.6 14 L2.5 9.2 L9.5 8.5 Z" fill={color} />
-  </svg>
-);
-
-const CategoryIcon: React.FC<{
-  kind: "brush" | "note" | "code" | "globe";
-  accent: string;
-  size?: number;
-}> = ({ kind, accent, size = 20 }) => {
-  const s = size;
-  const sw = 1.8;
-  switch (kind) {
-    case "brush":
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-          <path d="M14 3l7 7-9 9-4.5-4.5L14 3z" stroke={accent} strokeWidth={sw} strokeLinejoin="round" />
-          <path d="M3 21c2-1 3-2 4-4l-4-2v6z" fill={accent} />
-        </svg>
-      );
-    case "note":
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-          <path d="M9 18V5l10-2v13" stroke={accent} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx={6} cy={18} r={3} fill={accent} />
-          <circle cx={16} cy={16} r={3} fill={accent} />
-        </svg>
-      );
-    case "code":
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-          <path d="M8 6l-5 6 5 6M16 6l5 6-5 6" stroke={accent} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      );
-    case "globe":
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-          <circle cx={12} cy={12} r={9} stroke={accent} strokeWidth={sw} />
-          <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke={accent} strokeWidth={sw} />
-        </svg>
-      );
-  }
-};
 
 /* ---------- Utility ---------- */
 

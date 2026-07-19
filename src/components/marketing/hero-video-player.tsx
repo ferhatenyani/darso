@@ -15,6 +15,16 @@ import {
 /** Below this aspect ratio the composition switches to its compact layout. */
 const COMPACT_RATIO_THRESHOLD = 1.15;
 
+/** Storyset SVGs used by the composition. Pre-warmed on mount so the first
+ *  loop doesn't render empty scenes while their fetches are in flight. */
+const SVG_PRELOAD = [
+  "/svgs/Video tutorial-rafiki.svg",
+  "/svgs/Video tutorial-pana.svg",
+  "/svgs/Kids Studying from Home-bro.svg",
+  "/svgs/Events-pana.svg",
+  "/svgs/Partnership-pana.svg",
+];
+
 /**
  * Renders the Remotion composition into the hero's notched container.
  *   1. Measures the parent DOM box and scales the Player so the composition
@@ -35,6 +45,23 @@ const COMPACT_RATIO_THRESHOLD = 1.15;
 export function HeroVideoPlayer() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+  const [assetsReady, setAssetsReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(SVG_PRELOAD.map((src) => fetch(src).then((r) => r.text())))
+      .then(() => {
+        if (!cancelled) setAssetsReady(true);
+      })
+      .catch(() => {
+        // Even if some fail, still show the Player so the composition can
+        // partially render — better than a blank container.
+        if (!cancelled) setAssetsReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -86,27 +113,29 @@ export function HeroVideoPlayer() {
         overflow: "hidden",
       }}
     >
-      <Player
-        component={HeroComposition}
-        durationInFrames={HERO_DURATION}
-        fps={HERO_FPS}
-        compositionWidth={HERO_WIDTH}
-        compositionHeight={HERO_HEIGHT}
-        numberOfSharedAudioTags={0}
-        initiallyMuted
-        inputProps={inputProps}
-        style={style}
-        loop
-        autoPlay
-        controls={false}
-        showVolumeControls={false}
-        clickToPlay={false}
-        doubleClickToFullscreen={false}
-        spaceKeyToPlayOrPause={false}
-        moveToBeginningWhenEnded
-        alwaysShowControls={false}
-        acknowledgeRemotionLicense
-      />
+      {assetsReady && (
+        <Player
+          component={HeroComposition}
+          durationInFrames={HERO_DURATION}
+          fps={HERO_FPS}
+          compositionWidth={HERO_WIDTH}
+          compositionHeight={HERO_HEIGHT}
+          numberOfSharedAudioTags={0}
+          initiallyMuted
+          inputProps={inputProps}
+          style={style}
+          loop
+          autoPlay
+          controls={false}
+          showVolumeControls={false}
+          clickToPlay={false}
+          doubleClickToFullscreen={false}
+          spaceKeyToPlayOrPause={false}
+          moveToBeginningWhenEnded
+          alwaysShowControls={false}
+          acknowledgeRemotionLicense
+        />
+      )}
     </div>
   );
 }
