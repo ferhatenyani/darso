@@ -23,7 +23,7 @@ import {
 export const HERO_WIDTH = 1600;
 export const HERO_HEIGHT = 1000;
 export const HERO_FPS = 30;
-export const HERO_DURATION = 780;
+export const HERO_DURATION = 810;
 export type HeroLayout = "wide" | "compact";
 
 /* ---------- Palette ---------- */
@@ -56,15 +56,17 @@ const ELASTIC = { damping: 10, stiffness: 140, mass: 0.9 } as const;
 const ELASTIC_SOFT = { damping: 14, stiffness: 110, mass: 0.9 } as const;
 const SETTLE = { damping: 22, stiffness: 100 } as const;
 const POP = { damping: 12, stiffness: 170, mass: 0.9 } as const;
+/** Smoother-than-ELASTIC arrival with just enough overshoot to feel alive. */
+const SMOOTH_ENTRY = { damping: 18, stiffness: 90, mass: 1 } as const;
 
 /* ---------- Scene windows ---------- */
 
-const S1 = { start: 0, end: 135 };
-const S2 = { start: 135, end: 285 };
-const S3 = { start: 285, end: 405 };
-const S4 = { start: 405, end: 585 };
-const S5 = { start: 585, end: 690 };
-const S6 = { start: 690, end: 780 };
+const S1 = { start: 0, end: 150 };
+const S2 = { start: 150, end: 300 };
+const S3 = { start: 300, end: 420 };
+const S4 = { start: 420, end: 615 };
+const S5 = { start: 615, end: 720 };
+const S6 = { start: 720, end: 810 };
 const FADE = 14;
 
 function sceneOpacity(frame: number, start: number, end: number, fade = FADE) {
@@ -119,7 +121,7 @@ export const HeroComposition: React.FC<{ layout?: HeroLayout }> = ({
       )}
       {frame > S5.start - FADE && frame < S5.end + FADE && (
         <AbsoluteFill style={{ opacity: sceneOpacity(frame, S5.start, S5.end) }}>
-          <SceneFaces localFrame={frame - S5.start} layout={layout} />
+          <SceneHandshake localFrame={frame - S5.start} layout={layout} />
         </AbsoluteFill>
       )}
       {frame > S6.start - FADE && (
@@ -239,14 +241,14 @@ const SEARCH_SUGGESTIONS = [
   "Cours de développement",
 ];
 
-// Local frames (135 total)
-const T1_CURSOR_APPEARS = 32;
-const T1_TYPING_START = 52;
+// Local frames (150 total). Card lands early so it can rest on screen ~45f.
+const T1_CURSOR_APPEARS = 30;
+const T1_TYPING_START = 48;
 const T1_TYPING_PER_CHAR = 3;
-const T1_TYPING_END = T1_TYPING_START + SEARCH_TARGET.length * T1_TYPING_PER_CHAR; // 52 + 33 = 85
-const T1_DROPDOWN_OPEN = 90;
-const T1_SELECT_LANGUES = 108;
-const T1_CARD_LANDS = 122;
+const T1_TYPING_END = T1_TYPING_START + SEARCH_TARGET.length * T1_TYPING_PER_CHAR; // 48 + 33 = 81
+const T1_DROPDOWN_OPEN = 84;
+const T1_SELECT_LANGUES = 98;
+const T1_CARD_LANDS = 108;
 
 const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   localFrame,
@@ -309,10 +311,10 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const pulse =
     cardSpring > 0.5 ? 1 + Math.sin((localFrame - T1_CARD_LANDS) * 0.34) * 0.04 : 1;
 
-  // Deliberately shorter than the composition height — protects against
-  // vertical crop on short/wide desktop containers.
-  const phoneW = layout === "wide" ? 350 : 400;
-  const phoneH = layout === "wide" ? 560 : 660;
+  // Narrower phone reduces visual weight and protects against vertical crop
+  // on short/wide desktop containers.
+  const phoneW = layout === "wide" ? 300 : 350;
+  const phoneH = layout === "wide" ? 520 : 600;
   const cx = HERO_WIDTH / 2;
   const cy = HERO_HEIGHT / 2;
   const innerW = phoneW - 44;
@@ -492,7 +494,7 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           </div>
         )}
 
-        {/* "Langues" persistent row (padding & icon size tightened to prevent overflow) */}
+        {/* "Langues" persistent row — richer design: iconbadge + title + social-proof subtitle */}
         {langHighlight > 0.05 && (
           <div
             style={{
@@ -505,8 +507,8 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           >
             <InkedRect
               width={innerW}
-              height={54}
-              radius={14}
+              height={72}
+              radius={16}
               fill={COOL_SOFT}
               stroke={COOL}
               strokeMid={1.4}
@@ -517,43 +519,77 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
               style={{
                 position: "absolute",
                 inset: 0,
-                padding: "0 20px",
+                padding: "0 14px",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                gap: 12,
                 overflow: "hidden",
               }}
             >
-              <span
+              {/* Icon inside a soft coloured disc — no way to overflow the row */}
+              <div
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 10,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  color: INK,
-                  letterSpacing: "-0.01em",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  minWidth: 0,
+                  position: "relative",
+                  width: 40,
+                  height: 40,
+                  flex: "0 0 40px",
                 }}
               >
-                <span style={{ display: "inline-flex", flex: "0 0 auto" }}>
-                  <CategoryIcon kind="globe" accent={COOL_2} size={17} />
-                </span>
-                <span
+                <InkedCircle
+                  size={40}
+                  fill="rgba(255,255,255,0.85)"
+                  stroke={COOL_2}
+                  strokeWidth={1.5}
+                />
+                <div
                   style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                >
+                  <CategoryIcon kind="globe" accent={COOL_2} size={18} />
+                </div>
+              </div>
+              {/* Title + subtitle */}
+              <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: INK,
+                    letterSpacing: "-0.01em",
+                    whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
                   }}
                 >
                   Langues
-                </span>
-              </span>
+                </div>
+                <div
+                  style={{
+                    fontSize: 11.5,
+                    color: INK_2,
+                    marginTop: 2,
+                    letterSpacing: "-0.005em",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  240 cours · 18 langues
+                </div>
+              </div>
+              {/* Chevron */}
               <span
-                style={{ color: COOL_2, fontSize: 18, flex: "0 0 auto", marginLeft: 8 }}
+                style={{
+                  color: COOL_2,
+                  fontSize: 20,
+                  flex: "0 0 auto",
+                  marginLeft: 4,
+                  lineHeight: 1,
+                }}
               >
                 ›
               </span>
@@ -826,10 +862,10 @@ const LESSONS: LessonCardData[] = [
   { subject: "Anglais", when: "Ven · 11h", who: "Lina", letter: "L", tone: PLATFORM, icon: "globe", rating: "4,9" },
 ];
 
-const CARDS_DEAL_AT = [12, 30, 48, 66, 84];
-const CARDS_HOLD_END = 118; // hold all 5 cards fully in place until this local frame
-const CARDS_DROP_START = 122;
-const CARDS_DROP_STAGGER = 4;
+const CARDS_DEAL_AT = [12, 26, 40, 54, 68];
+const CARDS_HOLD_END = 112;
+const CARDS_DROP_START = 112;
+const CARDS_DROP_STAGGER = 3;
 
 const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   localFrame,
@@ -840,7 +876,8 @@ const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const cardW = layout === "wide" ? 440 : 380;
   const cardH = layout === "wide" ? 118 : 108;
   const stackStep = layout === "wide" ? 38 : 34;
-  const rotations = [-4.5, 3, -2, 4, -3.5];
+  // Softer rotations so the deck feels dealt rather than tossed.
+  const rotations = [-3, 2, -1.5, 2.5, -2];
 
   const cx = HERO_WIDTH / 2;
   const cy = HERO_HEIGHT / 2;
@@ -872,16 +909,23 @@ const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
 
       {LESSONS.map((lesson, i) => {
         const dealAt = CARDS_DEAL_AT[i];
-        const enter = spring({ frame: localFrame - dealAt, fps, config: ELASTIC });
+        // Softer spring — less overshoot, no jittery landing. Each card
+        // arrives on the same trajectory so the deck reads as one motion.
+        const enter = spring({
+          frame: localFrame - dealAt,
+          fps,
+          config: SMOOTH_ENTRY,
+        });
         const settledY =
           cy -
           ((LESSONS.length - 1) / 2) * stackStep * 0.6 +
           i * stackStep * 0.6;
 
-        const dealRot = interpolate(enter, [0, 1], [rotations[i] - 8, rotations[i]]);
-        const dealX = interpolate(enter, [0, 1], [420, 0]);
-        const dealY = interpolate(enter, [0, 1], [220, 0]);
-        const dealScale = 0.9 + enter * 0.1;
+        const dealRot = interpolate(enter, [0, 1], [rotations[i] - 6, rotations[i]]);
+        // Shorter entry travel = smoother arrival
+        const dealX = interpolate(enter, [0, 1], [320, 0]);
+        const dealY = interpolate(enter, [0, 1], [180, 0]);
+        const dealScale = 0.92 + enter * 0.08;
 
         const dropAt = CARDS_DROP_START + i * CARDS_DROP_STAGGER;
         const dropT = Math.max(0, localFrame - dropAt);
@@ -893,16 +937,20 @@ const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           extrapolateRight: "clamp",
         });
 
-        const ghost1 = spring({ frame: localFrame - dealAt - 3, fps, config: ELASTIC });
-        const ghost2 = spring({ frame: localFrame - dealAt - 6, fps, config: ELASTIC });
+        // Single close ghost (-3f) instead of two — cleaner motion trail.
+        const ghost = spring({
+          frame: localFrame - dealAt - 3,
+          fps,
+          config: SMOOTH_ENTRY,
+        });
 
         if (enter < 0.01) return null;
 
         const renderGhost = (e: number, alpha: number) => {
-          const rDeg = interpolate(e, [0, 1], [rotations[i] - 8, rotations[i]]);
-          const xOff = interpolate(e, [0, 1], [420, 0]);
-          const yOff = interpolate(e, [0, 1], [220, 0]);
-          const sc = 0.9 + e * 0.1;
+          const rDeg = interpolate(e, [0, 1], [rotations[i] - 6, rotations[i]]);
+          const xOff = interpolate(e, [0, 1], [320, 0]);
+          const yOff = interpolate(e, [0, 1], [180, 0]);
+          const sc = 0.92 + e * 0.08;
           return (
             <div
               style={{
@@ -923,8 +971,7 @@ const SceneCards: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
 
         return (
           <div key={i}>
-            {dropT === 0 && ghost2 > 0.01 && renderGhost(ghost2, 0.10)}
-            {dropT === 0 && ghost1 > 0.01 && renderGhost(ghost1, 0.18)}
+            {dropT === 0 && ghost > 0.01 && renderGhost(ghost, 0.14)}
             <div
               style={{
                 position: "absolute",
@@ -1352,13 +1399,18 @@ const WaveBlock: React.FC<{
  * Scene 4 · Vase — amber 90% + blue top 10% + labelled arrows (180 f)
  * ========================================================================== */
 
-// Local frames
+// Local frames (195 total).
+//   0–25   title in
+//   25–105 amber fills 0 → 90%
+//   105–140 blue fills top 10% (visible split emerges)
+//   140–145 brief hold on the finished jar (reads before the arrows arrive)
+//   145–170 arrows draw in
+//   170–195 hold with everything on screen (~0.8s reading time)
 const T4_TITLE_IN = 8;
-const T4_FILL_START = 30;
-const T4_AMBER_END = 100; // amber fills 0 → 90% over 30–100
-const T4_BLUE_END = 130; // blue fills 90 → 100% over 100–130
-const T4_ARROWS_IN = 132;
-const T4_ARROWS_HOLD = 172;
+const T4_FILL_START = 25;
+const T4_AMBER_END = 105;
+const T4_BLUE_END = 140;
+const T4_ARROWS_IN = 145;
 
 const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   localFrame,
@@ -1503,17 +1555,15 @@ const Amphora: React.FC<{
   localFrame: number;
 }> = ({ width, height, amberPct, bluePct, localFrame }) => {
   const clipId = useId();
-  // Design in a 200×260 viewBox
   const vbW = 200;
   const vbH = 260;
-  // The interior fillable range (bottom → just below rim)
   const interiorBottom = 246;
   const interiorTop = 12;
-  const interiorSpan = interiorBottom - interiorTop; // 234
+  const interiorSpan = interiorBottom - interiorTop;
 
-  // Fluid tops
   const amberTop = interiorBottom - amberPct * interiorSpan;
   const blueTop = interiorBottom - (amberPct + bluePct) * interiorSpan;
+  const hasBlue = bluePct > 0.01;
 
   const path = `
     M 60 12
@@ -1533,20 +1583,47 @@ const Amphora: React.FC<{
     Q 52 18 60 12 Z
   `;
 
-  // Wobbly fluid surface path — reused for both amber & blue tops
-  const wave = (top: number) => {
+  // Sine-wobble edge sampled left→right (open polyline, no closing).
+  const wobbleEdge = (yBase: number, direction: "ltr" | "rtl" = "ltr") => {
     const steps = 10;
     const amp = 2.5;
-    const pts: string[] = [];
+    const pts: { x: number; y: number }[] = [];
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const x = t * vbW;
-      const y = top + Math.sin(t * Math.PI * 3 + localFrame * 0.18) * amp;
-      pts.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
+      const y = yBase + Math.sin(t * Math.PI * 3 + localFrame * 0.18) * amp;
+      pts.push({ x, y });
     }
-    pts.push(`L ${vbW} ${vbH} L 0 ${vbH} Z`);
-    return pts.join(" ");
+    if (direction === "rtl") pts.reverse();
+    return pts;
   };
+
+  // Amber fill: wobble top (when there's no blue above) or flat top (when
+  // capped by blue) — either way, closes down to the jar interior floor.
+  const amberEdgeTop = hasBlue
+    ? [
+        { x: 0, y: amberTop },
+        { x: vbW, y: amberTop },
+      ]
+    : wobbleEdge(amberTop, "ltr");
+  const amberPath =
+    amberEdgeTop
+      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+      .join(" ") + ` L ${vbW} ${vbH} L 0 ${vbH} Z`;
+
+  // Blue band: wobble on top (blueTop), flat on bottom (amberTop).
+  const blueTopEdge = wobbleEdge(blueTop, "ltr");
+  const blueBottomEdge = [
+    { x: vbW, y: amberTop },
+    { x: 0, y: amberTop },
+  ];
+  const bluePath =
+    blueTopEdge
+      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+      .join(" ") +
+    " " +
+    blueBottomEdge.map((p) => `L ${p.x} ${p.y}`).join(" ") +
+    " Z";
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${vbW} ${vbH}`} style={{ overflow: "visible" }}>
@@ -1557,17 +1634,17 @@ const Amphora: React.FC<{
       </defs>
       {/* Vase body */}
       <path d={path} fill={SURFACE} />
-      {/* Amber fill */}
+      {/* Amber region — clipped to jar */}
       {amberPct > 0.01 && (
         <g clipPath={`url(#${clipId})`}>
-          <path d={wave(amberTop)} fill={WARM} />
+          <path d={amberPath} fill={WARM} />
         </g>
       )}
-      {/* Blue top 10% (drawn above amber, only up to blueTop) */}
-      {bluePct > 0.01 && (
+      {/* Blue band on top (only in the 10% cap), clipped to jar */}
+      {hasBlue && (
         <g clipPath={`url(#${clipId})`}>
-          <path d={wave(blueTop)} fill={COOL} />
-          {/* thin crisp separator between amber & blue */}
+          <path d={bluePath} fill={COOL} />
+          {/* Crisp 2px separator marking the split */}
           <line
             x1={0}
             y1={amberTop}
@@ -1762,169 +1839,345 @@ const VaseAnnotations: React.FC<{
   );
 };
 
-// Silence unused (kept for future use)
-void T4_ARROWS_HOLD;
-
 /* ==========================================================================
- * Scene 5 · Faces — minimalist bust silhouettes + sine link (105 f)
+ * Scene 5 · Handshake — two arms grip at center, glow pulses on the seam
+ *   Copy: "Le savoir se partage. La confiance se construit."
  * ========================================================================== */
 
-const SceneFaces: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
-  localFrame,
-  layout,
-}) => {
+const SceneHandshake: React.FC<{
+  localFrame: number;
+  layout: HeroLayout;
+}> = ({ localFrame, layout }) => {
   const { fps } = useVideoConfig();
 
-  const leftIn = spring({ frame: localFrame, fps, config: ELASTIC });
-  const rightIn = spring({ frame: localFrame - 10, fps, config: ELASTIC });
-  const lineDraw = interpolate(localFrame, [26, 48], [0, 1], {
+  const titleIn = interpolate(localFrame, [6, 26], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: (t) => cubicBezier(EASE_OUT, t),
+  });
+  const subIn = interpolate(localFrame, [18, 38], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: (t) => cubicBezier(EASE_OUT, t),
   });
 
-  const profileSize = layout === "wide" ? 200 : 160;
-  const gap = layout === "wide" ? 260 : 200;
-  const cy = HERO_HEIGHT / 2;
-  const leftX = HERO_WIDTH / 2 - gap;
-  const rightX = HERO_WIDTH / 2 + gap;
+  const leftIn = spring({
+    frame: localFrame - 20,
+    fps,
+    config: SMOOTH_ENTRY,
+  });
+  const rightIn = spring({
+    frame: localFrame - 26,
+    fps,
+    config: SMOOTH_ENTRY,
+  });
 
-  const waveStartX = leftX + profileSize * 0.32;
-  const waveEndX = rightX - profileSize * 0.32;
-  const waveW = waveEndX - waveStartX;
-  const amp = 26;
+  const labelIn = interpolate(localFrame, [56, 76], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
-  const points: string[] = [];
-  const steps = 40;
-  const revealed = Math.floor(steps * lineDraw);
-  for (let i = 0; i <= revealed; i++) {
-    const t = i / steps;
-    const x = waveStartX + waveW * t;
-    const y = cy + Math.sin(t * Math.PI * 4 + localFrame * 0.11) * amp;
-    points.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
-  }
-  const wavePath = points.join(" ");
+  const cx = HERO_WIDTH / 2;
+  const cy = HERO_HEIGHT / 2 + 20;
+  const illustrationW = layout === "wide" ? 780 : 560;
+  const illustrationH = illustrationW * 0.4;
 
-  const packetT = (Math.sin(localFrame * 0.08) + 1) / 2;
-  const packetX = waveStartX + waveW * packetT;
-  const packetY = cy + Math.sin(packetT * Math.PI * 4 + localFrame * 0.11) * amp;
+  // Both hands settled? Only then pulse
+  const gripSettled = Math.min(leftIn, rightIn) > 0.9;
 
   return (
     <>
-      <BustSilhouette x={leftX} y={cy} size={profileSize} color={COOL} scale={leftIn} label="Étudiant" />
-      <BustSilhouette x={rightX} y={cy} size={profileSize} color={WARM} scale={rightIn} label="Enseignant" />
-      <svg width={HERO_WIDTH} height={HERO_HEIGHT} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        {revealed > 0 && (
-          <path
-            d={wavePath}
-            fill="none"
-            stroke={PLATFORM}
-            strokeWidth={2.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        )}
-        {lineDraw > 0.99 && (
-          <>
-            <circle cx={packetX} cy={packetY} r={10} fill={PLATFORM} opacity={0.22} />
-            <circle cx={packetX} cy={packetY} r={5} fill={PLATFORM} />
-          </>
-        )}
-      </svg>
-
+      {/* Title — parallel two-liner */}
       <div
         style={{
           position: "absolute",
           left: "50%",
-          top: cy + profileSize * 0.75,
+          top: cy - illustrationH * 0.5 - 130,
           transform: "translate(-50%, 0)",
-          fontSize: 12,
-          letterSpacing: "0.32em",
-          textTransform: "uppercase",
-          color: INK_2,
-          fontWeight: 700,
           textAlign: "center",
-          opacity: interpolate(localFrame, [50, 70], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
+          width: "100%",
+          maxWidth: layout === "wide" ? 900 : 600,
+          padding: "0 24px",
+          boxSizing: "border-box",
         }}
       >
-        Une rencontre, un savoir partagé
+        <div
+          style={{
+            fontSize: layout === "wide" ? 34 : 22,
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.1,
+            opacity: titleIn,
+            transform: `translateY(${(1 - titleIn) * 12}px)`,
+          }}
+        >
+          Le savoir se partage.
+        </div>
+        <div
+          style={{
+            fontSize: layout === "wide" ? 34 : 22,
+            fontWeight: 700,
+            color: INK_2,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.1,
+            marginTop: 4,
+            opacity: subIn,
+            transform: `translateY(${(1 - subIn) * 12}px)`,
+          }}
+        >
+          La confiance se construit.
+        </div>
       </div>
-    </>
-  );
-};
 
-/** Minimalist bust silhouette — no facial features, distinguishable by color. */
-const BustSilhouette: React.FC<{
-  x: number;
-  y: number;
-  size: number;
-  color: string;
-  scale: number;
-  label: string;
-}> = ({ x, y, size, color, scale, label }) => {
-  const vbW = 140;
-  const vbH = 160;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        width: size,
-        height: size * (vbH / vbW),
-        transform: `translate(-50%, -50%) scale(${scale})`,
-        opacity: scale,
-      }}
-    >
-      <svg width={size} height={size * (vbH / vbW)} viewBox={`0 0 ${vbW} ${vbH}`} style={{ overflow: "visible" }}>
-        {/* Shoulders / body */}
-        <path
-          d={`M 14 158 Q 14 118 55 112 Q 70 111 85 112 Q 126 118 126 158 L 14 158 Z`}
-          fill={color}
-          opacity={0.9}
-        />
-        <path
-          d={`M 14 158 Q 14 118 55 112 Q 70 111 85 112 Q 126 118 126 158`}
-          fill="none"
-          stroke={INK}
-          strokeWidth={2.4}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Neck */}
-        <path d="M 55 112 L 55 96 Q 55 92 60 92 L 80 92 Q 85 92 85 96 L 85 112" fill={color} opacity={0.9} />
-        <path
-          d="M 55 112 L 55 96 Q 55 92 60 92 L 80 92 Q 85 92 85 96 L 85 112"
-          fill="none"
-          stroke={INK}
-          strokeWidth={2.4}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Head */}
-        <ellipse cx={70} cy={54} rx={32} ry={38} fill={color} opacity={0.92} />
-        <ellipse cx={70} cy={54} rx={32} ry={38} fill="none" stroke={INK} strokeWidth={2.6} />
-      </svg>
+      {/* Handshake illustration */}
       <div
         style={{
           position: "absolute",
-          left: "50%",
-          top: "calc(100% + 12px)",
+          left: cx,
+          top: cy,
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <HandshakeIllustration
+          width={illustrationW}
+          height={illustrationH}
+          leftDrawIn={leftIn}
+          rightDrawIn={rightIn}
+          pulseActive={gripSettled}
+          localFrame={localFrame}
+        />
+      </div>
+
+      {/* Labels flanking the handshake */}
+      <div
+        style={{
+          position: "absolute",
+          left: cx - illustrationW * 0.42,
+          top: cy + illustrationH * 0.5 + 30,
           transform: "translate(-50%, 0)",
           fontSize: 12,
           letterSpacing: "0.24em",
           textTransform: "uppercase",
           fontWeight: 700,
           color: INK_2,
-          whiteSpace: "nowrap",
+          opacity: labelIn,
         }}
       >
-        {label}
+        Étudiant
       </div>
-    </div>
+      <div
+        style={{
+          position: "absolute",
+          left: cx + illustrationW * 0.42,
+          top: cy + illustrationH * 0.5 + 30,
+          transform: "translate(-50%, 0)",
+          fontSize: 12,
+          letterSpacing: "0.24em",
+          textTransform: "uppercase",
+          fontWeight: 700,
+          color: INK_2,
+          opacity: labelIn,
+        }}
+      >
+        Enseignant
+      </div>
+    </>
+  );
+};
+
+/** Two forearms grip at center; small thumb-bumps on top; gold pulse rings
+ *  radiate from the seam once both hands are settled. */
+const HandshakeIllustration: React.FC<{
+  width: number;
+  height: number;
+  leftDrawIn: number;
+  rightDrawIn: number;
+  pulseActive: boolean;
+  localFrame: number;
+}> = ({ width, height, leftDrawIn, rightDrawIn, pulseActive, localFrame }) => {
+  // Design canvas
+  const vbW = 500;
+  const vbH = 200;
+  const cx = vbW / 2;
+  const cy = vbH / 2;
+  const armH = 46;
+  const gripH = 84;
+
+  // Where each grip ends. Slight overlap past centre so the seam reads.
+  const leftGripEnd = cx + 18;
+  const rightGripEnd = cx - 18;
+
+  const leftArm = `
+    M 0 ${cy - armH / 2}
+    L ${cx - 110} ${cy - armH / 2}
+    Q ${cx - 70} ${cy - armH / 2} ${cx - 48} ${cy - gripH / 2 + 10}
+    Q ${cx - 20} ${cy - gripH / 2 - 4} ${leftGripEnd - 12} ${cy - gripH / 2}
+    Q ${leftGripEnd} ${cy - gripH / 2} ${leftGripEnd} ${cy - gripH / 2 + 20}
+    L ${leftGripEnd} ${cy + gripH / 2 - 20}
+    Q ${leftGripEnd} ${cy + gripH / 2} ${leftGripEnd - 12} ${cy + gripH / 2}
+    Q ${cx - 20} ${cy + gripH / 2 + 4} ${cx - 48} ${cy + gripH / 2 - 10}
+    Q ${cx - 70} ${cy + armH / 2} ${cx - 110} ${cy + armH / 2}
+    L 0 ${cy + armH / 2}
+    Z
+  `;
+
+  const rightArm = `
+    M ${vbW} ${cy - armH / 2}
+    L ${cx + 110} ${cy - armH / 2}
+    Q ${cx + 70} ${cy - armH / 2} ${cx + 48} ${cy - gripH / 2 + 10}
+    Q ${cx + 20} ${cy - gripH / 2 - 4} ${rightGripEnd + 12} ${cy - gripH / 2}
+    Q ${rightGripEnd} ${cy - gripH / 2} ${rightGripEnd} ${cy - gripH / 2 + 20}
+    L ${rightGripEnd} ${cy + gripH / 2 - 20}
+    Q ${rightGripEnd} ${cy + gripH / 2} ${rightGripEnd + 12} ${cy + gripH / 2}
+    Q ${cx + 20} ${cy + gripH / 2 + 4} ${cx + 48} ${cy + gripH / 2 - 10}
+    Q ${cx + 70} ${cy + armH / 2} ${cx + 110} ${cy + armH / 2}
+    L ${vbW} ${cy + armH / 2}
+    Z
+  `;
+
+  // Thumb nubs sit on TOP of each grip
+  const leftThumb = `
+    M ${leftGripEnd - 46} ${cy - gripH / 2 + 8}
+    Q ${leftGripEnd - 36} ${cy - gripH / 2 - 16} ${leftGripEnd - 16} ${cy - gripH / 2 - 6}
+    L ${leftGripEnd - 12} ${cy - gripH / 2 + 4}
+    L ${leftGripEnd - 42} ${cy - gripH / 2 + 16}
+    Z
+  `;
+  const rightThumb = `
+    M ${rightGripEnd + 46} ${cy - gripH / 2 + 8}
+    Q ${rightGripEnd + 36} ${cy - gripH / 2 - 16} ${rightGripEnd + 16} ${cy - gripH / 2 - 6}
+    L ${rightGripEnd + 12} ${cy - gripH / 2 + 4}
+    L ${rightGripEnd + 42} ${cy - gripH / 2 + 16}
+    Z
+  `;
+
+  const leftOffset = (1 - leftDrawIn) * -220;
+  const rightOffset = (1 - rightDrawIn) * 220;
+
+  // Pulsing glow at the seam
+  const beat = pulseActive
+    ? (Math.sin(localFrame * 0.14) + 1) / 2
+    : 0;
+  const glowR = 22 + beat * 12;
+  const glowOp = pulseActive ? 0.35 + beat * 0.3 : 0;
+
+  // Continuous ripples emanating from the seam
+  const rippleRings = pulseActive
+    ? [0, 1, 2].map((i) => {
+        const phase = ((localFrame - 40) * 0.024 + i / 3) % 1;
+        return {
+          r: 12 + phase * 72,
+          op: (1 - phase) * 0.4,
+        };
+      })
+    : [];
+
+  return (
+    <svg
+      viewBox={`0 0 ${vbW} ${vbH}`}
+      width={width}
+      height={height}
+      style={{ overflow: "visible" }}
+    >
+      {/* Ripple rings under the seam */}
+      {rippleRings.map((r, i) => (
+        <circle
+          key={i}
+          cx={cx}
+          cy={cy}
+          r={r.r}
+          fill="none"
+          stroke={PLATFORM}
+          strokeWidth={2}
+          opacity={r.op}
+        />
+      ))}
+
+      {/* Left arm */}
+      <g transform={`translate(${leftOffset} 0)`} opacity={leftDrawIn}>
+        <path
+          d={leftArm}
+          fill={COOL}
+          stroke={INK}
+          strokeWidth={2.6}
+          strokeLinejoin="round"
+        />
+        <path
+          d={leftThumb}
+          fill={COOL}
+          stroke={INK}
+          strokeWidth={2.4}
+          strokeLinejoin="round"
+        />
+        {/* Finger ridges — small ticks on the grip inner face */}
+        {[0, 1, 2].map((i) => (
+          <line
+            key={i}
+            x1={leftGripEnd - 6}
+            y1={cy - 14 + i * 10}
+            x2={leftGripEnd - 26}
+            y2={cy - 14 + i * 10}
+            stroke={INK}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            opacity={0.55}
+          />
+        ))}
+      </g>
+
+      {/* Right arm */}
+      <g transform={`translate(${rightOffset} 0)`} opacity={rightDrawIn}>
+        <path
+          d={rightArm}
+          fill={WARM}
+          stroke={INK}
+          strokeWidth={2.6}
+          strokeLinejoin="round"
+        />
+        <path
+          d={rightThumb}
+          fill={WARM}
+          stroke={INK}
+          strokeWidth={2.4}
+          strokeLinejoin="round"
+        />
+        {[0, 1, 2].map((i) => (
+          <line
+            key={i}
+            x1={rightGripEnd + 6}
+            y1={cy - 14 + i * 10}
+            x2={rightGripEnd + 26}
+            y2={cy - 14 + i * 10}
+            stroke={INK}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            opacity={0.55}
+          />
+        ))}
+      </g>
+
+      {/* Central seam glow — sits over the grip, gently pulses */}
+      {pulseActive && (
+        <>
+          <circle
+            cx={cx}
+            cy={cy}
+            r={glowR + 14}
+            fill="rgba(140, 122, 74, 0.14)"
+            opacity={glowOp * 0.6}
+          />
+          <circle
+            cx={cx}
+            cy={cy}
+            r={glowR}
+            fill="rgba(140, 122, 74, 0.28)"
+            opacity={glowOp}
+          />
+          <circle cx={cx} cy={cy} r={5} fill={PLATFORM} />
+        </>
+      )}
+    </svg>
   );
 };
 
