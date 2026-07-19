@@ -1,8 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
 
-import { SiteHeader } from "@/components/nav/site-header";
+import { HomeHeader } from "@/components/nav/home-header";
 import { SiteFooter } from "@/components/nav/site-footer";
 import { HomeHero } from "@/components/marketing/home-hero";
+import { HomeSearchBand } from "@/components/marketing/home-search-band";
 import { CategoryCarousel } from "@/components/marketing/category-carousel";
 import { HowItWorksV2 } from "@/components/marketing/how-it-works-v2";
 import { TrustSafety } from "@/components/marketing/trust-safety";
@@ -23,11 +24,13 @@ export default async function HomePage({
 
   return (
     <>
-      <SiteHeader />
+      <HomeHeader />
       <main className="flex-1">
-        {/* 1 · Hero with functional search + dual-path toggle */}
+        {/* 1 · Hero — cinematic Remotion composition, two-column, floating CTAs */}
         <HomeHero />
-        {/* 2 · Popular categories — carousel on mobile, grid on desktop */}
+        {/* 2 · Search — moved out of the hero, sits directly beneath it */}
+        <HomeSearchBand />
+        {/* 3 · Popular categories — carousel on mobile, grid on desktop */}
         <CategoryCarousel />
         {/* 3 · How it works — 3 steps */}
         <HowItWorksV2 />

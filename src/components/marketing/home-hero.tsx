@@ -1,251 +1,312 @@
 "use client";
 
-import { useState } from "react";
-import { Search, GraduationCap, Sparkles, ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { ArrowUpRight, Compass } from "lucide-react";
 
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
-import { cn } from "@/lib/utils";
+import { HeroVideoPlayer } from "./hero-video-player";
 
-const POPULAR: { label: string; q: string }[] = [
-  { label: "Maths Bac", q: "Maths Bac" },
-  { label: "IELTS", q: "IELTS" },
-  { label: "Physique", q: "Physique" },
-  { label: "Coran & tajwid", q: "Coran" },
-  { label: "Programmation Web", q: "React" },
-  { label: "Piano", q: "Piano" },
-];
-
+/**
+ * Home hero — single dominant dark container with 4 inverted-radius notches,
+ * one at each corner. All four notches use the same structural pattern:
+ *
+ *   container edge → convex bump → straight segment → interior rounded corner
+ *                  → straight segment → convex bump → container edge
+ *
+ * Content lives inside each notch, sitting on the page bg (which shows
+ * through the carve-outs). The container's outline is a JS-generated
+ * clip-path that resizes on any measurement change (ResizeObserver).
+ *
+ *   TL — headline + eyebrow chip (rectangular content)
+ *   TR — guide compass button (small, app-wide guide entry point)
+ *   BL — secondary CTA "Devenir enseignant"
+ *   BR — primary CTA "Trouver un cours"
+ */
 export function HomeHero() {
-  const router = useRouter();
-  const [mode, setMode] = useState<"learn" | "teach">("learn");
-  const [q, setQ] = useState("");
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (mode === "teach") {
-      router.push(routes.teachLanding() as never);
-      return;
-    }
-    const params = new URLSearchParams();
-    if (q.trim()) params.set("q", q.trim());
-    router.push(`/browse${params.toString() ? `?${params.toString()}` : ""}` as never);
-  }
-
   return (
-    <section className="relative isolate overflow-hidden border-b border-border bg-background">
-      {/* Backgrounds: dotted grid + accent hairline + editorial corner tick */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-dots opacity-70 [mask-image:radial-gradient(80%_60%_at_50%_0%,black,transparent_80%)]"
-      />
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-px bg-border" />
-      <div aria-hidden className="absolute start-8 top-0 -z-10 h-[3px] w-24 bg-accent md:start-12" />
-
-      <div className="container-wide grid gap-10 pt-10 pb-14 md:pt-16 md:pb-20 lg:grid-cols-12 lg:gap-16 lg:pt-24 lg:pb-28">
-        {/* LEFT — Copy + search + dual toggle */}
-        <div className="lg:col-span-7 xl:col-span-7">
-          {/* Eyebrow */}
-          <div
-            className="anim-fade-up inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[12px] font-medium text-ink-2"
-            style={{ animationDelay: "0ms" }}
-          >
-            <span className="ink-rule" />
-            La marketplace de l'apprentissage
-          </div>
-
-          {/* Headline */}
-          <h1
-            className="anim-fade-up mt-6 text-[38px] font-bold leading-[1.02] tracking-[-0.02em] text-foreground sm:text-[46px] md:text-[54px] lg:text-[60px] xl:text-[68px] text-balance"
-            style={{ animationDelay: "80ms" }}
-          >
-            Apprenez ce qui vous fait avancer,{" "}
-            <span className="relative inline-block">
-              <span className="relative z-10">avec des enseignants</span>
-              <span
-                aria-hidden
-                className="anim-underline absolute inset-x-0 bottom-1 -z-0 h-[10px] bg-accent-soft"
-              />
-            </span>{" "}
-            qui s'engagent.
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            className="anim-fade-up mt-5 max-w-2xl text-[15.5px] leading-relaxed text-ink-2 md:text-[17px]"
-            style={{ animationDelay: "180ms" }}
-          >
-            Trouvez un cours particulier, une cohorte en ligne ou un atelier en direct. Payez en sécurité,
-            réservez sans engagement, et changez de professeur si nécessaire.
-          </p>
-
-          {/* Dual-path toggle */}
-          <div
-            role="tablist"
-            aria-label="Vous voulez apprendre ou enseigner ?"
-            className="anim-fade-up mt-8 inline-flex rounded-[var(--radius-md)] border border-border bg-surface p-1"
-            style={{ animationDelay: "260ms" }}
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "learn"}
-              onClick={() => setMode("learn")}
-              className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-[var(--radius-xs)] px-4 text-[13.5px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus",
-                mode === "learn"
-                  ? "bg-background text-foreground shadow-e1"
-                  : "text-ink-2 hover:text-foreground",
-              )}
-            >
-              <GraduationCap className="h-4 w-4" aria-hidden />
-              Je veux apprendre
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "teach"}
-              onClick={() => setMode("teach")}
-              className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-[var(--radius-xs)] px-4 text-[13.5px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus",
-                mode === "teach"
-                  ? "bg-background text-foreground shadow-e1"
-                  : "text-ink-2 hover:text-foreground",
-              )}
-            >
-              <Sparkles className="h-4 w-4" aria-hidden />
-              Je veux enseigner
-            </button>
-          </div>
-
-          {/* Search (only in learn mode) OR CTA (in teach mode) */}
-          {mode === "learn" ? (
-            <>
-              <form
-                onSubmit={onSubmit}
-                aria-label="Rechercher un cours ou un professeur"
-                className="anim-fade-up mt-4 flex items-stretch gap-2 rounded-[var(--radius-lg)] border border-border-strong bg-card p-1.5 shadow-e1 transition-all duration-300 focus-within:border-accent focus-within:shadow-e2 max-w-2xl"
-                style={{ animationDelay: "340ms" }}
-              >
-                <span className="ms-2 grid h-11 w-9 place-items-center text-ink-3">
-                  <Search className="h-[18px] w-[18px]" aria-hidden />
-                </span>
-                <input
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Une matière, un professeur, une ville…"
-                  className="h-11 flex-1 bg-transparent text-[15px] text-foreground placeholder:text-ink-3 focus:outline-none"
-                  aria-label="Que voulez-vous apprendre ?"
-                />
-                <button
-                  type="submit"
-                  className="group inline-flex h-11 items-center gap-1.5 rounded-[var(--radius-xs)] bg-accent px-4 text-[14px] font-semibold text-accent-foreground transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus"
-                >
-                  Rechercher
-                  <ArrowRight
-                    className="h-3.5 w-3.5 rtl-flip transition-transform duration-300 group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </button>
-              </form>
-
-              {/* Popular chips */}
-              <div
-                className="anim-fade-up mt-4 flex flex-wrap items-center gap-1.5"
-                style={{ animationDelay: "420ms" }}
-              >
-                <span className="text-[12px] font-medium text-ink-3 me-1">Populaire :</span>
-                {POPULAR.map((p, i) => (
-                  <Link
-                    key={p.q}
-                    href={`/browse?q=${encodeURIComponent(p.q)}` as never}
-                    className="rounded-full border border-border bg-background px-3 py-1 text-[12.5px] font-medium text-ink-2 transition-all duration-200 hover:-translate-y-[1px] hover:border-accent hover:bg-accent-soft/60 hover:text-accent focus-visible:outline-none focus-visible:shadow-focus"
-                    style={{ animationDelay: `${460 + i * 40}ms` }}
-                  >
-                    {p.label}
-                  </Link>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div
-              className="anim-fade-up mt-4 max-w-2xl rounded-[var(--radius-lg)] border border-border-strong bg-card p-6 shadow-e1"
-              style={{ animationDelay: "340ms" }}
-            >
-              <p className="text-[15px] leading-relaxed text-ink-2">
-                Publiez vos cours en 10 minutes. Recevez des demandes d'élèves. Gérez réservations et
-                paiements depuis un seul tableau de bord.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Link
-                  href={routes.teachLanding()}
-                  className="group inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:shadow-focus"
-                >
-                  Devenir enseignant
-                  <ArrowRight
-                    className="h-3.5 w-3.5 rtl-flip transition-transform duration-300 group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </Link>
-                <Link
-                  href={routes.teachPricing()}
-                  className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-xs)] border border-border bg-background px-5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-none focus-visible:shadow-focus"
-                >
-                  Voir les tarifs
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* RIGHT — abstract brand mark (never stock photo) */}
-        <div className="hidden lg:col-span-5 lg:block xl:col-span-5">
-          <HeroBrandMark />
-        </div>
+    <section
+      aria-labelledby="home-hero-heading"
+      className="relative isolate bg-background pt-3 pb-14 md:pt-4 md:pb-20"
+    >
+      <div className="container-wide">
+        <HeroCard />
       </div>
     </section>
   );
 }
 
-/** Editorial brand illustration — geometric, no stock, no gradient orbs. */
-function HeroBrandMark() {
+/* --- design tokens ------------------------------------------------------- */
+
+/** Padding between content and the notch's interior edge (px). */
+const NOTCH_PAD = 14;
+/** Convex bump radius where each notch meets the container edge (px). */
+const TRANSITION_R = 22;
+/** Interior rounded corner radius for each notch (px). */
+const INNER_R = 40;
+/** Outer container corner radius — the "flat" corners between notches. */
+const CORNER_R = 48;
+/** Fallback dimensions used before ResizeObserver fires. */
+const FALLBACK = {
+  tl: { w: 480, h: 240 },
+  tr: { w: 72, h: 72 },
+  bl: { w: 240, h: 60 },
+  br: { w: 220, h: 60 },
+};
+
+function HeroCard() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const shapeRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<HTMLDivElement>(null);
+  const trRef = useRef<HTMLAnchorElement>(null);
+  const blRef = useRef<HTMLAnchorElement>(null);
+  const brRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const shape = shapeRef.current;
+    if (!wrapper || !shape) return;
+
+    const update = () => {
+      const w = wrapper.offsetWidth;
+      const h = wrapper.offsetHeight;
+      if (w === 0 || h === 0) return;
+
+      const measure = (
+        el: HTMLElement | null,
+        fallback: { w: number; h: number },
+      ) => {
+        if (!el || el.offsetHeight === 0) return fallback;
+        return {
+          w: el.offsetWidth + 2 * NOTCH_PAD,
+          h: el.offsetHeight + 2 * NOTCH_PAD,
+        };
+      };
+
+      let tl = measure(tlRef.current, FALLBACK.tl);
+      const tr = measure(trRef.current, FALLBACK.tr);
+      const bl = measure(blRef.current, FALLBACK.bl);
+      const br = measure(brRef.current, FALLBACK.br);
+
+      // Cap headline notch so it never dominates the container.
+      const isMobile = w < 640;
+      tl = {
+        w: Math.min(tl.w, w * (isMobile ? 0.9 : 0.55)),
+        h: Math.min(tl.h, h * (isMobile ? 0.55 : 0.45)),
+      };
+
+      const path = buildHeroPath({
+        w,
+        h,
+        transitionR: TRANSITION_R,
+        innerR: INNER_R,
+        tl,
+        tr,
+        bl,
+        br,
+      });
+
+      shape.style.clipPath = `path("${path}")`;
+      (shape.style as CSSStyleDeclaration & { webkitClipPath?: string }).webkitClipPath =
+        `path("${path}")`;
+    };
+
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(wrapper);
+    [tlRef, trRef, blRef, brRef].forEach((r) => {
+      if (r.current) ro.observe(r.current);
+    });
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div
-      className="anim-fade-up relative aspect-square w-full max-w-[520px]"
-      style={{ animationDelay: "260ms", animationDuration: "900ms" }}
+      ref={wrapperRef}
+      className="relative w-full h-[calc(100dvh-140px)] min-h-[520px] max-h-[720px] lg:max-h-[820px]"
     >
-      {/* Base surface tile */}
-      <div className="absolute inset-0 rounded-[var(--radius-xl)] border border-border bg-surface shadow-e1" />
-      {/* Grid pattern inside */}
-      <div className="absolute inset-6 rounded-[var(--radius-lg)] bg-grid-sm opacity-60" />
-      {/* Editorial corner mark */}
-      <div className="absolute inset-x-6 top-6 flex items-center justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-3">
-          darso · marketplace
-        </span>
-        <span className="h-[3px] w-10 bg-accent" />
+      {/* Dark container — the Remotion composition is the background. */}
+      <div
+        ref={shapeRef}
+        className="absolute inset-0 overflow-hidden bg-[#0E1116]"
+        style={{
+          borderRadius: CORNER_R,
+          filter:
+            "drop-shadow(0 30px 60px rgba(10, 11, 14, 0.18)) drop-shadow(0 8px 16px rgba(10, 11, 14, 0.08))",
+        }}
+      >
+        <div className="absolute inset-0">
+          <HeroVideoPlayer />
+        </div>
       </div>
-      {/* Central editorial number */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
-        <p className="font-mono text-[13px] uppercase tracking-widest text-ink-3">
-          À vous de jouer
-        </p>
-        <p
-          className="anim-count-in mt-3 text-[92px] font-black leading-none tracking-tighter text-foreground/90"
-          style={{ animationDelay: "480ms" }}
+
+      {/* TL — headline + eyebrow */}
+      <div
+        ref={tlRef}
+        className="absolute top-0 left-0 max-w-[82%] pr-6 pb-5 sm:max-w-[52%] sm:pr-8 sm:pb-6 md:pr-10 md:pb-8"
+      >
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white px-3 py-1 text-[11px] font-medium text-ink-2 md:text-[12px]">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+          La marketplace de l'apprentissage
+        </div>
+        <h1
+          id="home-hero-heading"
+          className="mt-4 text-[28px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-[38px] md:text-[46px] lg:text-[54px] xl:text-[60px] text-balance"
         >
-          01
-        </p>
-        <p className="mt-3 max-w-[320px] mx-auto text-[13px] leading-relaxed text-ink-2">
-          Cherchez, comparez, réservez, apprenez. Chaque étape est claire — jamais de mauvaise surprise.
-        </p>
+          Apprenez tout,
+          <br />
+          avec les <span className="relative inline-block">
+            meilleurs
+            <span
+              aria-hidden
+              className="absolute inset-x-0 -bottom-1 h-[8px] rounded-full bg-accent/80"
+            />
+          </span>
+          <br className="hidden md:block" />
+          professeurs.
+        </h1>
       </div>
-      {/* Accent block bottom */}
-      <div className="absolute inset-x-6 bottom-6 flex items-center gap-3">
-        <span className="h-8 w-8 rounded-[var(--radius-xs)] bg-primary" />
-        <span className="h-2 flex-1 rounded-full bg-border" />
-        <span className="h-2 w-8 rounded-full bg-accent float-slow" />
-      </div>
+
+      {/* TR — guide compass button (app-wide entry point) */}
+      <Link
+        ref={trRef}
+        href={routes.help()}
+        aria-label="Ouvrir le guide"
+        className="group absolute top-0 right-0 grid h-14 w-14 place-items-center rounded-full bg-white text-foreground ring-1 ring-border shadow-[0_10px_28px_-10px_rgba(10,11,14,0.20),0_4px_10px_-4px_rgba(10,11,14,0.10)] transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus md:h-[60px] md:w-[60px]"
+      >
+        <Compass className="h-[22px] w-[22px] transition-transform duration-300 group-hover:rotate-45" strokeWidth={1.8} />
+      </Link>
+
+      {/* BL — secondary CTA */}
+      <Link
+        ref={blRef}
+        href={routes.teachLanding()}
+        className="group absolute bottom-0 left-0 inline-flex items-center gap-2 rounded-full bg-white py-3 pl-5 pr-4 text-[13.5px] font-semibold text-foreground shadow-[0_10px_28px_-10px_rgba(10,11,14,0.20),0_4px_10px_-4px_rgba(10,11,14,0.10)] ring-1 ring-border transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus"
+      >
+        Devenir enseignant
+        <span
+          aria-hidden
+          className="grid h-6 w-6 place-items-center rounded-full bg-primary text-primary-foreground transition-transform duration-200 group-hover:rotate-45"
+        >
+          <ArrowUpRight className="h-3.5 w-3.5" />
+        </span>
+      </Link>
+
+      {/* BR — primary CTA */}
+      <Link
+        ref={brRef}
+        href={routes.browse()}
+        className="group absolute bottom-0 right-0 inline-flex items-center gap-2 rounded-full bg-accent py-3 pl-5 pr-4 text-[13.5px] font-semibold text-accent-foreground shadow-[0_10px_28px_-10px_rgba(47,111,235,0.45),0_4px_10px_-4px_rgba(10,11,14,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus"
+      >
+        <span
+          aria-hidden
+          className="grid h-6 w-6 place-items-center rounded-full bg-white/25 text-accent-foreground"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.2" />
+            <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
+        </span>
+        Trouver un cours
+      </Link>
     </div>
   );
+}
+
+/* -------------------------------------------------------------------------- */
+
+type NotchSize = { w: number; h: number };
+
+/**
+ * Builds the container's SVG clip-path outline going CW.
+ * Every corner uses the SAME structural pattern:
+ *   convex bump → straight → interior rounded corner → straight → convex bump
+ *
+ * Convex bumps (sweep=1) turn direction 90° between container edge and
+ * notch's straight segment. The interior rounded corner (sweep=0) turns
+ * direction 90° between the two straight segments inside the notch.
+ */
+function buildHeroPath({
+  w,
+  h,
+  transitionR,
+  innerR,
+  tl,
+  tr,
+  bl,
+  br,
+}: {
+  w: number;
+  h: number;
+  transitionR: number;
+  innerR: number;
+  tl: NotchSize;
+  tr: NotchSize;
+  bl: NotchSize;
+  br: NotchSize;
+}) {
+  const TR = transitionR;
+  // Per-notch interior radii, capped to notch size so the arc is valid.
+  const cap = (r: number, n: NotchSize) =>
+    Math.min(r, Math.max(0, n.w - TR) * 0.5, Math.max(0, n.h - TR) * 0.5);
+  const tlIR = cap(innerR, tl);
+  const trIR = cap(innerR, tr);
+  const blIR = cap(innerR, bl);
+  const brIR = cap(innerR, br);
+
+  const parts: string[] = [
+    // Top edge, starting past TL notch's convex bump
+    `M ${tl.w + TR} 0`,
+    `L ${w - tr.w - TR} 0`,
+    // TR notch — convex bump into notch
+    `A ${TR} ${TR} 0 0 1 ${w - tr.w} ${TR}`,
+    // TR notch left side going down
+    `L ${w - tr.w} ${tr.h - trIR}`,
+    // TR notch interior rounded corner (concave from container's side)
+    `A ${trIR} ${trIR} 0 0 0 ${w - tr.w + trIR} ${tr.h}`,
+    // TR notch bottom going right
+    `L ${w - TR} ${tr.h}`,
+    // TR notch — convex bump back to right edge
+    `A ${TR} ${TR} 0 0 1 ${w} ${tr.h + TR}`,
+    // Right edge going down
+    `L ${w} ${h - br.h - TR}`,
+    // BR notch — convex bump into notch
+    `A ${TR} ${TR} 0 0 1 ${w - TR} ${h - br.h}`,
+    // BR notch top going left
+    `L ${w - br.w + brIR} ${h - br.h}`,
+    // BR notch interior rounded corner
+    `A ${brIR} ${brIR} 0 0 0 ${w - br.w} ${h - br.h + brIR}`,
+    // BR notch left going down
+    `L ${w - br.w} ${h - TR}`,
+    // BR notch — convex bump back to bottom edge
+    `A ${TR} ${TR} 0 0 1 ${w - br.w - TR} ${h}`,
+    // Bottom edge going left
+    `L ${bl.w + TR} ${h}`,
+    // BL notch — convex bump into notch
+    `A ${TR} ${TR} 0 0 1 ${bl.w} ${h - TR}`,
+    // BL notch right going up
+    `L ${bl.w} ${h - bl.h + blIR}`,
+    // BL notch interior rounded corner
+    `A ${blIR} ${blIR} 0 0 0 ${bl.w - blIR} ${h - bl.h}`,
+    // BL notch top going left
+    `L ${TR} ${h - bl.h}`,
+    // BL notch — convex bump back to left edge
+    `A ${TR} ${TR} 0 0 1 0 ${h - bl.h - TR}`,
+    // Left edge going up
+    `L 0 ${tl.h + TR}`,
+    // TL notch — convex bump into notch
+    `A ${TR} ${TR} 0 0 1 ${TR} ${tl.h}`,
+    // TL notch bottom going right
+    `L ${tl.w - tlIR} ${tl.h}`,
+    // TL notch interior rounded corner
+    `A ${tlIR} ${tlIR} 0 0 0 ${tl.w} ${tl.h - tlIR}`,
+    // TL notch right going up
+    `L ${tl.w} ${TR}`,
+    // TL notch — convex bump back to top edge
+    `A ${TR} ${TR} 0 0 1 ${tl.w + TR} 0`,
+    "Z",
+  ];
+
+  return parts.join(" ");
 }
