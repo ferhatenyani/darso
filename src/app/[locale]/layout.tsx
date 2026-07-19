@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Caveat, Inter, Montserrat } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -14,6 +14,20 @@ import "../globals.css";
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-caveat",
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin", "latin-ext"],
+  weight: ["500", "600", "700"],
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -62,7 +76,7 @@ export default async function LocaleLayout({
       lang={meta.htmlLang}
       dir={meta.dir}
       suppressHydrationWarning
-      className={inter.variable}
+      className={`${inter.variable} ${caveat.variable} ${montserrat.variable}`}
     >
       <body
         className="min-h-dvh bg-background text-foreground antialiased"
