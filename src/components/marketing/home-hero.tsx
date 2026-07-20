@@ -53,6 +53,113 @@ const REVEAL_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 /** Initial SSR clip — dimension-agnostic so the first paint isn't a bare rectangle. */
 const INITIAL_CLIP = `inset(0 round ${CORNER_R}px)`;
 
+/* --- CTA typewriter ------------------------------------------------------ */
+
+type CTALine = {
+  /** Full text; "\n" produces a hard line break (via `whitespace: pre-line`). */
+  text: string;
+  /** [start, end) character range rendered inside the dark highlight box. */
+  highlightRange: [number, number];
+  /** Static tree for SSR / reduced-motion / grid sizers — matches `text` 1:1. */
+  staticContent: React.ReactNode;
+};
+
+const CTA_HIGHLIGHT_CLASS =
+  "inline-block bg-foreground px-[0.12em] py-[0.04em] text-[#F2ECDD]";
+
+const CTA_LINES: CTALine[] = [
+  {
+    text: "Réservez le prof\nqui vous fait\nprogresser.",
+    highlightRange: [31, 42],
+    staticContent: (
+      <>
+        {"Réservez le prof\nqui vous fait\n"}
+        <span className={CTA_HIGHLIGHT_CLASS}>progresser.</span>
+      </>
+    ),
+  },
+  {
+    text: "Rejoignez les élèves\nqui ont\nbesoin de vous.",
+    highlightRange: [29, 44],
+    staticContent: (
+      <>
+        {"Rejoignez les élèves\nqui ont\n"}
+        <span className={CTA_HIGHLIGHT_CLASS}>besoin de vous.</span>
+      </>
+    ),
+  },
+];
+
+const TW_TYPE_MS = 35;
+const TW_DELETE_MS = 18;
+const TW_DWELL_MS = 2000;
+const TW_CURSOR_BLINK_MS = 500;
+const TW_CURSOR_COLOR = "#EDE6D1";
+
+function commonPrefixLength(a: string, b: string): number {
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a[i] === b[i]) i++;
+  return i;
+}
+
+function TypewriterCursor({ visible }: { visible: boolean }) {
+  return (
+    <span
+      aria-hidden
+      style={{
+        display: "inline-block",
+        width: "0.55em",
+        height: "0.6em",
+        marginLeft: "0.05em",
+        marginRight: "-0.02em",
+        background: TW_CURSOR_COLOR,
+        borderRadius: "0.1em",
+        // Nudged just under the baseline so the block visually straddles the
+        // typing line instead of hovering above the letters' cap-height.
+        verticalAlign: "-0.06em",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 80ms linear",
+      }}
+    />
+  );
+}
+
+function renderTypewriterContent({
+  line,
+  visibleCount,
+  cursorVisible,
+  showCursor,
+}: {
+  line: CTALine;
+  visibleCount: number;
+  cursorVisible: boolean;
+  showCursor: boolean;
+}) {
+  const [hStart, hEnd] = line.highlightRange;
+  const clamped = Math.max(0, Math.min(visibleCount, line.text.length));
+  const before = line.text.slice(0, Math.min(hStart, clamped));
+  const inside = clamped > hStart ? line.text.slice(hStart, Math.min(hEnd, clamped)) : "";
+  const cursor = showCursor ? <TypewriterCursor visible={cursorVisible} /> : null;
+  if (!inside) {
+    return (
+      <>
+        {before}
+        {cursor}
+      </>
+    );
+  }
+  return (
+    <>
+      {before}
+      <span className={CTA_HIGHLIGHT_CLASS}>
+        {inside}
+        {cursor}
+      </span>
+    </>
+  );
+}
+
 function HeroCard() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const shapeRef = useRef<HTMLDivElement>(null);
@@ -67,10 +174,23 @@ function HeroCard() {
   /** Flips true after the last reveal transition finishes; releases inline
    *  transition/transform so per-element hover classes take over. */
   const [revealSettled, setRevealSettled] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [twLineIdx, setTwLineIdx] = useState(0);
+  const [twVisible, setTwVisible] = useState(CTA_LINES[0].text.length);
+  const [twPhase, setTwPhase] = useState<"dwell" | "deleting" | "typing">("dwell");
+  const [cursorOn, setCursorOn] = useState(true);
 
   useLayoutEffect(() => {
     const mq = window.matchMedia(COMPACT_QUERY);
     const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReducedMotion(mq.matches);
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -199,6 +319,53 @@ function HeroCard() {
     return () => clearTimeout(t);
   }, [revealed, revealSettled]);
 
+  // Typewriter state machine — one step per transition. Kicks in only after
+  // the intro reveal has settled so the very first entrance stays unchanged.
+  useEffect(() => {
+    if (!revealSettled || reducedMotion) return;
+    const current = CTA_LINES[twLineIdx];
+    const nextIdx = (twLineIdx + 1) % CTA_LINES.length;
+    const next = CTA_LINES[nextIdx];
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    if (twPhase === "dwell") {
+      timer = setTimeout(() => setTwPhase("deleting"), TW_DWELL_MS);
+    } else if (twPhase === "deleting") {
+      const target = commonPrefixLength(current.text, next.text);
+      if (twVisible > target) {
+        timer = setTimeout(() => setTwVisible((v) => v - 1), TW_DELETE_MS);
+      } else {
+        setTwLineIdx(nextIdx);
+        setTwPhase("typing");
+      }
+    } else if (twPhase === "typing") {
+      if (twVisible < current.text.length) {
+        timer = setTimeout(() => setTwVisible((v) => v + 1), TW_TYPE_MS);
+      } else {
+        setTwPhase("dwell");
+      }
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [twPhase, twVisible, twLineIdx, revealSettled, reducedMotion]);
+
+  // Cursor blinks only while dwelling; stays solid while chars are moving.
+  useEffect(() => {
+    if (!revealSettled || reducedMotion || twPhase !== "dwell") {
+      setCursorOn(true);
+      return;
+    }
+    setCursorOn(true);
+    const interval = setInterval(
+      () => setCursorOn((v) => !v),
+      TW_CURSOR_BLINK_MS,
+    );
+    return () => clearInterval(interval);
+  }, [twPhase, revealSettled, reducedMotion]);
+
   const revealStyle = ({
     delay,
     from,
@@ -242,24 +409,38 @@ function HeroCard() {
           </div>
         </div>
 
-        {/* TL — headline */}
+        {/* TL — headline (grid-stack: invisible sizers lock the container to
+            the larger of the two CTAs so the notch stays put while the
+            visible headline typewrites between them). */}
         <div
           ref={tlRef}
-          className="absolute top-0 left-0 w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%]"
+          className="absolute top-0 left-0 grid w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%]"
           style={revealStyle({ delay: 0, from: "translate(-8px, -8px)" })}
         >
+          {CTA_LINES.map((line, i) => (
+            <div
+              key={`cta-sizer-${i}`}
+              aria-hidden
+              className="pointer-events-none invisible [grid-area:1/1] translate-y-1.5 whitespace-pre-line text-start text-[15px] font-extrabold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[22px] md:text-[27px] lg:text-[32px] xl:text-[36px] text-balance"
+              style={{ fontFamily: "var(--font-cabinet), system-ui, sans-serif" }}
+            >
+              {line.staticContent}
+            </div>
+          ))}
           <h1
             id="home-hero-heading"
+            aria-live="off"
             style={{ fontFamily: "var(--font-cabinet), system-ui, sans-serif" }}
-            className="translate-y-1.5 text-start text-[15px] font-extrabold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[22px] md:text-[27px] lg:text-[32px] xl:text-[36px] text-balance"
+            className="[grid-area:1/1] translate-y-1.5 whitespace-pre-line text-start text-[15px] font-extrabold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[22px] md:text-[27px] lg:text-[32px] xl:text-[36px] text-balance"
           >
-            Trouvez le prof
-            <br />
-            qui vous fait
-            <br />
-            <span className="inline-block bg-foreground px-[0.12em] py-[0.04em] text-[#F2ECDD]">
-              progresser.
-            </span>
+            {reducedMotion
+              ? CTA_LINES[0].staticContent
+              : renderTypewriterContent({
+                  line: CTA_LINES[twLineIdx],
+                  visibleCount: twVisible,
+                  cursorVisible: cursorOn,
+                  showCursor: revealSettled,
+                })}
           </h1>
         </div>
 
