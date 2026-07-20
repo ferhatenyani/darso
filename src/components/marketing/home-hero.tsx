@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight, Compass } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
@@ -46,6 +46,10 @@ const FALLBACK = {
 
 const COMPACT_QUERY = "(max-width: 639.98px)";
 const INTRO_MS = 800;
+/** Content reveal fires slightly before the container settles for a tighter feel. */
+const REVEAL_START_MS = INTRO_MS - 100;
+const REVEAL_MS = 520;
+const REVEAL_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 /** Initial SSR clip — dimension-agnostic so the first paint isn't a bare rectangle. */
 const INITIAL_CLIP = `inset(0 round ${CORNER_R}px)`;
 
@@ -60,6 +64,9 @@ function HeroCard() {
 
   const [compact, setCompact] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  /** Flips true after the last reveal transition finishes; releases inline
+   *  transition/transform so per-element hover classes take over. */
+  const [revealSettled, setRevealSettled] = useState(false);
 
   useLayoutEffect(() => {
     const mq = window.matchMedia(COMPACT_QUERY);
@@ -132,6 +139,7 @@ function HeroCard() {
     };
 
     let rafId: number | null = null;
+    let revealTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
 
     const targets = readTargets();
@@ -156,14 +164,14 @@ function HeroCard() {
         if (cancelled) return;
         const t = Math.min(1, (now - start) / INTRO_MS);
         writePath(targets, easeOut(t));
-        if (t < 1) {
-          rafId = requestAnimationFrame(tick);
-        } else {
-          introDoneRef.current = true;
-          setRevealed(true);
-        }
+        if (t < 1) rafId = requestAnimationFrame(tick);
       };
       rafId = requestAnimationFrame(tick);
+      // Kick off content reveal slightly before the container settles.
+      revealTimer = setTimeout(() => {
+        introDoneRef.current = true;
+        setRevealed(true);
+      }, REVEAL_START_MS);
     }
 
     const ro = new ResizeObserver(() => {
@@ -179,15 +187,38 @@ function HeroCard() {
     return () => {
       cancelled = true;
       if (rafId) cancelAnimationFrame(rafId);
+      if (revealTimer) clearTimeout(revealTimer);
       ro.disconnect();
     };
   }, [compact]);
 
-  const revealStyle = (delayMs: number) => ({
-    opacity: revealed ? 1 : 0,
-    transitionDelay: revealed ? `${delayMs}ms` : "0ms",
-    pointerEvents: revealed ? undefined : ("none" as const),
-  });
+  useEffect(() => {
+    if (!revealed || revealSettled) return;
+    // Longest stagger delay + reveal duration + small buffer.
+    const t = setTimeout(() => setRevealSettled(true), 280 + REVEAL_MS + 60);
+    return () => clearTimeout(t);
+  }, [revealed, revealSettled]);
+
+  const revealStyle = ({
+    delay,
+    from,
+  }: {
+    delay: number;
+    /** Resting-state transform to slide/scale/rotate FROM (e.g. "translate(-8px,-8px)"). */
+    from: string;
+  }) => {
+    // Once fully settled, drop inline styles so per-element className hover
+    // transitions (transition-all duration-200) take over uncontested.
+    if (revealSettled) return undefined;
+    return {
+      opacity: revealed ? 1 : 0,
+      transform: revealed ? "none" : from,
+      transition: `opacity ${REVEAL_MS}ms ${REVEAL_EASE}, transform ${REVEAL_MS}ms ${REVEAL_EASE}`,
+      transitionDelay: revealed ? `${delay}ms` : "0ms",
+      pointerEvents: revealed ? undefined : ("none" as const),
+      willChange: "opacity, transform" as const,
+    };
+  };
 
   return (
     <div
@@ -214,8 +245,8 @@ function HeroCard() {
         {/* TL — headline */}
         <div
           ref={tlRef}
-          className="absolute top-0 left-0 w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%] transition-opacity duration-500 ease-out"
-          style={revealStyle(0)}
+          className="absolute top-0 left-0 w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%]"
+          style={revealStyle({ delay: 0, from: "translate(-8px, -8px)" })}
         >
           <h1
             id="home-hero-heading"
@@ -238,7 +269,7 @@ function HeroCard() {
           href={routes.help()}
           aria-label="Ouvrir le guide"
           className="group absolute top-0 right-0 grid h-11 w-11 place-items-center rounded-full bg-white text-foreground ring-1 ring-border shadow-[0_8px_22px_-10px_rgba(10,11,14,0.20),0_3px_8px_-4px_rgba(10,11,14,0.10)] transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus md:h-12 md:w-12"
-          style={revealStyle(120)}
+          style={revealStyle({ delay: 120, from: "translate(8px, -8px) rotate(-15deg) scale(0.9)" })}
         >
           <Compass
             className="h-[18px] w-[18px] transition-transform duration-300 group-hover:rotate-45 md:h-5 md:w-5"
@@ -251,7 +282,7 @@ function HeroCard() {
           ref={blRef}
           href={routes.teachLanding()}
           className="group absolute bottom-0 left-0 inline-flex items-center gap-1.5 rounded-full bg-white py-1.5 pl-2.5 pr-2 text-[11.5px] font-semibold text-foreground shadow-[0_10px_28px_-10px_rgba(10,11,14,0.22),0_4px_10px_-4px_rgba(10,11,14,0.12)] ring-1 ring-border transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
-          style={revealStyle(220)}
+          style={revealStyle({ delay: 220, from: "translate(-8px, 10px) scale(0.94)" })}
         >
           <span className="sm:hidden">Enseigner</span>
           <span className="hidden sm:inline">Devenir enseignant</span>
@@ -268,7 +299,7 @@ function HeroCard() {
           ref={brRef}
           href={routes.browse()}
           className="group absolute bottom-0 right-0 inline-flex items-center gap-1.5 rounded-full bg-accent py-1.5 pl-2 pr-2.5 text-[11.5px] font-semibold text-accent-foreground shadow-[0_10px_28px_-10px_rgba(47,111,235,0.45),0_4px_10px_-4px_rgba(10,11,14,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
-          style={revealStyle(280)}
+          style={revealStyle({ delay: 280, from: "translate(8px, 10px) scale(0.94)" })}
         >
           <span
             aria-hidden
