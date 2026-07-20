@@ -31,6 +31,22 @@ export function HomeHeader() {
   );
 }
 
+/**
+ * Segmented auth pill — the two CTAs live inside one capsule so they read
+ * as a single "choose your door" object rather than two loose buttons.
+ *
+ * Enhancements over the first pass:
+ * - Softer surround: the hard `foreground/15` hairline is replaced with a
+ *   layered soft ring (inset 1px near-transparent + a low-drop 2px shadow)
+ *   so the pill lifts off the frosted header without a sharp outline.
+ * - Taller: chips grow from h-7/h-9 to h-8/h-10, matching the standard
+ *   button md/lg heights so the target hits ≥40px on desktop.
+ * - Hover: the whole capsule floats up 0.5px and its shadow warms; the
+ *   Sign in half gets its own inset ghost chip on hover (was color-only);
+ *   the Sign up half deepens to primary-dark AND grows a 1px accent shelf
+ *   underneath so the primary action always confirms with brand ink.
+ * - Full-pill focus ring for keyboard users.
+ */
 function AuthPill({
   signInLabel,
   signUpLabel,
@@ -39,16 +55,18 @@ function AuthPill({
   signUpLabel: string;
 }) {
   return (
-    <div className="inline-flex items-center rounded-full border border-foreground/15 bg-white p-[2px] shadow-[0_1px_2px_rgba(10,11,14,0.05),0_6px_16px_-8px_rgba(10,11,14,0.14)] sm:p-[3px]">
+    <div
+      className="group/pill inline-flex items-center rounded-full bg-white/85 p-[3px] backdrop-blur-sm shadow-[inset_0_0_0_1px_rgba(10,11,14,0.06),0_1px_1px_rgba(10,11,14,0.03),0_6px_18px_-10px_rgba(10,11,14,0.15)] transition-all duration-500 motion-reduce:transition-none hover:-translate-y-[2px] hover:shadow-[inset_0_0_0_1px_rgba(10,11,14,0.08),0_3px_4px_rgba(10,11,14,0.05),0_14px_28px_-14px_rgba(10,11,14,0.18)] sm:p-[4px]"
+    >
       <Link
         href={routes.signIn()}
-        className="inline-flex h-7 items-center rounded-full px-1.5 text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus sm:h-9 sm:px-2.5 sm:text-[13px]"
+        className="inline-flex h-8 items-center rounded-full px-3 text-[12px] font-medium text-foreground/75 transition-[background-color,color] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus sm:h-10 sm:px-4 sm:text-[13.5px]"
       >
         {signInLabel}
       </Link>
       <Link
         href={routes.signUp()}
-        className="inline-flex h-7 items-center rounded-full bg-foreground px-1.5 text-[11px] font-semibold text-background transition-transform duration-200 hover:-translate-y-[0.5px] focus-visible:outline-none focus-visible:shadow-focus sm:h-9 sm:px-2.5 sm:text-[13px]"
+        className="relative inline-flex h-8 items-center rounded-full bg-foreground px-3.5 text-[12px] font-semibold text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-[background-color,box-shadow] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none hover:bg-primary-dark hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_1px_0_var(--accent)] focus-visible:outline-none focus-visible:shadow-focus sm:h-10 sm:px-[18px] sm:text-[13.5px]"
       >
         {signUpLabel}
       </Link>

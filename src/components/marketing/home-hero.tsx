@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ArrowUpRight, Compass } from "lucide-react";
+import { ArrowUpRight, Compass, Search } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
@@ -464,52 +464,62 @@ function HeroCard() {
           />
         </Link>
 
-        {/* BC — split-pill: two primary CTAs fused into one capsule, seated
-            in a single centered bottom-edge notch. Halves are 50/50 so the
-            teacher and learner doors read as equally weighted. */}
+        {/* BC — split-pill: identity-first doors. Primary label picks the role
+            ("Enseigner" / "Apprendre" — mimetic + identity framing), meta-line
+            names the literal next action with an ownership pronoun ("mon" =
+            endowment). Material: drenched accent with an inset top highlight,
+            2px inset seam (deeper-accent + hairline), and directional lift on
+            hover so the chosen half physically leans toward the user. */}
         <div
           ref={bcRef}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 flex w-[86%] max-w-[560px] items-stretch rounded-full bg-accent text-accent-foreground shadow-[0_14px_36px_-12px_rgba(47,111,235,0.5),0_6px_14px_-6px_rgba(10,11,14,0.18)] ring-1 ring-white/10 sm:w-auto sm:min-w-[440px]"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 flex w-[88%] max-w-[600px] items-stretch overflow-hidden rounded-full bg-accent text-accent-foreground shadow-[0_18px_44px_-14px_rgba(47,111,235,0.55),0_8px_18px_-8px_rgba(10,11,14,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] ring-1 ring-[color:var(--accent-hover)] sm:w-auto sm:min-w-[480px]"
           style={revealStyle({ delay: 250, from: "translate(0, 12px) scale(0.96)" })}
         >
           <Link
             href={routes.teachLanding()}
-            className="group flex flex-1 basis-0 items-center justify-center gap-1.5 rounded-l-full py-2 pl-3 pr-3 text-[12px] font-semibold transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3.5 sm:pl-5 sm:pr-5 sm:text-[14px] md:py-4 md:text-[14.5px]"
+            className="group relative flex flex-1 basis-0 items-center justify-center gap-2.5 rounded-l-full py-2.5 pl-4 pr-4 text-start transition-[background-color,transform] duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-3.5 sm:py-3.5 sm:pl-6 sm:pr-6"
           >
             <span
               aria-hidden
-              className="grid h-4 w-4 place-items-center rounded-full bg-white/20 transition-transform duration-200 group-hover:rotate-45 sm:h-7 sm:w-7"
+              className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15 ring-1 ring-white/25 transition-transform duration-300 group-hover:rotate-45 sm:h-9 sm:w-9"
             >
-              <ArrowUpRight className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
+              <ArrowUpRight className="h-3.5 w-3.5 sm:h-[18px] sm:w-[18px]" />
             </span>
-            <span className="sm:hidden">Enseigner</span>
-            <span className="hidden sm:inline">Devenir enseignant</span>
+            <span className="flex min-w-0 flex-col leading-[1.1]">
+              <span className="text-[13px] font-semibold tracking-tight sm:text-[15.5px]">
+                Enseigner
+              </span>
+              <span className="mt-0.5 hidden text-[10.5px] font-medium text-white/85 tabular sm:block">
+                Créer mon annonce
+              </span>
+            </span>
           </Link>
 
-          <span
-            aria-hidden
-            className="my-2 w-px shrink-0 bg-white/20 sm:my-3"
-          />
+          {/* 2px inset seam: darker-accent then hairline white — reads as a
+              stamped-metal join between two halves rather than a painted line. */}
+          <div aria-hidden className="my-2 flex shrink-0 sm:my-3">
+            <span className="w-px bg-[color:var(--accent-hover)]" />
+            <span className="w-px bg-white/25" />
+          </div>
 
           <Link
             href={routes.browse()}
-            className="group flex flex-1 basis-0 items-center justify-center gap-1.5 rounded-r-full py-2 pl-3 pr-3 text-[12px] font-semibold transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3.5 sm:pl-5 sm:pr-5 sm:text-[14px] md:py-4 md:text-[14.5px]"
+            className="group relative flex flex-1 basis-0 items-center justify-center gap-2.5 rounded-r-full py-2.5 pl-4 pr-4 text-start transition-[background-color,transform] duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-3.5 sm:py-3.5 sm:pl-6 sm:pr-6"
           >
             <span
               aria-hidden
-              className="grid h-4 w-4 place-items-center rounded-full bg-white/20 sm:h-7 sm:w-7"
+              className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15 ring-1 ring-white/25 transition-transform duration-300 group-hover:-rotate-12 sm:h-9 sm:w-9"
             >
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" className="sm:hidden">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.4" />
-                <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-              </svg>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="hidden sm:block">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.2" />
-                <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-              </svg>
+              <Search className="h-3.5 w-3.5 sm:h-[18px] sm:w-[18px]" strokeWidth={2.2} />
             </span>
-            <span className="sm:hidden">Cours</span>
-            <span className="hidden sm:inline">Trouver un cours</span>
+            <span className="flex min-w-0 flex-col leading-[1.1]">
+              <span className="text-[13px] font-semibold tracking-tight sm:text-[15.5px]">
+                Apprendre
+              </span>
+              <span className="mt-0.5 hidden text-[10.5px] font-medium text-white/85 tabular sm:block">
+                Trouver mon prof
+              </span>
+            </span>
           </Link>
         </div>
     </div>
