@@ -8,10 +8,10 @@ import { routes } from "@/lib/routes";
 import { HeroVideoPlayer } from "./hero-video-player";
 
 /**
- * Home hero — dark rounded container with inverted-radius notches.
- * Desktop (sm+) uses four notches: TL headline, TR compass, BL/BR CTAs.
- * Compact (below sm) collapses to two notches (TL + TR) and moves the
- * CTAs to a normal row beneath the card so they never collide.
+ * Home hero — light rounded container with inverted-radius notches.
+ * Three notches: TL headline, TR compass, BC (bottom-center) split-pill CTA.
+ * The split pill fuses the two primary CTAs (teachers / learners) into one
+ * capsule so they read as a "choose your door" moment.
  */
 export function HomeHero() {
   return (
@@ -40,8 +40,7 @@ const CORNER_R = 40;
 const FALLBACK = {
   tl: { w: 460, h: 220 },
   tr: { w: 60, h: 60 },
-  bl: { w: 210, h: 52 },
-  br: { w: 190, h: 52 },
+  bc: { w: 420, h: 60 },
 };
 
 const COMPACT_QUERY = "(max-width: 639.98px)";
@@ -165,8 +164,7 @@ function HeroCard() {
   const shapeRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<HTMLDivElement>(null);
   const trRef = useRef<HTMLAnchorElement>(null);
-  const blRef = useRef<HTMLAnchorElement>(null);
-  const brRef = useRef<HTMLAnchorElement>(null);
+  const bcRef = useRef<HTMLDivElement>(null);
   const introDoneRef = useRef(false);
 
   const [compact, setCompact] = useState(false);
@@ -222,8 +220,9 @@ function HeroCard() {
       // TL runs with tighter padding — pulls the inner corner arc closer to the text.
       let tl = measure(tlRef.current, FALLBACK.tl, 11, 11);
       const tr = measure(trRef.current, FALLBACK.tr);
-      const bl = measure(blRef.current, FALLBACK.bl);
-      const br = measure(brRef.current, FALLBACK.br);
+      // BC is a mid-edge notch: pill's bottom sits on the container edge,
+      // so only the top of the notch needs interior padding (padY = half).
+      let bc = measure(bcRef.current, FALLBACK.bc, NOTCH_PAD, NOTCH_PAD / 2);
 
       // Cap headline notch so it never dominates the container.
       tl = {
@@ -231,7 +230,15 @@ function HeroCard() {
         h: Math.min(tl.h, h * (compact ? 0.58 : 0.45)),
       };
 
-      return { w, h, tl, tr, bl, br };
+      // Cap the bottom-center notch so its base + 2 transition arcs always
+      // fit between the outer corners with breathing room.
+      const bcMaxW = Math.max(0, w - 2 * (CORNER_R + TRANSITION_R + 12));
+      bc = {
+        w: Math.min(bc.w, bcMaxW, w * (compact ? 0.86 : 0.55)),
+        h: Math.min(bc.h, h * 0.28),
+      };
+
+      return { w, h, tl, tr, bc };
     };
 
     const scale = (n: NotchSize, p: number): NotchSize => ({
@@ -250,8 +257,7 @@ function HeroCard() {
         innerR: INNER_R,
         tl: scale(t.tl, p),
         tr: scale(t.tr, p),
-        bl: scale(t.bl, p),
-        br: scale(t.br, p),
+        bc: scale(t.bc, p),
       });
       shape.style.clipPath = `path("${path}")`;
       (shape.style as CSSStyleDeclaration & { webkitClipPath?: string }).webkitClipPath =
@@ -300,7 +306,7 @@ function HeroCard() {
       if (next) writePath(next, 1);
     });
     ro.observe(wrapper);
-    [tlRef, trRef, blRef, brRef].forEach((r) => {
+    [tlRef, trRef, bcRef].forEach((r) => {
       if (r.current) ro.observe(r.current);
     });
 
@@ -458,46 +464,54 @@ function HeroCard() {
           />
         </Link>
 
-        {/* BL — secondary CTA (shorter label on mobile) */}
-        <Link
-          ref={blRef}
-          href={routes.teachLanding()}
-          className="group absolute bottom-0 left-0 inline-flex items-center gap-1.5 rounded-full bg-white py-1.5 pl-2.5 pr-2 text-[11.5px] font-semibold text-foreground shadow-[0_10px_28px_-10px_rgba(10,11,14,0.22),0_4px_10px_-4px_rgba(10,11,14,0.12)] ring-1 ring-border transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
-          style={revealStyle({ delay: 220, from: "translate(-8px, 10px) scale(0.94)" })}
+        {/* BC — split-pill: two primary CTAs fused into one capsule, seated
+            in a single centered bottom-edge notch. Halves are 50/50 so the
+            teacher and learner doors read as equally weighted. */}
+        <div
+          ref={bcRef}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 flex w-[86%] max-w-[560px] items-stretch rounded-full bg-accent text-accent-foreground shadow-[0_14px_36px_-12px_rgba(47,111,235,0.5),0_6px_14px_-6px_rgba(10,11,14,0.18)] ring-1 ring-white/10 sm:w-auto sm:min-w-[440px]"
+          style={revealStyle({ delay: 250, from: "translate(0, 12px) scale(0.96)" })}
         >
-          <span className="sm:hidden">Enseigner</span>
-          <span className="hidden sm:inline">Devenir enseignant</span>
-          <span
-            aria-hidden
-            className="grid h-4 w-4 place-items-center rounded-full bg-primary text-primary-foreground transition-transform duration-200 group-hover:rotate-45 sm:h-7 sm:w-7"
+          <Link
+            href={routes.teachLanding()}
+            className="group flex flex-1 basis-0 items-center justify-center gap-1.5 rounded-l-full py-2 pl-3 pr-3 text-[12px] font-semibold transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3.5 sm:pl-5 sm:pr-5 sm:text-[14px] md:py-4 md:text-[14.5px]"
           >
-            <ArrowUpRight className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
-          </span>
-        </Link>
+            <span
+              aria-hidden
+              className="grid h-4 w-4 place-items-center rounded-full bg-white/20 transition-transform duration-200 group-hover:rotate-45 sm:h-7 sm:w-7"
+            >
+              <ArrowUpRight className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
+            </span>
+            <span className="sm:hidden">Enseigner</span>
+            <span className="hidden sm:inline">Devenir enseignant</span>
+          </Link>
 
-        {/* BR — primary CTA (shorter label on mobile) */}
-        <Link
-          ref={brRef}
-          href={routes.browse()}
-          className="group absolute bottom-0 right-0 inline-flex items-center gap-1.5 rounded-full bg-accent py-1.5 pl-2 pr-2.5 text-[11.5px] font-semibold text-accent-foreground shadow-[0_10px_28px_-10px_rgba(47,111,235,0.45),0_4px_10px_-4px_rgba(10,11,14,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
-          style={revealStyle({ delay: 280, from: "translate(8px, 10px) scale(0.94)" })}
-        >
           <span
             aria-hidden
-            className="grid h-4 w-4 place-items-center rounded-full bg-white/25 sm:h-7 sm:w-7"
+            className="my-2 w-px shrink-0 bg-white/20 sm:my-3"
+          />
+
+          <Link
+            href={routes.browse()}
+            className="group flex flex-1 basis-0 items-center justify-center gap-1.5 rounded-r-full py-2 pl-3 pr-3 text-[12px] font-semibold transition-colors duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3.5 sm:pl-5 sm:pr-5 sm:text-[14px] md:py-4 md:text-[14.5px]"
           >
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" className="sm:hidden">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.4" />
-              <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-            </svg>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="hidden sm:block">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.2" />
-              <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
-          </span>
-          <span className="sm:hidden">Cours</span>
-          <span className="hidden sm:inline">Trouver un cours</span>
-        </Link>
+            <span
+              aria-hidden
+              className="grid h-4 w-4 place-items-center rounded-full bg-white/20 sm:h-7 sm:w-7"
+            >
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" className="sm:hidden">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.4" />
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+              </svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="hidden sm:block">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.2" />
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span className="sm:hidden">Cours</span>
+            <span className="hidden sm:inline">Trouver un cours</span>
+          </Link>
+        </div>
     </div>
   );
 }
@@ -508,8 +522,9 @@ type NotchSize = { w: number; h: number };
 
 /**
  * Build the container's clip-path outline going CW.
- * TL is always a notch. TR / BL / BR are optional — when null, that corner
- * uses the plain outer rounded corner instead.
+ * TL is always a notch. TR is an optional corner notch.
+ * BC is an optional mid-edge notch centered on the bottom, cutting UP into
+ * the container to seat the split-pill CTA.
  */
 function buildHeroPath({
   w,
@@ -519,8 +534,7 @@ function buildHeroPath({
   innerR,
   tl,
   tr,
-  bl,
-  br,
+  bc,
 }: {
   w: number;
   h: number;
@@ -529,8 +543,7 @@ function buildHeroPath({
   innerR: number;
   tl: NotchSize;
   tr: NotchSize | null;
-  bl: NotchSize | null;
-  br: NotchSize | null;
+  bc: NotchSize | null;
 }) {
   const TR = transitionR;
   const CR = cornerR;
@@ -538,8 +551,7 @@ function buildHeroPath({
     Math.min(r, Math.max(0, n.w - TR) * 0.5, Math.max(0, n.h - TR) * 0.5);
   const tlIR = cap(innerR, tl);
   const trIR = tr ? cap(innerR, tr) : 0;
-  const blIR = bl ? cap(innerR, bl) : 0;
-  const brIR = br ? cap(innerR, br) : 0;
+  const bcIR = bc ? cap(innerR, bc) : 0;
 
   const parts: string[] = [`M ${tl.w + TR} 0`];
 
@@ -556,31 +568,33 @@ function buildHeroPath({
     parts.push(`A ${CR} ${CR} 0 0 1 ${w} ${CR}`);
   }
 
-  // ── Right edge → BR corner ───────────────────────────────────────────
-  if (br) {
-    parts.push(`L ${w} ${h - br.h - TR}`);
-    parts.push(`A ${TR} ${TR} 0 0 1 ${w - TR} ${h - br.h}`);
-    parts.push(`L ${w - br.w + brIR} ${h - br.h}`);
-    parts.push(`A ${brIR} ${brIR} 0 0 0 ${w - br.w} ${h - br.h + brIR}`);
-    parts.push(`L ${w - br.w} ${h - TR}`);
-    parts.push(`A ${TR} ${TR} 0 0 1 ${w - br.w - TR} ${h}`);
-  } else {
-    parts.push(`L ${w} ${h - CR}`);
-    parts.push(`A ${CR} ${CR} 0 0 1 ${w - CR} ${h}`);
-  }
+  // ── Right edge → BR corner (plain) ───────────────────────────────────
+  parts.push(`L ${w} ${h - CR}`);
+  parts.push(`A ${CR} ${CR} 0 0 1 ${w - CR} ${h}`);
 
-  // ── Bottom edge → BL corner ──────────────────────────────────────────
-  if (bl) {
-    parts.push(`L ${bl.w + TR} ${h}`);
-    parts.push(`A ${TR} ${TR} 0 0 1 ${bl.w} ${h - TR}`);
-    parts.push(`L ${bl.w} ${h - bl.h + blIR}`);
-    parts.push(`A ${blIR} ${blIR} 0 0 0 ${bl.w - blIR} ${h - bl.h}`);
-    parts.push(`L ${TR} ${h - bl.h}`);
-    parts.push(`A ${TR} ${TR} 0 0 1 0 ${h - bl.h - TR}`);
-  } else {
-    parts.push(`L ${CR} ${h}`);
-    parts.push(`A ${CR} ${CR} 0 0 1 0 ${h - CR}`);
+  // ── Bottom edge → BC notch (optional, centered) → BL corner (plain) ──
+  if (bc && bc.w > 0 && bc.h > 0) {
+    const cx = w / 2;
+    const bcRightX = cx + bc.w / 2;
+    const bcLeftX = cx - bc.w / 2;
+    const bcTopY = h - bc.h;
+    // Walk right→left along the bottom edge:
+    //   ...outer bottom edge... → convex bump up (TR arc) → straight up
+    //   the notch's right wall → concave inner arc at notch top-right →
+    //   straight across notch ceiling → concave inner arc at notch
+    //   top-left → straight down notch's left wall → convex bump back
+    //   down (TR arc) → continue along bottom edge.
+    parts.push(`L ${bcRightX + TR} ${h}`);
+    parts.push(`A ${TR} ${TR} 0 0 1 ${bcRightX} ${h - TR}`);
+    parts.push(`L ${bcRightX} ${bcTopY + bcIR}`);
+    parts.push(`A ${bcIR} ${bcIR} 0 0 0 ${bcRightX - bcIR} ${bcTopY}`);
+    parts.push(`L ${bcLeftX + bcIR} ${bcTopY}`);
+    parts.push(`A ${bcIR} ${bcIR} 0 0 0 ${bcLeftX} ${bcTopY + bcIR}`);
+    parts.push(`L ${bcLeftX} ${h - TR}`);
+    parts.push(`A ${TR} ${TR} 0 0 1 ${bcLeftX - TR} ${h}`);
   }
+  parts.push(`L ${CR} ${h}`);
+  parts.push(`A ${CR} ${CR} 0 0 1 0 ${h - CR}`);
 
   // ── Left edge → TL notch (always present) ────────────────────────────
   parts.push(`L 0 ${tl.h + TR}`);
