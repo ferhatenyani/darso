@@ -153,14 +153,16 @@ function HeroCard() {
         >
           <h1
             id="home-hero-heading"
-            style={{ fontFamily: "var(--font-montserrat), system-ui, sans-serif" }}
-            className="translate-y-1.5 text-start text-[14px] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] text-balance"
+            style={{ fontFamily: "var(--font-cabinet), system-ui, sans-serif" }}
+            className="translate-y-1.5 text-start text-[15px] font-extrabold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[22px] md:text-[27px] lg:text-[32px] xl:text-[36px] text-balance"
           >
             Trouvez le prof
             <br />
             qui vous fait
             <br />
-            progresser.
+            <span className="inline-block bg-foreground px-[0.12em] py-[0.04em] text-[#F2ECDD]">
+              progresser.
+            </span>
           </h1>
         </div>
 

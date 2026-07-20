@@ -1,8 +1,12 @@
 import { useId } from "react";
 import {
   AbsoluteFill,
+  cancelRender,
+  continueRender,
+  delayRender,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -17,6 +21,38 @@ import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily: INTER_FAMILY } = loadFont("normal", {
   weights: ["400", "500", "600", "700", "800"],
 });
+
+/**
+ * Cabinet Grotesk — self-hosted brand voice for headlines & panel titles.
+ * Loaded via FontFace so headless Chromium renders wait for glyphs before
+ * capturing frames. Guarded for SSR because HeroComposition is also imported
+ * from React Server Components via HeroVideoPlayer.
+ */
+const CABINET_FAMILY = "Cabinet Grotesk";
+
+if (typeof document !== "undefined") {
+  const handle = delayRender("Loading Cabinet Grotesk");
+  const weights: Array<[string, string]> = [
+    ["400", "CabinetGrotesk-Regular.woff2"],
+    ["500", "CabinetGrotesk-Medium.woff2"],
+    ["700", "CabinetGrotesk-Bold.woff2"],
+    ["800", "CabinetGrotesk-Extrabold.woff2"],
+  ];
+  Promise.all(
+    weights.map(([weight, file]) => {
+      const face = new FontFace(
+        CABINET_FAMILY,
+        `url(${staticFile(`fonts/cabinet-grotesk/${file}`)}) format('woff2')`,
+        { weight, style: "normal", display: "swap" },
+      );
+      return face.load().then((loaded) => document.fonts.add(loaded));
+    }),
+  )
+    .then(() => continueRender(handle))
+    .catch((err) => cancelRender(err));
+}
+
+const CABINET_STACK = `"${CABINET_FAMILY}", ${INTER_FAMILY}, ui-sans-serif, system-ui, sans-serif`;
 
 /* --------------------------------------------------------------------------
  * Darso — Hero composition · "The Value Loop" (v11)
@@ -984,8 +1020,9 @@ const SceneCatalogue: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           left: "50%",
           top: kickerTop,
           transform: `translate(-50%, ${(1 - kickerIn) * -10}px)`,
+          fontFamily: CABINET_STACK,
           fontSize: 12,
-          letterSpacing: "0.36em",
+          letterSpacing: "0.24em",
           textTransform: "uppercase",
           color: INK_2,
           fontWeight: 700,
@@ -1003,11 +1040,12 @@ const SceneCatalogue: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           left: "50%",
           top: headlineTop,
           transform: `translate(-50%, ${(1 - kickerIn) * -14}px)`,
+          fontFamily: CABINET_STACK,
           fontSize: isWide ? 30 : 22,
-          fontWeight: 700,
+          fontWeight: 800,
           color: INK,
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
+          letterSpacing: "-0.03em",
+          lineHeight: 1.05,
           opacity: kickerIn * textOut,
           textAlign: "center",
           maxWidth: 900,
@@ -1528,8 +1566,9 @@ const SceneCalendar: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
           right: 0,
           bottom: -34,
           textAlign: "center",
+          fontFamily: CABINET_STACK,
           fontSize: 12,
-          letterSpacing: "0.28em",
+          letterSpacing: "0.22em",
           textTransform: "uppercase",
           color: INK_2,
           fontWeight: 700,
@@ -1643,8 +1682,9 @@ const PlanningCtaCard: React.FC<{
         {/* Head */}
         <div
           style={{
+            fontFamily: CABINET_STACK,
             fontSize: 12,
-            letterSpacing: "0.32em",
+            letterSpacing: "0.24em",
             textTransform: "uppercase",
             color: INK_3,
             fontWeight: 700,
@@ -1655,11 +1695,12 @@ const PlanningCtaCard: React.FC<{
         <div
           style={{
             marginTop: 6,
+            fontFamily: CABINET_STACK,
             fontSize: isWide ? 36 : 26,
-            fontWeight: 700,
+            fontWeight: 800,
             color: INK,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.28,
+            letterSpacing: "-0.035em",
+            lineHeight: 1.08,
           }}
         >
           Un agenda pour <HighlightWord seed={2}>vous deux</HighlightWord>.
@@ -1761,8 +1802,9 @@ const PlanningPoint: React.FC<{
         <div style={{ minWidth: 0, flex: 1 }}>
           <div
             style={{
+              fontFamily: CABINET_STACK,
               fontSize: 11,
-              letterSpacing: "0.26em",
+              letterSpacing: "0.20em",
               textTransform: "uppercase",
               color: accent,
               fontWeight: 700,
@@ -1788,12 +1830,13 @@ const PlanningPoint: React.FC<{
           </div>
           <div
             style={{
+              fontFamily: CABINET_STACK,
               fontSize: isWide ? 17 : 14,
               fontWeight: 700,
               color: INK,
-              letterSpacing: "-0.015em",
+              letterSpacing: "-0.02em",
               marginTop: 4,
-              lineHeight: 1.2,
+              lineHeight: 1.15,
             }}
           >
             {title}
@@ -2032,8 +2075,9 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
             answer. Bigger, easier to scan, no pill. */}
         <div
           style={{
+            fontFamily: CABINET_STACK,
             fontSize: 12,
-            letterSpacing: "0.32em",
+            letterSpacing: "0.24em",
             textTransform: "uppercase",
             color: INK_3,
             fontWeight: 700,
@@ -2046,10 +2090,11 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         </div>
         <div
           style={{
-            fontSize: layout === "wide" ? 40 : 26,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.06,
+            fontFamily: CABINET_STACK,
+            fontSize: layout === "wide" ? 36 : 24,
+            fontWeight: 800,
+            letterSpacing: "-0.035em",
+            lineHeight: 1.04,
             opacity: titleIn,
             transform: `translateY(${(1 - titleIn) * 12}px)`,
           }}
@@ -2352,8 +2397,9 @@ const VaseAnnotations: React.FC<{
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
+            fontFamily: CABINET_STACK,
             fontSize: 11,
-            letterSpacing: "0.24em",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
             fontWeight: 700,
             color: WARM_2,
@@ -2365,11 +2411,12 @@ const VaseAnnotations: React.FC<{
         </div>
         <div
           style={{
+            fontFamily: CABINET_STACK,
             fontSize: isWide ? 26 : 20,
-            fontWeight: 700,
+            fontWeight: 800,
             color: INK,
-            letterSpacing: "-0.025em",
-            lineHeight: 1.08,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.05,
           }}
         >
           Zéro commission
@@ -2404,8 +2451,9 @@ const VaseAnnotations: React.FC<{
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
+            fontFamily: CABINET_STACK,
             fontSize: 11,
-            letterSpacing: "0.24em",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
             fontWeight: 700,
             color: COOL_2,
@@ -2417,11 +2465,12 @@ const VaseAnnotations: React.FC<{
         </div>
         <div
           style={{
+            fontFamily: CABINET_STACK,
             fontSize: isWide ? 26 : 20,
-            fontWeight: 700,
+            fontWeight: 800,
             color: INK,
-            letterSpacing: "-0.025em",
-            lineHeight: 1.08,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.05,
           }}
         >
           Part calculée sur vos revenus
@@ -2586,19 +2635,21 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
             >
               <div
                 style={{
-                  fontSize: isWide ? 22 : 20,
-                  fontWeight: 700,
+                  fontFamily: CABINET_STACK,
+                  fontSize: isWide ? 24 : 21,
+                  fontWeight: 800,
                   color: INK,
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.1,
+                  letterSpacing: "-0.035em",
+                  lineHeight: 1.02,
                 }}
               >
                 {p.title}
               </div>
               <div
                 style={{
+                  fontFamily: CABINET_STACK,
                   fontSize: isWide ? 10 : 10,
-                  letterSpacing: "0.24em",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color: INK_3,
                   fontWeight: 700,
@@ -3424,9 +3475,10 @@ const SceneDarkFinale: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
       >
         <div
           style={{
+            fontFamily: CABINET_STACK,
             fontSize: layout === "wide" ? 30 : 22,
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
+            fontWeight: 500,
+            letterSpacing: "-0.025em",
             color: "rgba(255,255,255,0.92)",
           }}
         >
