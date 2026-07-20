@@ -84,6 +84,21 @@ export const HERO_FPS = 30;
 export const HERO_DURATION = 1082;
 export type HeroLayout = "wide" | "compact";
 
+/* ---------- Safe zone ----------
+ * The player scales the composition with object-fit:cover, so at container
+ * aspects > 1.6:1 the composition's top/bottom get cropped. On top of that,
+ * the notched hero clips the top-left corner (TL headline notch), TR
+ * (compass), and BL/BR (CTA pills). Anything a scene puts inside those
+ * regions disappears at wide desktop aspects.
+ *
+ * SAFE_TOP / SAFE_BOTTOM are the composition-Y band guaranteed visible up to
+ * an ~3:1 container aspect (worst realistic desktop crop). Scenes should
+ * place their top-most text at Y ≥ SAFE_TOP and their bottom-most content at
+ * Y ≤ SAFE_BOTTOM. SAFE_TOP is deliberately below the TL-notch's typical
+ * reach (~Y 250-350 at aspect 2-2.5) so headers clear the notch too. */
+const SAFE_TOP = 260;
+const SAFE_BOTTOM = 780;
+
 /* ---------- Palette ---------- */
 
 const BG = "#F7F7F5";
@@ -429,8 +444,12 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   // Pro (~2:1). Still leaves ~248px of readable width inside the search pill
   // (the 23-char query needs ~170px), and the teacher card layout continues
   // to fit — subtitle already truncates gracefully with ellipsis.
+  //
+  // Wide phoneH capped at (SAFE_BOTTOM - SAFE_TOP) = 520 so the phone body
+  // never spills past the composition's safe vertical band on 3:1 desktop
+  // containers (previous 580 was cropped top+bottom at aspect ~3).
   const phoneW = layout === "wide" ? 320 : 320;
-  const phoneH = layout === "wide" ? 580 : 620;
+  const phoneH = layout === "wide" ? 520 : 620;
   const cx = HERO_WIDTH / 2;
   const cy = HERO_HEIGHT / 2;
   const innerW = phoneW - 44;
@@ -1114,12 +1133,14 @@ const SceneCatalogue: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         })}
       </div>
 
-      {/* Subtitle below the fan — arrives with the last cards, fades with fall */}
+      {/* Subtitle below the fan — arrives with the last cards, fades with fall.
+          Positioned at composition Y ≈ SAFE_BOTTOM (was bottom:96 → Y=904,
+          which was cropped on any container aspect > ~1.7). */}
       <div
         style={{
           position: "absolute",
           left: "50%",
-          bottom: 96,
+          top: SAFE_BOTTOM - 20,
           transform: `translate(-50%, ${(1 - subtitleIn) * 14}px)`,
           textAlign: "center",
           opacity: Math.min(1, subtitleIn) * textOut,
@@ -1995,7 +2016,9 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const vaseH = layout === "wide" ? 300 : 250;
   const vaseW = vaseH * 0.78;
   const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2 + 30;
+  // cy nudged down (was +30 → +60) so the title block above the jar lands at
+  // Y ≈ SAFE_TOP+20 instead of Y=220 (previously cropped on aspect ≥ 2.6).
+  const cy = HERO_HEIGHT / 2 + 60;
 
   const titleIn = interpolate(localFrame, [T4_TITLE_IN, T4_TITLE_IN + 22], [0, 1], {
     extrapolateLeft: "clamp",
@@ -2060,7 +2083,10 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         style={{
           position: "absolute",
           left: "50%",
-          top: cy - vaseH * 0.5 - 160,
+          // Pin the title block to SAFE_TOP so it never crops on wide desktop
+          // containers, regardless of vaseH. Previous formula
+          // (cy - vaseH/2 - 160) put it at Y=220, below the SAFE_TOP line.
+          top: SAFE_TOP,
           transform: "translate(-50%, 0)",
           textAlign: "center",
           maxWidth: layout === "wide" ? 900 : 620,
@@ -2520,15 +2546,22 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   // the effective panel size gets small fast. So we start smaller and rely on
   // bigger typography + fewer content per panel instead of pixel density.
   //
-  //   wide     grid 960×480 → ~40% side / ~26% top-bottom safe margin
+  //   wide     grid 960×400 → shorter+shifted-down so the top-left panel
+  //           clears the TL headline notch on wide desktop containers
+  //           (notch reaches composition Y ≈ 331–468 at 2:1+ aspects; the
+  //           previous 480-tall grid started at Y=260 and got cropped).
   //   compact  grid 680×620 → portrait-friendly, generous side margin
   const gridW = isWide ? 960 : 680;
-  const gridH = isWide ? 480 : 620;
+  const gridH = isWide ? 400 : 620;
   const gutter = isWide ? 18 : 14;
   const panelW = (gridW - gutter) / 2;
   const panelH = (gridH - gutter) / 2;
   const cx = HERO_WIDTH / 2;
-  const cy = HERO_HEIGHT / 2 + (isWide ? 0 : 20);
+  // Wide cy pushed to +70 so panel top-row starts at Y=370, safely below the
+  // TL notch's typical reach (~350 at aspect 2, ~468 at aspect 2.5). Bottom
+  // row ends at Y=770 — inside SAFE_BOTTOM. Compact bumped to +30 to keep
+  // the top row clear of the notch in portrait containers too.
+  const cy = HERO_HEIGHT / 2 + (isWide ? 70 : 30);
 
   const panels: Array<{
     col: 0 | 1;
@@ -2659,20 +2692,22 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
                 {p.kicker}
               </div>
             </div>
-            {/* Motif area — fills the panel below the head */}
+            {/* Motif area — fills the panel below the head. Chrome tightened
+                (top 60→50, bottom 22→16) to give the motif ~16px more room
+                inside the shorter panels used at the new gridH. */}
             <div
               style={{
                 position: "absolute",
                 left: isWide ? 22 : 18,
                 right: isWide ? 22 : 18,
-                top: isWide ? 60 : 58,
-                bottom: isWide ? 22 : 20,
+                top: isWide ? 50 : 52,
+                bottom: isWide ? 16 : 14,
                 overflow: "hidden",
               }}
             >
               {p.render({
                 w: panelW - (isWide ? 44 : 36),
-                h: panelH - (isWide ? 82 : 78),
+                h: panelH - (isWide ? 66 : 66),
                 local: inner,
               })}
             </div>
