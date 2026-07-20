@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight, Compass } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
@@ -45,6 +45,9 @@ const FALLBACK = {
 };
 
 const COMPACT_QUERY = "(max-width: 639.98px)";
+const INTRO_MS = 800;
+/** Initial SSR clip — dimension-agnostic so the first paint isn't a bare rectangle. */
+const INITIAL_CLIP = `inset(0 round ${CORNER_R}px)`;
 
 function HeroCard() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -53,10 +56,12 @@ function HeroCard() {
   const trRef = useRef<HTMLAnchorElement>(null);
   const blRef = useRef<HTMLAnchorElement>(null);
   const brRef = useRef<HTMLAnchorElement>(null);
+  const introDoneRef = useRef(false);
 
   const [compact, setCompact] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mq = window.matchMedia(COMPACT_QUERY);
     const sync = () => setCompact(mq.matches);
     sync();
@@ -64,15 +69,15 @@ function HeroCard() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const wrapper = wrapperRef.current;
     const shape = shapeRef.current;
     if (!wrapper || !shape) return;
 
-    const update = () => {
+    const readTargets = () => {
       const w = wrapper.offsetWidth;
       const h = wrapper.offsetHeight;
-      if (w === 0 || h === 0) return;
+      if (w === 0 || h === 0) return null;
 
       const measure = (
         el: HTMLElement | null,
@@ -99,32 +104,90 @@ function HeroCard() {
         h: Math.min(tl.h, h * (compact ? 0.58 : 0.45)),
       };
 
+      return { w, h, tl, tr, bl, br };
+    };
+
+    const scale = (n: NotchSize, p: number): NotchSize => ({
+      w: Math.max(0, n.w * p),
+      h: Math.max(0, n.h * p),
+    });
+
+    type Targets = NonNullable<ReturnType<typeof readTargets>>;
+
+    const writePath = (t: Targets, p: number) => {
       const path = buildHeroPath({
-        w,
-        h,
+        w: t.w,
+        h: t.h,
         transitionR: TRANSITION_R,
         cornerR: CORNER_R,
         innerR: INNER_R,
-        tl,
-        tr,
-        bl,
-        br,
+        tl: scale(t.tl, p),
+        tr: scale(t.tr, p),
+        bl: scale(t.bl, p),
+        br: scale(t.br, p),
       });
-
       shape.style.clipPath = `path("${path}")`;
       (shape.style as CSSStyleDeclaration & { webkitClipPath?: string }).webkitClipPath =
         `path("${path}")`;
     };
 
-    update();
+    let rafId: number | null = null;
+    let cancelled = false;
 
-    const ro = new ResizeObserver(update);
+    const targets = readTargets();
+    if (!targets) return;
+
+    const prefersReduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (introDoneRef.current || prefersReduced) {
+      writePath(targets, 1);
+      if (!introDoneRef.current) {
+        introDoneRef.current = true;
+        setRevealed(true);
+      }
+    } else {
+      // Seed the first frame at progress 0 so the rounded-rectangle SSR clip
+      // and the first path() frame are visually indistinguishable.
+      writePath(targets, 0);
+      const start = performance.now();
+      const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
+      const tick = (now: number) => {
+        if (cancelled) return;
+        const t = Math.min(1, (now - start) / INTRO_MS);
+        writePath(targets, easeOut(t));
+        if (t < 1) {
+          rafId = requestAnimationFrame(tick);
+        } else {
+          introDoneRef.current = true;
+          setRevealed(true);
+        }
+      };
+      rafId = requestAnimationFrame(tick);
+    }
+
+    const ro = new ResizeObserver(() => {
+      if (!introDoneRef.current) return;
+      const next = readTargets();
+      if (next) writePath(next, 1);
+    });
     ro.observe(wrapper);
     [tlRef, trRef, blRef, brRef].forEach((r) => {
       if (r.current) ro.observe(r.current);
     });
-    return () => ro.disconnect();
+
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, [compact]);
+
+  const revealStyle = (delayMs: number) => ({
+    opacity: revealed ? 1 : 0,
+    transitionDelay: revealed ? `${delayMs}ms` : "0ms",
+    pointerEvents: revealed ? undefined : ("none" as const),
+  });
 
   return (
     <div
@@ -137,6 +200,8 @@ function HeroCard() {
           className="absolute inset-0 overflow-hidden bg-[#F7F7F5]"
           style={{
             borderRadius: CORNER_R,
+            clipPath: INITIAL_CLIP,
+            WebkitClipPath: INITIAL_CLIP,
             filter:
               "drop-shadow(0 30px 60px rgba(10, 11, 14, 0.14)) drop-shadow(0 8px 16px rgba(10, 11, 14, 0.06))",
           }}
@@ -149,7 +214,8 @@ function HeroCard() {
         {/* TL — headline */}
         <div
           ref={tlRef}
-          className="absolute top-0 left-0 w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%]"
+          className="absolute top-0 left-0 w-fit max-w-[85%] pr-0 pb-0 sm:max-w-[55%] transition-opacity duration-500 ease-out"
+          style={revealStyle(0)}
         >
           <h1
             id="home-hero-heading"
@@ -172,6 +238,7 @@ function HeroCard() {
           href={routes.help()}
           aria-label="Ouvrir le guide"
           className="group absolute top-0 right-0 grid h-11 w-11 place-items-center rounded-full bg-white text-foreground ring-1 ring-border shadow-[0_8px_22px_-10px_rgba(10,11,14,0.20),0_3px_8px_-4px_rgba(10,11,14,0.10)] transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus md:h-12 md:w-12"
+          style={revealStyle(120)}
         >
           <Compass
             className="h-[18px] w-[18px] transition-transform duration-300 group-hover:rotate-45 md:h-5 md:w-5"
@@ -184,6 +251,7 @@ function HeroCard() {
           ref={blRef}
           href={routes.teachLanding()}
           className="group absolute bottom-0 left-0 inline-flex items-center gap-1.5 rounded-full bg-white py-1.5 pl-2.5 pr-2 text-[11.5px] font-semibold text-foreground shadow-[0_10px_28px_-10px_rgba(10,11,14,0.22),0_4px_10px_-4px_rgba(10,11,14,0.12)] ring-1 ring-border transition-all duration-200 hover:-translate-y-[1px] hover:ring-border-strong focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
+          style={revealStyle(220)}
         >
           <span className="sm:hidden">Enseigner</span>
           <span className="hidden sm:inline">Devenir enseignant</span>
@@ -200,6 +268,7 @@ function HeroCard() {
           ref={brRef}
           href={routes.browse()}
           className="group absolute bottom-0 right-0 inline-flex items-center gap-1.5 rounded-full bg-accent py-1.5 pl-2 pr-2.5 text-[11.5px] font-semibold text-accent-foreground shadow-[0_10px_28px_-10px_rgba(47,111,235,0.45),0_4px_10px_-4px_rgba(10,11,14,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-2.5 sm:py-3 sm:pl-5 sm:pr-4 sm:text-[14px] md:py-3.5 md:pl-6 md:text-[14.5px]"
+          style={revealStyle(280)}
         >
           <span
             aria-hidden
