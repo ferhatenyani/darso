@@ -68,6 +68,9 @@ importers:
       '@remotion/cli':
         specifier: ^4.0.491
         version: 4.0.491(postcss@8.5.15)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@remotion/google-fonts':
+        specifier: ^4.0.491
+        version: 4.0.491(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@remotion/player':
         specifier: ^4.0.491
         version: 4.0.491(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1382,6 +1385,9 @@ packages:
     resolution: {integrity: sha512-hIdPhMa3X4hQzKA1dl1dkGp2Cq/PsT/DPLIjxHOq6imPqMtfjQ/3Y95B7LNGpjz7Hgewf10/eO5celkHP1rj3w==}
     cpu: [x64]
     os: [win32]
+
+  '@remotion/google-fonts@4.0.491':
+    resolution: {integrity: sha512-dyLBWYxzLggxGU/nNLJNtwqZZxb4Pvzrk37JIbha6sNfdGwFxuAN1TBBFBMgxmaS2hybo7ZkBfXjgNw+EgQjig==}
 
   '@remotion/licensing@4.0.491':
     resolution: {integrity: sha512-oMPGLdGnwVUgkzi1f3Aqu7H80piOF+MDsm9BqYigMTsuivpwdBvqagl2Q8SfuWQdkzTyjK/wQLbcidUAvIFijw==}
@@ -4835,13 +4841,13 @@ snapshots:
       '@remotion/timeline-utils': 4.0.491
       '@rspack/core': 1.7.11
       '@rspack/plugin-react-refresh': 1.6.1(react-refresh@0.18.0)
-      css-loader: 7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(postcss@8.5.15))
+      css-loader: 7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.15))
       esbuild: 0.28.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       react-refresh: 0.18.0
       remotion: 4.0.491(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      style-loader: 4.0.0(webpack@5.105.0(postcss@8.5.15))
+      style-loader: 4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.15))
       webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.15)
     transitivePeerDependencies:
       - '@minify-html/node'
@@ -4921,6 +4927,13 @@ snapshots:
 
   '@remotion/compositor-win32-x64-msvc@4.0.491':
     optional: true
+
+  '@remotion/google-fonts@4.0.491(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      remotion: 4.0.491(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   '@remotion/licensing@4.0.491': {}
 
@@ -5737,7 +5750,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(postcss@8.5.15)):
+  css-loader@7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.15)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.15)
       postcss: 8.5.15
@@ -7226,7 +7239,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  style-loader@4.0.0(webpack@5.105.0(postcss@8.5.15)):
+  style-loader@4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.15)):
     dependencies:
       webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.15)
 
