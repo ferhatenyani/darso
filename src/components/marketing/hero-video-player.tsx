@@ -1,40 +1,47 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Player } from "@remotion/player";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  HeroComposition,
-  HERO_DURATION,
-  HERO_FPS,
-  HERO_HEIGHT,
-  HERO_WIDTH,
-  type HeroLayout,
-} from "@/remotion/HeroComposition";
-
-/** Below this aspect ratio the composition switches to its compact layout. */
+/** Below this container aspect ratio, use the compact-layout video. */
 const COMPACT_RATIO_THRESHOLD = 1.15;
+/** Video fade-in duration once the browser reports it can play. */
+const REVEAL_FADE_MS = 260;
+
+type Layout = "wide" | "compact";
 
 /**
- * Renders the Remotion composition into the hero's notched container.
- *   1. Measures the parent DOM box and scales the Player so the composition
- *      always covers the notched shape (equivalent to object-fit: cover).
- *   2. Passes a stable `layout` inputProp so scenes can re-lay out for wide vs.
- *      compact container aspect ratios.
+ * Serves the hero animation as a pre-rendered WebM/MP4 video instead of
+ * running the Remotion composition live via `@remotion/player`. The two
+ * layouts are rendered from `src/remotion/HeroComposition.tsx` at build time:
  *
- * Audio suppression (composition has zero audio content):
- *   - numberOfSharedAudioTags={0}: skip the shared <audio> tag pool.
- *   - initiallyMuted={true}: this is what actually gates AudioContext
- *     creation. Remotion's shouldCreateAudioContext =
- *       audioEnabled && !playerMuted && mediaVolume > 0
- *     so as long as the player boots muted, no AudioContext is instantiated,
- *     and Chrome's autoplay policy has nothing to gate the render loop on.
- *   Both together mirror Remotion's own thumbnail preview pattern. Bump back
- *   to defaults (5 tags, unmuted) if you ever add <Audio>/<Video>.
+ *   npx remotion render Hero public/hero-wide.webm    --props='{"layout":"wide"}'    --codec=vp9 --crf=22
+ *   npx remotion render Hero public/hero-compact.webm --props='{"layout":"compact"}' --codec=vp9 --crf=22
+ *   npx remotion render Hero public/hero-wide.mp4     --props='{"layout":"wide"}'    --codec=h264 --crf=18
+ *   npx remotion render Hero public/hero-compact.mp4  --props='{"layout":"compact"}' --codec=h264 --crf=18
+ *
+ * WebM (VP9) is the primary format — ~35% smaller than h264 at matched
+ * quality. MP4 (h264) is the fallback for Safari < 14.1 and any decoder that
+ * doesn't advertise VP9 support.
+ *
+ * Runtime:
+ *   - ResizeObserver picks the layout that matches the container's aspect,
+ *     so the same viewport-adaptive behavior the live composition had is
+ *     preserved. When the aspect crosses the threshold we call `video.load()`
+ *     to swap the source without a component remount.
+ *   - The element mounts with `preload="auto"` so buffering starts on the
+ *     first paint of the page. By the time the notched clip-path finishes
+ *     morphing (~800ms per `INTRO_MS` in home-hero.tsx), decoding is warm and
+ *     the video is ready to play on any reasonable connection.
+ *   - Opacity is gated on `canplay` and fades in over 260ms. Before that,
+ *     the video is transparent and the parent shape div's cream background
+ *     shows through — which matches the composition's frame-0 paper-grain
+ *     state, so there's no visible seam between "not-yet-loaded" and "playing".
  */
 export function HeroVideoPlayer() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [layout, setLayout] = useState<Layout>("wide");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -42,71 +49,56 @@ export function HeroVideoPlayer() {
     const ro = new ResizeObserver((entries) => {
       const rect = entries[0]?.contentRect;
       if (!rect || rect.width === 0 || rect.height === 0) return;
-      setDims((prev) => {
-        if (prev && prev.w === rect.width && prev.h === rect.height) {
-          return prev;
-        }
-        return { w: rect.width, h: rect.height };
-      });
+      const next: Layout =
+        rect.width / rect.height < COMPACT_RATIO_THRESHOLD ? "compact" : "wide";
+      setLayout((prev) => (prev === next ? prev : next));
     });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
-  const layout: HeroLayout = useMemo(() => {
-    if (!dims) return "wide";
-    return dims.w / dims.h < COMPACT_RATIO_THRESHOLD ? "compact" : "wide";
-  }, [dims]);
+  // When the layout flips, force the video to reload from the newly-selected
+  // <source> URLs. Without this the browser keeps playing the previous layout
+  // even after React updates the DOM (video src is only re-evaluated on load()).
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    setReady(false);
+    video.load();
+  }, [layout]);
 
-  const inputProps = useMemo(() => ({ layout }), [layout]);
-
-  const style = useMemo<React.CSSProperties>(() => {
-    if (!dims) {
-      return { width: "100%", height: "100%", display: "block" };
-    }
-    const scale = Math.max(dims.w / HERO_WIDTH, dims.h / HERO_HEIGHT);
-    const renderedW = HERO_WIDTH * scale;
-    const renderedH = HERO_HEIGHT * scale;
-    return {
-      position: "absolute",
-      left: (dims.w - renderedW) / 2,
-      top: (dims.h - renderedH) / 2,
-      width: renderedW,
-      height: renderedH,
-      display: "block",
-    };
-  }, [dims]);
+  const base = layout === "compact" ? "/hero-compact" : "/hero-wide";
 
   return (
     <div
       ref={wrapperRef}
-      style={{
-        position: "absolute",
-        inset: 0,
-        overflow: "hidden",
-      }}
+      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
     >
-      <Player
-        component={HeroComposition}
-        durationInFrames={HERO_DURATION}
-        fps={HERO_FPS}
-        compositionWidth={HERO_WIDTH}
-        compositionHeight={HERO_HEIGHT}
-        numberOfSharedAudioTags={0}
-        initiallyMuted
-        inputProps={inputProps}
-        style={style}
-        loop
+      <video
+        ref={videoRef}
         autoPlay
-        controls={false}
-        showVolumeControls={false}
-        clickToPlay={false}
-        doubleClickToFullscreen={false}
-        spaceKeyToPlayOrPause={false}
-        moveToBeginningWhenEnded
-        alwaysShowControls={false}
-        acknowledgeRemotionLicense
-      />
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden
+        onCanPlay={() => setReady(true)}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+          opacity: ready ? 1 : 0,
+          transition: `opacity ${REVEAL_FADE_MS}ms ease-out`,
+        }}
+      >
+        {/* Keys force React to unmount/remount the <source> nodes when the
+            layout changes so the browser sees fresh URLs at the next load(). */}
+        <source key={`${base}.webm`} src={`${base}.webm`} type="video/webm" />
+        <source key={`${base}.mp4`} src={`${base}.mp4`} type="video/mp4" />
+      </video>
     </div>
   );
 }
