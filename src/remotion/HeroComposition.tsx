@@ -11,6 +11,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
+import { loadFont as loadCaveat } from "@remotion/google-fonts/Caveat";
 
 /**
  * Load Inter directly through @remotion/google-fonts. This runs at module
@@ -22,6 +23,21 @@ const { fontFamily: INTER_FAMILY } = loadFont("normal", {
   weights: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
+
+/**
+ * Caveat — handwritten wordmark used by the finale scene and the mosaic
+ * stamp. Also loaded via @remotion/google-fonts so headless Chromium has real
+ * glyphs at render time. Previously this was declared via the Next.js CSS
+ * var `--font-caveat` which the browser resolved but headless Chromium did
+ * not, causing rendered MP4s to fall through to the system's default
+ * cursive font — mismatched with the navbar wordmark.
+ */
+const { fontFamily: CAVEAT_FAMILY } = loadCaveat("normal", {
+  weights: ["400", "700"],
+  subsets: ["latin"],
+});
+
+const CAVEAT_STACK = `${CAVEAT_FAMILY}, "Caveat", cursive`;
 
 /**
  * Cabinet Grotesk — self-hosted brand voice for headlines & panel titles.
@@ -2762,7 +2778,7 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
               padding: isWide ? 22 : 18,
               textAlign: "center",
               color: INK,
-              fontFamily: "var(--font-caveat), 'Caveat', cursive",
+              fontFamily: CAVEAT_STACK,
               fontWeight: 700,
               fontSize: isWide ? 30 : 24,
               lineHeight: 1.05,
@@ -3546,7 +3562,7 @@ const CaveatWordmark: React.FC<{ size: number }> = ({ size }) => (
   <div
     style={{
       display: "inline-block",
-      fontFamily: "var(--font-caveat), 'Caveat', cursive",
+      fontFamily: CAVEAT_STACK,
       fontSize: size,
       fontWeight: 700,
       color: "white",
