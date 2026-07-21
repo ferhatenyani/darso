@@ -85,19 +85,32 @@ export const HERO_DURATION = 1082;
 export type HeroLayout = "wide" | "compact";
 
 /* ---------- Safe zone ----------
- * The player scales the composition with object-fit:cover, so at container
- * aspects > 1.6:1 the composition's top/bottom get cropped. On top of that,
- * the notched hero clips the top-left corner (TL headline notch), TR
- * (compass), and BL/BR (CTA pills). Anything a scene puts inside those
- * regions disappears at wide desktop aspects.
+ * The player scales the composition with object-fit:cover (see
+ * hero-video-player.tsx), so wide container aspects crop top/bottom. On top of
+ * that, home-hero.tsx clips the container with a path() that carves out three
+ * notches into the composition:
+ *   - TL headline (~380–400 wide × ~132 tall in container units, per the
+ *     xl:text-[36px] cabinet headline + 22px pad)
+ *   - TR compass (60 × 60)
+ *   - BC split-pill CTA (~292 wide × ~66 tall)
  *
- * SAFE_TOP / SAFE_BOTTOM are the composition-Y band guaranteed visible up to
- * an ~3:1 container aspect (worst realistic desktop crop). Scenes should
- * place their top-most text at Y ≥ SAFE_TOP and their bottom-most content at
- * Y ≤ SAFE_BOTTOM. SAFE_TOP is deliberately below the TL-notch's typical
- * reach (~Y 250-350 at aspect 2-2.5) so headers clear the notch too. */
-const SAFE_TOP = 260;
-const SAFE_BOTTOM = 780;
+ * Translating those into composition-Y for a container of width w and
+ * height h with s = max(w/1600, h/1000):
+ *   comp_y(TL notch bottom) = (140 - h/2)·1600/w + 500   (when r = w/h > 1.6)
+ *   comp_y(BC notch top)    = (h/2 - 66)·1600/w + 500    (when r > 1.6)
+ *
+ * Sweeping realistic wide-desktop containers (h ∈ [500, 900], r ∈ [1.6, 2.5]):
+ *   TL notch bottom lands in comp Y ≈ 240–330 (worst at r=2.5, h=600 → 329)
+ *   BC notch top    lands in comp Y ≈ 720–840 (worst at r=2.5, h=600 → 750)
+ * At r > 2.5 both notches encroach further and some scenes accept small
+ * bleed; ultrawide is not the primary target.
+ *
+ * Scenes place their top-most text at Y ≥ SAFE_TOP and bottom-most content at
+ * Y ≤ SAFE_BOTTOM to stay clear of both the cover-crop AND the notch cutouts
+ * on the centered content column. Content that hugs the left edge (x < ~500)
+ * needs additional TL clearance beyond SAFE_TOP. */
+const SAFE_TOP = 300;
+const SAFE_BOTTOM = 740;
 
 /* ---------- Palette ---------- */
 
@@ -440,16 +453,13 @@ const SceneBrowse: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const pulse =
     cardSpring > 0.5 ? 1 + Math.sin((localFrame - T1_CARD_LANDS) * 0.34) * 0.06 : 1;
 
-  // Narrower phone (v11 → v12) — 320 wide, taller aspect closer to iPhone 16
-  // Pro (~2:1). Still leaves ~248px of readable width inside the search pill
-  // (the 23-char query needs ~170px), and the teacher card layout continues
-  // to fit — subtitle already truncates gracefully with ellipsis.
-  //
-  // Wide phoneH capped at (SAFE_BOTTOM - SAFE_TOP) = 520 so the phone body
-  // never spills past the composition's safe vertical band on 3:1 desktop
-  // containers (previous 580 was cropped top+bottom at aspect ~3).
-  const phoneW = layout === "wide" ? 320 : 320;
-  const phoneH = layout === "wide" ? 520 : 620;
+  // Shorter phone (v14 → v15) — 260 × 460 wide (1:1.77) / 260 × 530 compact
+  // (1:2.04). Compact stays near iPhone-accurate; wide is stubbier so the
+  // whole silhouette fits inside the tightened safe band (300–740 = 440
+  // tall) with a 10 px buffer under SAFE_BOTTOM. Inner pill width unchanged
+  // (216 px, still comfortable for the 23-char search query).
+  const phoneW = layout === "wide" ? 260 : 260;
+  const phoneH = layout === "wide" ? 460 : 530;
   const cx = HERO_WIDTH / 2;
   const cy = HERO_HEIGHT / 2;
   const innerW = phoneW - 44;
@@ -2016,9 +2026,12 @@ const SceneVase: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const vaseH = layout === "wide" ? 300 : 250;
   const vaseW = vaseH * 0.78;
   const cx = HERO_WIDTH / 2;
-  // cy nudged down (was +30 → +60) so the title block above the jar lands at
-  // Y ≈ SAFE_TOP+20 instead of Y=220 (previously cropped on aspect ≥ 2.6).
-  const cy = HERO_HEIGHT / 2 + 60;
+  // cy nudged down again (was +60 → +80) to compensate for SAFE_TOP moving
+  // from 260 → 300: the title block anchored to SAFE_TOP now ends near Y=398
+  // (kicker+headline+subtitle ≈ 98px tall), so the jar top at Y = cy - 150
+  // needs to sit around Y=430 for a clean gap. Vase bottom lands at Y=730,
+  // 10px above SAFE_BOTTOM=740.
+  const cy = HERO_HEIGHT / 2 + 80;
 
   const titleIn = interpolate(localFrame, [T4_TITLE_IN, T4_TITLE_IN + 22], [0, 1], {
     extrapolateLeft: "clamp",
@@ -2524,14 +2537,16 @@ const VaseAnnotations: React.FC<{
  * ========================================================================== */
 
 // Local frames (190 total):
-//   0–30    4 panels pop in with 6f stagger (ELASTIC) — bigger read gap so
-//           each gesture registers on mid-size screens
-//   30–90   each panel's inner motif animates through its states
-//   90–130  panels sit fully settled — long "read the ecosystem" hold
-//   130–150 central stamp scales up over intersection (POP)
-//   150–190 hold, subtle throb on stamp
-const T5_PANEL_STAGGER = 6;
-const T5_STAMP_IN = 130;
+//   0        first panel enters (SMOOTH_ENTRY — soft, minimal overshoot)
+//   20/40/60 remaining panels cascade in with a 20f stagger so each card
+//           gets its own beat instead of overlapping the previous one's
+//           settle. Card 4 lands at ~f60; SMOOTH_ENTRY settles by ~f75.
+//   60–142  each panel's inner motif animates through its states
+//   142–150 panels sit fully settled — brief read hold before the stamp
+//   150–170 central stamp scales up over intersection (POP)
+//   170–190 hold, subtle throb on stamp (freeze clamp at f170)
+const T5_PANEL_STAGGER = 20;
+const T5_STAMP_IN = 150;
 
 const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   localFrame,
@@ -2546,10 +2561,7 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   // the effective panel size gets small fast. So we start smaller and rely on
   // bigger typography + fewer content per panel instead of pixel density.
   //
-  //   wide     grid 960×400 → shorter+shifted-down so the top-left panel
-  //           clears the TL headline notch on wide desktop containers
-  //           (notch reaches composition Y ≈ 331–468 at 2:1+ aspects; the
-  //           previous 480-tall grid started at Y=260 and got cropped).
+  //   wide     grid 960×400 → exactly fills the [SAFE_TOP, SAFE_BOTTOM] band
   //   compact  grid 680×620 → portrait-friendly, generous side margin
   const gridW = isWide ? 960 : 680;
   const gridH = isWide ? 400 : 620;
@@ -2557,11 +2569,15 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
   const panelW = (gridW - gutter) / 2;
   const panelH = (gridH - gutter) / 2;
   const cx = HERO_WIDTH / 2;
-  // Wide cy pushed to +70 so panel top-row starts at Y=370, safely below the
-  // TL notch's typical reach (~350 at aspect 2, ~468 at aspect 2.5). Bottom
-  // row ends at Y=770 — inside SAFE_BOTTOM. Compact bumped to +30 to keep
-  // the top row clear of the notch in portrait containers too.
-  const cy = HERO_HEIGHT / 2 + (isWide ? 70 : 30);
+  // Wide cy = center of the [SAFE_TOP, SAFE_BOTTOM] band (Y=520 = 300+220).
+  // Panel top-row starts at Y = 520 - 200 = 320, safely below the TL notch's
+  // typical reach (~290–330 at r ≤ 2.5). Bottom row ends at Y = 720 — 20px
+  // above SAFE_BOTTOM=740, so the previously-clipped inner corners of the
+  // bottom panels now clear the BC pill notch too. Compact keeps a small
+  // downward nudge so the head text isn't kissing the composition's top edge.
+  const cy = isWide
+    ? (SAFE_TOP + SAFE_BOTTOM) / 2
+    : HERO_HEIGHT / 2 + 30;
 
   const panels: Array<{
     col: 0 | 1;
@@ -2622,7 +2638,7 @@ const SceneMosaic: React.FC<{ localFrame: number; layout: HeroLayout }> = ({
         const enter = spring({
           frame: localFrame - i * T5_PANEL_STAGGER,
           fps,
-          config: ELASTIC,
+          config: SMOOTH_ENTRY,
         });
         if (enter < 0.01) return null;
         const px = cx - gridW / 2 + p.col * (panelW + gutter);

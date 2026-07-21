@@ -17,7 +17,7 @@ export function HomeHero() {
   return (
     <section
       aria-labelledby="home-hero-heading"
-      className="relative isolate bg-background pt-2 pb-3 md:pt-4 md:pb-6"
+      className="relative isolate bg-background pt-3 pb-3 md:pb-5"
     >
       <div className="container-wide">
         <HeroCard />
@@ -40,8 +40,11 @@ const BC_NOTCH_PAD_Y_TOP = 9;
 const TRANSITION_R = 20;
 /** Interior rounded corner radius for each notch (px). */
 const INNER_R = 34;
-/** Outer container corner radius — used for corners without a notch. */
-const CORNER_R = 40;
+/** Outer container corner radius — used for corners without a notch (BL and BR
+ *  in the current layout, since TL/TR always host a notch). Matched to
+ *  TRANSITION_R so the BL/BR corner arcs flow visually into the BC notch's
+ *  convex bump arcs — one continuous curvature language along the bottom. */
+const CORNER_R = 20;
 /** Fallback dimensions used before ResizeObserver fires. */
 const FALLBACK = {
   tl: { w: 460, h: 220 },
@@ -237,15 +240,25 @@ function HeroCard() {
         h: Math.min(tl.h, h * (compact ? 0.58 : 0.45)),
       };
 
+      // Responsive corner geometry — at narrow container widths, the outer
+      // corner arc, the BC notch's transition arcs, and the safety buffer
+      // between them all shrink so the split-pill CTA can fit inside the
+      // notch instead of spilling into the corner curves. Caps hit at
+      // w ≈ 500 (radii) and w ≈ 800 (buffer), so wider containers get the
+      // original design-system values (40/20/12).
+      const cornerR = Math.min(CORNER_R, w * 0.08);
+      const transR = Math.min(TRANSITION_R, w * 0.04);
+      const bcBuffer = Math.min(12, w * 0.015);
+
       // Cap the bottom-center notch so its base + 2 transition arcs always
       // fit between the outer corners with breathing room.
-      const bcMaxW = Math.max(0, w - 2 * (CORNER_R + TRANSITION_R + 12));
+      const bcMaxW = Math.max(0, w - 2 * (cornerR + transR + bcBuffer));
       bc = {
         w: Math.min(bc.w, bcMaxW, w * (compact ? 0.86 : 0.55)),
         h: Math.min(bc.h, h * 0.28),
       };
 
-      return { w, h, tl, tr, bc };
+      return { w, h, tl, tr, bc, cornerR, transR };
     };
 
     const scale = (n: NotchSize, p: number): NotchSize => ({
@@ -259,8 +272,8 @@ function HeroCard() {
       const path = buildHeroPath({
         w: t.w,
         h: t.h,
-        transitionR: TRANSITION_R,
-        cornerR: CORNER_R,
+        transitionR: t.transR,
+        cornerR: t.cornerR,
         innerR: INNER_R,
         tl: scale(t.tl, p),
         tr: scale(t.tr, p),
@@ -403,18 +416,21 @@ function HeroCard() {
   return (
     <div
       ref={wrapperRef}
-      className="relative w-full h-[calc(100dvh-80px)] min-h-[380px] sm:min-h-[440px] md:h-[calc(100dvh-116px)]"
+      className="relative w-full h-[calc(100dvh-80px)] max-h-[133vw] min-h-[380px] sm:min-h-[440px] sm:max-h-none md:h-[calc(100dvh-116px)]"
     >
         {/* Light container — the Remotion composition provides the motion. */}
         <div
           ref={shapeRef}
-          className="absolute inset-0 overflow-hidden bg-[#F7F7F5]"
+          // The drop-shadow follows the clipped silhouette exactly, so on narrow
+          // screens (where bcMaxW ≈ pill group width) the shadow bleeds into
+          // the crescent between each pill's outer corner and the BC notch's
+          // transition arc, showing as a gray tint. Gate the filter to
+          // min-[520px] where the notch has enough breathing room to absorb it.
+          className="absolute inset-0 overflow-hidden bg-[#F7F7F5] min-[520px]:[filter:drop-shadow(0_30px_60px_rgba(10,11,14,0.14))_drop-shadow(0_8px_16px_rgba(10,11,14,0.06))]"
           style={{
             borderRadius: CORNER_R,
             clipPath: INITIAL_CLIP,
             WebkitClipPath: INITIAL_CLIP,
-            filter:
-              "drop-shadow(0 30px 60px rgba(10, 11, 14, 0.14)) drop-shadow(0 8px 16px rgba(10, 11, 14, 0.06))",
           }}
         >
           <div className="absolute inset-0">
@@ -483,7 +499,7 @@ function HeroCard() {
         >
           <Link
             href={routes.teachLanding()}
-            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2.5 text-center text-[13px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
+            className="group relative flex w-[104px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2 text-center text-[12px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus min-[480px]:w-[128px] min-[480px]:py-2.5 min-[480px]:text-[13px] sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
             <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
               Enseigner
@@ -494,13 +510,13 @@ function HeroCard() {
             </span>
             <span
               aria-hidden
-              className="absolute left-[18%] top-[42%] z-10 h-2 w-2 rounded-[2px] bg-[#F0A014] transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+              className="absolute left-[12%] top-[38%] z-10 h-2 w-2 rounded-[2px] bg-[#F0A014] transition-all duration-300 min-[520px]:left-[18%] min-[520px]:top-[42%] group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
             />
           </Link>
 
           <Link
             href={routes.browse()}
-            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2.5 text-center text-[13px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
+            className="group relative flex w-[104px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2 text-center text-[12px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus min-[480px]:w-[128px] min-[480px]:py-2.5 min-[480px]:text-[13px] sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
             <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
               Apprendre
@@ -511,7 +527,7 @@ function HeroCard() {
             </span>
             <span
               aria-hidden
-              className="absolute left-[18%] top-[42%] z-10 h-2 w-2 rounded-[2px] bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+              className="absolute left-[12%] top-[38%] z-10 h-2 w-2 rounded-[2px] bg-accent transition-all duration-300 min-[520px]:left-[18%] min-[520px]:top-[42%] group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
             />
           </Link>
         </div>
