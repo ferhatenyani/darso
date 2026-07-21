@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ArrowUpRight, Compass, Search } from "lucide-react";
+import { ArrowRight, Compass } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
@@ -30,6 +30,12 @@ export function HomeHero() {
 
 /** Padding between content and the notch's interior edge (px). */
 const NOTCH_PAD = 10;
+/** BC pill sits inside a bigger notch than the raw pill dimensions — extra
+ *  breathing room around a small pill keeps the notch legible. Values are
+ *  doubled by `measure` (see below) so the effective side gap = 2 × PAD_X and
+ *  effective top gap = 2 × PAD_Y (pill is bottom-anchored to container edge). */
+const BC_NOTCH_PAD_X = 14;
+const BC_NOTCH_PAD_Y_TOP = 9;
 /** Convex bump radius where each notch meets the container edge (px). */
 const TRANSITION_R = 20;
 /** Interior rounded corner radius for each notch (px). */
@@ -40,7 +46,7 @@ const CORNER_R = 40;
 const FALLBACK = {
   tl: { w: 460, h: 220 },
   tr: { w: 60, h: 60 },
-  bc: { w: 420, h: 60 },
+  bc: { w: 260, h: 40 },
 };
 
 const COMPACT_QUERY = "(max-width: 639.98px)";
@@ -221,8 +227,9 @@ function HeroCard() {
       let tl = measure(tlRef.current, FALLBACK.tl, 11, 11);
       const tr = measure(trRef.current, FALLBACK.tr);
       // BC is a mid-edge notch: pill's bottom sits on the container edge,
-      // so only the top of the notch needs interior padding (padY = half).
-      let bc = measure(bcRef.current, FALLBACK.bc, NOTCH_PAD, NOTCH_PAD / 2);
+      // so only the top of the notch needs interior padding. Extra breathing
+      // room here keeps the notch legible around a compact pill.
+      let bc = measure(bcRef.current, FALLBACK.bc, BC_NOTCH_PAD_X, BC_NOTCH_PAD_Y_TOP);
 
       // Cap headline notch so it never dominates the container.
       tl = {
@@ -464,62 +471,48 @@ function HeroCard() {
           />
         </Link>
 
-        {/* BC — split-pill: identity-first doors. Primary label picks the role
-            ("Enseigner" / "Apprendre" — mimetic + identity framing), meta-line
-            names the literal next action with an ownership pronoun ("mon" =
-            endowment). Material: drenched accent with an inset top highlight,
-            2px inset seam (deeper-accent + hairline), and directional lift on
-            hover so the chosen half physically leans toward the user. */}
+        {/* BC — two distinct pills sitting side by side inside a single notch.
+            Rest: off-white shell (matches the HeroComposition BG) with an
+            ink-black hairline border and ink-black type. Hover: an accent-blue
+            dot in the corner expands to fill the pill, the resting label
+            slides out, label + arrow slide in — one continuous 300ms motion. */}
         <div
           ref={bcRef}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 flex w-[88%] max-w-[600px] items-stretch overflow-hidden rounded-full bg-accent text-accent-foreground shadow-[0_18px_44px_-14px_rgba(47,111,235,0.55),0_8px_18px_-8px_rgba(10,11,14,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] ring-1 ring-[color:var(--accent-hover)] sm:w-auto sm:min-w-[480px]"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-stretch gap-2 sm:gap-3"
           style={revealStyle({ delay: 250, from: "translate(0, 12px) scale(0.96)" })}
         >
           <Link
             href={routes.teachLanding()}
-            className="group relative flex flex-1 basis-0 items-center justify-center gap-2.5 rounded-l-full py-2.5 pl-4 pr-4 text-start transition-[background-color,transform] duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-3.5 sm:py-3.5 sm:pl-6 sm:pr-6"
+            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border border-foreground bg-[#F7F7F5] py-2.5 text-center text-[13px] font-semibold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
+            <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
+              Enseigner
+            </span>
+            <span className="pointer-events-none absolute inset-0 z-20 flex translate-x-12 items-center justify-center gap-1.5 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
+              Enseigner
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.2} />
+            </span>
             <span
               aria-hidden
-              className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15 ring-1 ring-white/25 transition-transform duration-300 group-hover:rotate-45 sm:h-9 sm:w-9"
-            >
-              <ArrowUpRight className="h-3.5 w-3.5 sm:h-[18px] sm:w-[18px]" />
-            </span>
-            <span className="flex min-w-0 flex-col leading-[1.1]">
-              <span className="text-[13px] font-semibold tracking-tight sm:text-[15.5px]">
-                Enseigner
-              </span>
-              <span className="mt-0.5 hidden text-[10.5px] font-medium text-white/85 tabular sm:block">
-                Créer mon annonce
-              </span>
-            </span>
+              className="absolute left-[18%] top-[42%] z-10 h-1.5 w-1.5 rounded-full bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+            />
           </Link>
-
-          {/* 2px inset seam: darker-accent then hairline white — reads as a
-              stamped-metal join between two halves rather than a painted line. */}
-          <div aria-hidden className="my-2 flex shrink-0 sm:my-3">
-            <span className="w-px bg-[color:var(--accent-hover)]" />
-            <span className="w-px bg-white/25" />
-          </div>
 
           <Link
             href={routes.browse()}
-            className="group relative flex flex-1 basis-0 items-center justify-center gap-2.5 rounded-r-full py-2.5 pl-4 pr-4 text-start transition-[background-color,transform] duration-200 hover:bg-accent-hover focus-visible:outline-none focus-visible:shadow-focus sm:gap-3.5 sm:py-3.5 sm:pl-6 sm:pr-6"
+            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border border-foreground bg-[#F7F7F5] py-2.5 text-center text-[13px] font-semibold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
+            <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
+              Apprendre
+            </span>
+            <span className="pointer-events-none absolute inset-0 z-20 flex translate-x-12 items-center justify-center gap-1.5 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
+              Apprendre
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.2} />
+            </span>
             <span
               aria-hidden
-              className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15 ring-1 ring-white/25 transition-transform duration-300 group-hover:-rotate-12 sm:h-9 sm:w-9"
-            >
-              <Search className="h-3.5 w-3.5 sm:h-[18px] sm:w-[18px]" strokeWidth={2.2} />
-            </span>
-            <span className="flex min-w-0 flex-col leading-[1.1]">
-              <span className="text-[13px] font-semibold tracking-tight sm:text-[15.5px]">
-                Apprendre
-              </span>
-              <span className="mt-0.5 hidden text-[10.5px] font-medium text-white/85 tabular sm:block">
-                Trouver mon prof
-              </span>
-            </span>
+              className="absolute left-[18%] top-[42%] z-10 h-1.5 w-1.5 rounded-full bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+            />
           </Link>
         </div>
     </div>
