@@ -17,7 +17,7 @@ export function HomeHero() {
   return (
     <section
       aria-labelledby="home-hero-heading"
-      className="relative isolate bg-background pt-10 pb-12 md:pt-14 md:pb-20"
+      className="relative isolate bg-background pt-2 pb-3 md:pt-4 md:pb-6"
     >
       <div className="container-wide">
         <HeroCard />
@@ -403,7 +403,7 @@ function HeroCard() {
   return (
     <div
       ref={wrapperRef}
-      className="relative w-full h-[calc(100dvh-160px)] min-h-[380px] max-h-[500px] sm:min-h-[440px] sm:max-h-[600px] md:h-[calc(100dvh-220px)] lg:max-h-[680px]"
+      className="relative w-full h-[calc(100dvh-80px)] min-h-[380px] sm:min-h-[440px] md:h-[calc(100dvh-116px)]"
     >
         {/* Light container — the Remotion composition provides the motion. */}
         <div
