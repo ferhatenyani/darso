@@ -483,24 +483,24 @@ function HeroCard() {
         >
           <Link
             href={routes.teachLanding()}
-            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border border-foreground bg-[#F7F7F5] py-2.5 text-center text-[13px] font-semibold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
+            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2.5 text-center text-[13px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
             <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
               Enseigner
             </span>
-            <span className="pointer-events-none absolute inset-0 z-20 flex translate-x-12 items-center justify-center gap-1.5 text-primary-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
+            <span className="pointer-events-none absolute inset-0 z-20 flex translate-x-12 items-center justify-center gap-1.5 text-foreground opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
               Enseigner
               <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.2} />
             </span>
             <span
               aria-hidden
-              className="absolute left-[18%] top-[42%] z-10 h-1.5 w-1.5 rounded-full bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+              className="absolute left-[18%] top-[42%] z-10 h-2 w-2 rounded-[2px] bg-[#F0A014] transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
             />
           </Link>
 
           <Link
             href={routes.browse()}
-            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border border-foreground bg-[#F7F7F5] py-2.5 text-center text-[13px] font-semibold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
+            className="group relative flex w-[128px] items-center justify-center overflow-hidden rounded-full border-2 border-foreground bg-white py-2.5 text-center text-[13px] font-bold tracking-tight text-foreground shadow-[0_10px_24px_-14px_rgba(10,11,14,0.35)] focus-visible:outline-none focus-visible:shadow-focus sm:w-[148px] sm:py-3 sm:text-[14px]"
           >
             <span className="relative z-20 inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
               Apprendre
@@ -511,7 +511,7 @@ function HeroCard() {
             </span>
             <span
               aria-hidden
-              className="absolute left-[18%] top-[42%] z-10 h-1.5 w-1.5 rounded-full bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
+              className="absolute left-[18%] top-[42%] z-10 h-2 w-2 rounded-[2px] bg-accent transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.15] group-hover:rounded-none"
             />
           </Link>
         </div>
