@@ -3,8 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { HomeHeader } from "@/components/nav/home-header";
 import { SiteFooter } from "@/components/nav/site-footer";
 import { HomeHero } from "@/components/marketing/home-hero";
-import { StudentPath } from "@/components/marketing/student-path";
-import { TeacherPath } from "@/components/marketing/teacher-path";
+import { PathSection } from "@/components/marketing/path-section";
 import { AgencyCollective } from "@/components/marketing/agency-collective";
 import { CommissionCalculator } from "@/components/marketing/commission-calculator";
 import { BrowseLiveStrip } from "@/components/marketing/browse-live-strip";
@@ -28,13 +27,24 @@ export default async function HomePage({
         {/* 1 · Hero — untouched */}
         <HomeHero />
 
-        {/* 2 · Student path — editorial split, blue accent */}
-        <StudentPath />
+        {/* 2 · Path — 3 comparison variants stacked (pick one, remove the others) */}
+        <PathSection
+          variant="tinted"
+          label="Variant A · Tinted surround + Concave scoop"
+          magnet={false}
+        />
+        <PathSection
+          variant="mirror"
+          label="Variant B · Charcoal/Paper mirror + Center arch"
+          magnet={false}
+        />
+        <PathSection
+          variant="drench"
+          label="Variant C · Accent drench + Angled wedge"
+          magnet={false}
+        />
 
-        {/* 3 · Teacher path — reversed layout, amber accent */}
-        <TeacherPath />
-
-        {/* 4 · Agency / collective — 3-card grid, ink accent */}
+        {/* 3 · Agency / collective — 3-card grid, ink accent */}
         <AgencyCollective />
 
         {/* 5 · Commission calculator — interactive DZD simulator */}

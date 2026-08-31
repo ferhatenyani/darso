@@ -1,168 +1,247 @@
 "use client";
 
-import { Quote } from "lucide-react";
-
-import { Reveal } from "@/components/ui/reveal";
-import { IllustrationSlot } from "./illustration-slot";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const VALUES = [
   {
-    title: "Zéro intermédiaire.",
-    body: "Ce que l'élève paie, c'est ce que le prof reçoit, moins une commission qu'on assume et qui commence à zéro.",
+    numeral: "Zéro",
+    heading: "commission cachée",
+    body: "Ce que l'élève paie, c'est ce que le prof reçoit — moins une commission qu'on assume, qui commence à zéro.",
   },
   {
-    title: "Zéro barrière à l'entrée.",
-    body: "Pas de diplôme requis pour enseigner. Un savoir, un profil clair, quelques élèves — et c'est parti.",
+    numeral: "0 €",
+    heading: "à l'inscription",
+    body: "Créer un compte, publier un profil, ouvrir un agenda : gratuit. Pas de carte requise tant que rien ne se passe.",
   },
   {
-    title: "Zéro publicité déguisée.",
-    body: "Personne ne paie pour remonter dans les résultats. Vous voyez les meilleurs, pas les mieux placés.",
+    numeral: "100 %",
+    heading: "pédagogique",
+    body: "Personne ne paie pour remonter dans les résultats. Les meilleurs, pas les mieux placés.",
   },
 ];
 
+const CABINET = "var(--font-cabinet), system-ui, sans-serif";
+
 export function TeamManifesto() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, {
+    once: true,
+    margin: "0px 0px -12% 0px",
+  });
+
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       aria-labelledby="manifesto-title"
-      className="relative isolate px-3 pt-8 sm:px-4 sm:pt-12 md:pt-16"
+      className="relative isolate mt-16 overflow-hidden bg-[#111110] px-4 py-24 text-white sm:mt-20 sm:py-28 md:mt-28 md:py-32"
     >
-      <div className="container-wide">
-        <Reveal direction="up">
-          <article className="relative overflow-hidden rounded-[2rem] bg-ink px-5 py-9 text-white shadow-[0_30px_60px_-40px_rgba(10,11,14,0.55)] sm:rounded-[2.5rem] sm:px-8 sm:py-14 md:rounded-[3.5rem] md:px-14 md:py-20 lg:px-20">
-            {/* Subtle grid backdrop */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-[0.06]"
-            />
-            {/* Warm corner light */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-full bg-[#F0A014]/25 blur-3xl"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-16 -bottom-24 -z-10 h-64 w-64 rounded-full bg-accent/20 blur-3xl"
-            />
+      {/* Subtle grid dot pattern at ~6% opacity */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+          opacity: 0.06,
+        }}
+      />
 
-            <div className="grid gap-10 md:grid-cols-12 md:items-center md:gap-14 lg:gap-20">
-              {/* Quote column */}
-              <div className="md:col-span-7">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 py-1.5 pl-2 pr-3 text-[10.5px] font-bold uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm">
-                  <span
-                    aria-hidden
-                    className="h-2 w-2 rounded-full bg-[#F0A014]"
-                  />
-                  Un mot de l'équipe
-                </span>
+      {/* Warm amber corner glow — bottom-left */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-32 -left-40 -z-10 h-[400px] w-[400px] rounded-full opacity-[0.12]"
+        style={{
+          background:
+            "radial-gradient(closest-side, #F0A014 0%, transparent 70%)",
+        }}
+      />
+      {/* Cool blue corner glow — top-right */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 -top-32 -z-10 h-[300px] w-[300px] rounded-full opacity-[0.08]"
+        style={{
+          background:
+            "radial-gradient(closest-side, #2F6FEB 0%, transparent 70%)",
+        }}
+      />
 
-                {/* Big quote */}
-                <div className="relative mt-6">
-                  <Quote
-                    aria-hidden
-                    className="absolute -left-2 -top-3 h-8 w-8 text-[#F0A014]/70 sm:-left-3 sm:-top-4 sm:h-10 sm:w-10"
-                    strokeWidth={1.6}
-                  />
-                  <h2
-                    id="manifesto-title"
-                    style={{
-                      fontFamily:
-                        "var(--font-cabinet), system-ui, sans-serif",
-                    }}
-                    className="pl-6 text-[26px] font-extrabold leading-[1.1] tracking-[-0.025em] text-white text-balance sm:pl-8 sm:text-[34px] md:text-[42px] lg:text-[48px]"
-                  >
-                    On a connu des profs qui ont tout changé.
-                    <br className="hidden sm:block" /> Et un système qui les a
-                    faits partir.
-                    <br className="hidden sm:block" />{" "}
-                    <span className="text-[#F0A014]">
-                      Darso, c'est notre réponse.
-                    </span>
-                  </h2>
-                </div>
+      {/* Single centered column, max-w 720 */}
+      <div className="mx-auto max-w-[720px]">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex justify-center"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 py-1.5 pl-2 pr-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm">
+            <span aria-hidden className="h-2 w-2 rounded-full bg-[#F0A014]" />
+            Un mot de l'équipe
+          </span>
+        </motion.div>
 
-                <p className="mt-6 max-w-lg pl-6 text-[14.5px] leading-relaxed text-white/80 sm:pl-8 sm:text-[15.5px]">
-                  Un lieu où le savoir circule sans intermédiaire, où le prof
-                  fixe son tarif, où l'élève choisit vraiment ce qu'il vient
-                  chercher.
-                </p>
+        {/* Huge decorative quote mark + centered quote */}
+        <div className="relative mt-10 text-center">
+          <span
+            aria-hidden
+            style={{ fontFamily: CABINET }}
+            className="pointer-events-none absolute -top-8 left-1/2 -translate-x-[52%] select-none text-[120px] font-extrabold leading-none text-[#F0A014] opacity-20 sm:-top-12 sm:text-[140px]"
+          >
+            &ldquo;
+          </span>
 
-                {/* Signature line */}
-                <div className="mt-8 flex items-center gap-4 pl-6 sm:pl-8">
-                  {/* Avatar cluster placeholder */}
-                  <div className="flex -space-x-2">
-                    {["Y", "S", "A"].map((initial, i) => (
-                      <span
-                        key={i}
-                        aria-hidden
-                        className="grid h-9 w-9 place-items-center rounded-full border-2 border-ink bg-white/10 text-[12px] font-bold text-white backdrop-blur-sm"
-                        style={{
-                          background:
-                            i === 0
-                              ? "linear-gradient(135deg,#F0A014,#7A4E00)"
-                              : i === 1
-                                ? "linear-gradient(135deg,#2F6FEB,#1E58C7)"
-                                : "linear-gradient(135deg,#2E8B6B,#1A5C46)",
-                        }}
-                      >
-                        {initial}
-                      </span>
-                    ))}
-                  </div>
-                  <div>
-                    <p
-                      style={{
-                        fontFamily:
-                          "var(--font-cabinet), system-ui, sans-serif",
-                      }}
-                      className="text-[14px] font-bold text-white sm:text-[15px]"
-                    >
-                      L'équipe darso
-                    </p>
-                    <p className="text-[11.5px] text-white/60">
-                      Alger, pour toute l'Algérie
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <motion.h2
+            id="manifesto-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              duration: 0.8,
+              delay: 0.1,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            style={{ fontFamily: CABINET }}
+            className="relative text-[28px] font-extrabold leading-[1.25] tracking-[-0.02em] text-white text-balance sm:text-[36px] md:text-[40px]"
+          >
+            On a connu des profs qui ont tout changé.
+            <br className="hidden sm:block" /> Et un système qui les a faits
+            partir.{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10 text-[#F0A014]">
+                Darso, c'est notre réponse.
+              </span>
+              <motion.span
+                aria-hidden
+                initial={{ scaleX: 0 }}
+                animate={inView ? { scaleX: 1 } : {}}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.8,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ transformOrigin: "0% 50%" }}
+                className="absolute inset-x-0 bottom-1 -z-0 h-[10px] bg-[#F0A014]/25 sm:h-[12px]"
+              />
+            </span>
+          </motion.h2>
+        </div>
 
-              {/* Values column — desktop */}
-              <div className="md:col-span-5">
-                <Reveal delay={140} direction="scale">
-                  <IllustrationSlot
-                    label="Portrait éditorial de l'équipe darso au studio d'Alger."
-                    caption="Séquence de portraits · 4 s"
-                    aspect="aspect-[4/5] sm:aspect-square"
-                    accent="cream"
-                    wireframe="avatar"
-                    className="border-white/30 bg-white/[0.04]"
-                  />
-                </Reveal>
-              </div>
-            </div>
+        {/* Signature row: 3 gradient-initial avatars + team label */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{
+            duration: 0.7,
+            delay: 0.35,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="mt-10 flex flex-col items-center gap-3"
+        >
+          <div className="flex -space-x-2">
+            {[
+              { i: "Y", grad: "linear-gradient(135deg,#F0A014,#7A4E00)" },
+              { i: "S", grad: "linear-gradient(135deg,#2F6FEB,#1E58C7)" },
+              { i: "A", grad: "linear-gradient(135deg,#2E8B6B,#1A5C46)" },
+            ].map(({ i, grad }) => (
+              <motion.span
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+                aria-hidden
+                className="grid h-11 w-11 place-items-center rounded-full border-2 border-[#111110] text-[13px] font-bold text-white backdrop-blur-sm"
+                style={{ background: grad, fontFamily: CABINET }}
+              >
+                {i}
+              </motion.span>
+            ))}
+          </div>
+          <p
+            style={{ fontFamily: CABINET }}
+            className="mt-1 text-[15px] font-bold text-white"
+          >
+            L'équipe darso
+          </p>
+          <p className="text-[13px] text-white/60">Alger, pour toute l'Algérie</p>
+        </motion.div>
 
-            {/* Values strip */}
-            <ul className="mt-10 grid gap-x-6 gap-y-6 border-t border-white/10 pt-8 sm:mt-14 sm:grid-cols-3 sm:gap-x-8 sm:pt-10">
-              {VALUES.map((v, i) => (
-                <Reveal key={v.title} delay={120 + i * 90} direction="up">
-                  <li className="flex flex-col gap-2 sm:border-l sm:border-white/10 sm:pl-5 sm:first:border-l-0 sm:first:pl-0">
-                    <h3
-                      style={{
-                        fontFamily:
-                          "var(--font-cabinet), system-ui, sans-serif",
-                      }}
-                      className="text-[18px] font-bold tracking-tight text-[#F0A014] sm:text-[20px]"
-                    >
-                      {v.title}
-                    </h3>
-                    <p className="text-[13px] leading-relaxed text-white/80 sm:text-[13.5px]">
-                      {v.body}
-                    </p>
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
-          </article>
-        </Reveal>
+        {/* 3-column "zéro" values strip, separated by hairlines that draw in */}
+        <ul className="mt-16 grid gap-8 sm:mt-20 sm:grid-cols-3 sm:gap-0">
+          {VALUES.map((v, i) => (
+            <li
+              key={v.numeral + v.heading}
+              className="relative flex flex-col items-center gap-2 text-center sm:px-6"
+            >
+              {/* Vertical hairline between columns — first one hidden */}
+              {i > 0 && (
+                <motion.span
+                  aria-hidden
+                  initial={{ scaleY: 0 }}
+                  animate={inView ? { scaleY: 1 } : {}}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.5 + i * 0.1,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  style={{ transformOrigin: "50% 0%" }}
+                  className="absolute -left-px top-0 hidden h-full w-px bg-white/12 sm:block"
+                />
+              )}
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.6 + i * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ fontFamily: CABINET }}
+                className="text-[32px] font-extrabold leading-none tracking-[-0.03em] text-[#F0A014] tabular sm:text-[36px]"
+              >
+                {v.numeral}
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.7 + i * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="text-[13.5px] font-semibold uppercase tracking-[0.12em] text-white"
+              >
+                {v.heading}
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.8 + i * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mt-1 max-w-[240px] text-[13px] leading-relaxed text-white/70"
+              >
+                {v.body}
+              </motion.p>
+
+              {/* Horizontal hairline draw-in below each on mobile */}
+              <motion.span
+                aria-hidden
+                initial={{ scaleX: 0 }}
+                animate={inView ? { scaleX: 1 } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.5 + i * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ transformOrigin: "50% 50%" }}
+                className="mt-4 h-px w-16 bg-white/20 sm:hidden"
+              />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

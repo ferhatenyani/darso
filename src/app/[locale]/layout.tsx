@@ -90,6 +90,17 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${caveat.variable} ${montserrat.variable} ${cabinetGrotesk.variable}`}
     >
+      <head>
+        <link
+          rel="preconnect"
+          href="https://api.fontshare.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap"
+        />
+      </head>
       <body
         className="min-h-dvh bg-background text-foreground antialiased"
         suppressHydrationWarning
