@@ -15,8 +15,8 @@ export function HomeHeader() {
   const t = useTranslations("nav");
 
   return (
-    <header className="sticky top-0 z-30 bg-white/55 pt-2 pb-2 backdrop-blur-xl backdrop-saturate-150 md:pt-3 md:pb-3">
-      <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between gap-4 px-4 sm:px-5 md:px-6">
+    <header className="sticky top-0 z-30 bg-white/55 pt-1.5 pb-1.5 backdrop-blur-xl backdrop-saturate-150 md:pt-2 md:pb-2">
+      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-3 sm:px-5 md:px-6">
         <Link
           href={routes.home()}
           className="shrink-0 outline-none focus-visible:rounded-md focus-visible:shadow-focus"
@@ -25,33 +25,25 @@ export function HomeHeader() {
           <Logo />
         </Link>
 
-        <AuthPill signInLabel={t("signIn")} signUpLabel={t("signUp")} />
+        <AuthButton signInLabel={t("signIn")} />
       </div>
     </header>
   );
 }
 
-function AuthPill({
-  signInLabel,
-  signUpLabel,
-}: {
-  signInLabel: string;
-  signUpLabel: string;
-}) {
+/**
+ * Single auth CTA. One dark pill pointing at the sign-in page across all
+ * breakpoints — that page hosts both existing-user login and a link into the
+ * signup flow, so a single door covers the whole surface. Height and padding
+ * step up gently at sm+ so the button reads with more weight on desktop.
+ */
+function AuthButton({ signInLabel }: { signInLabel: string }) {
   return (
-    <div className="inline-flex items-center rounded-full border border-foreground/15 bg-white p-[2px] shadow-[0_1px_2px_rgba(10,11,14,0.05),0_6px_16px_-8px_rgba(10,11,14,0.14)] sm:p-[3px]">
-      <Link
-        href={routes.signIn()}
-        className="inline-flex h-7 items-center rounded-full px-1.5 text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-focus sm:h-9 sm:px-2.5 sm:text-[13px]"
-      >
-        {signInLabel}
-      </Link>
-      <Link
-        href={routes.signUp()}
-        className="inline-flex h-7 items-center rounded-full bg-foreground px-1.5 text-[11px] font-semibold text-background transition-transform duration-200 hover:-translate-y-[0.5px] focus-visible:outline-none focus-visible:shadow-focus sm:h-9 sm:px-2.5 sm:text-[13px]"
-      >
-        {signUpLabel}
-      </Link>
-    </div>
+    <Link
+      href={routes.signIn()}
+      className="inline-flex h-9 items-center rounded-full bg-foreground px-3.5 text-[13px] font-semibold text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_6px_18px_-10px_rgba(10,11,14,0.25)] transition-[background-color,box-shadow,transform] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none hover:-translate-y-[1px] hover:bg-primary-dark hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_10px_22px_-12px_rgba(10,11,14,0.30)] focus-visible:outline-none focus-visible:shadow-focus sm:h-10 sm:px-[18px] sm:text-[13.5px]"
+    >
+      {signInLabel}
+    </Link>
   );
 }

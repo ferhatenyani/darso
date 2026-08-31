@@ -1,0 +1,4 @@
+hero section: 
+- better hero cta: 
+- make the last scene's cards load one after another and then pause at the end
+- make the two bottom buttons work their way to the center in a lequid like animation while the notched container reshapes its bottom to be fully rectangular and then pause on that frame like 10 seconds with a good looking cursor animation, before their go down again and the video loops again

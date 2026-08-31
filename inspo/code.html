@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>darso - Plateforme d'apprentissage moderne</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#474747",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#6a4800",
+                        "secondary-fixed-dim": "#ffba3b",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#4c4546",
+                        "on-tertiary-fixed": "#001c39",
+                        "surface-container": "#eeeeee",
+                        "on-secondary-fixed-variant": "#604100",
+                        "secondary": "#7f5700",
+                        "surface-bright": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-low": "#f3f3f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#feb316",
+                        "inverse-surface": "#2f3131",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "on-background": "#1a1c1c",
+                        "surface": "#f9f9f9",
+                        "inverse-primary": "#c6c6c6",
+                        "surface-tint": "#5e5e5e",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary-container": "#001c39",
+                        "secondary-fixed": "#ffdead",
+                        "on-primary-container": "#848484",
+                        "tertiary-fixed": "#d4e3ff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#000000",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary-fixed": "#281900",
+                        "primary-fixed": "#e2e2e2",
+                        "on-surface": "#1a1c1c",
+                        "on-error": "#ffffff",
+                        "outline": "#7e7576",
+                        "tertiary-fixed-dim": "#a4c9ff",
+                        "on-tertiary-container": "#3e86d7",
+                        "primary-container": "#1b1b1b",
+                        "on-tertiary-fixed-variant": "#004883"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-md": "32px",
+                        "gutter": "24px",
+                        "margin-sm": "16px",
+                        "unit": "8px",
+                        "container-padding": "64px",
+                        "margin-lg": "64px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["56px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .handwritten-annotation {
+            font-family: 'Kalam', cursive; /* Generic fallback, keeping it simple as per instructions */
+        }
+        .island-container {
+            border-radius: 4rem;
+        }
+        @media (max-width: 768px) {
+            .island-container {
+                border-radius: 2rem;
+            }
+        }
+        .custom-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 4px solid #feb316;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-margin-lg py-unit-margin-sm max-w-7xl mx-auto">
+<div class="text-headline-lg font-headline-lg font-bold text-primary italic">darso</div>
+<div class="hidden md:flex gap-margin-md items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Students</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Teachers</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Agencies</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Pricing</a>
+</div>
+<div class="flex items-center gap-margin-sm">
+<button class="px-margin-sm py-2 text-on-surface-variant hover:text-primary transition-all font-label-caps text-label-caps">Se connecter</button>
+<button class="bg-primary text-on-primary px-margin-md py-3 rounded-full hover:scale-95 transition-all font-label-caps text-label-caps">Créer un compte</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 px-margin-sm md:px-margin-lg space-y-32">
+<!-- SECTION 1: How it Works for Students -->
+<section class="max-w-7xl mx-auto island-container bg-surface-container-low p-margin-md md:p-container-padding relative overflow-hidden">
+<div class="flex flex-col md:flex-row items-center gap-margin-lg">
+<div class="w-full md:w-1/2 space-y-margin-md">
+<div class="flex items-center gap-2 mb-4">
+<span class="w-3 h-3 rounded-full bg-on-tertiary-container"></span>
+<span class="text-label-caps font-label-caps text-on-tertiary-container uppercase tracking-widest">Pour les élèves</span>
+</div>
+<h2 class="text-headline-lg md:text-display-lg font-display-lg leading-tight">L'apprentissage à votre rythme.</h2>
+<p class="text-body-lg text-on-surface-variant">Explorez un monde de connaissances sans barrières. Connectez-vous avec les meilleurs experts et rejoignez une communauté passionnée.</p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-on-tertiary-container">search</span>
+<div>
+<h4 class="font-title-md text-title-md">Trouvez votre mentor</h4>
+<p class="text-body-sm text-on-surface-variant">Des centaines de professeurs qualifiés dans tous les domaines imaginables.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-on-tertiary-container">groups</span>
+<div>
+<h4 class="font-title-md text-title-md">Rejoignez la communauté</h4>
+<p class="text-body-sm text-on-surface-variant">Apprenez avec d'autres élèves et partagez vos progrès en temps réel.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="w-full md:w-1/2 relative">
+<div class="aspect-square rounded-xl overflow-hidden border-2 border-primary/5 bg-white p-4 shadow-sm">
+<img class="w-full h-full object-cover rounded-lg" data-alt="A clean, minimalist UI dashboard mockup for a student learning platform. The interface shows a grid of colorful course cards, a teacher profile with a soft blue badge, and a vibrant community chat sidebar. The aesthetic is modern and high-key with soft natural lighting and a neutral grey and bright blue color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd4Jsq_zmj-eE8Fwo0AaA32pxG94_OCXWViBscQ5g9eZI-PGbIgn-qAHlZGMv_kAUkhOd2u4Z9XtoLeCBaGW7RQW0KhfgwJp614AvXGptz1F3fvXBd3GZm0pUiv_45czFj6a6PRTC91jLQxynGcfZlD499rEg6bZoCjUAQq3ZiUSJOkxQKRGJxQVecWoXKuEIdIieY8hmREpAXcrX-t3wcPSXxO5kavf3N-MBX1fr2TQNouQNi8F0hYEM7hQ8fceFpUF3XeBjHbsYs"/>
+</div>
+<!-- Handwritten accent -->
+<div class="absolute -bottom-8 -right-4 hidden md:block">
+<svg class="stroke-on-tertiary-container" fill="none" height="80" viewbox="0 0 120 80" width="120">
+<path d="M10 10C30 40 80 10 110 70" stroke-linecap="round" stroke-width="2"></path>
+<path d="M100 60L110 70L95 75" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<p class="text-on-tertiary-container font-medium text-sm rotate-6">C'est ici que ça commence !</p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: How it Works for Teachers -->
+<section class="max-w-7xl mx-auto island-container bg-surface-container p-margin-md md:p-container-padding">
+<div class="flex flex-col-reverse md:flex-row items-center gap-margin-lg">
+<div class="w-full md:w-1/2 relative">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4 pt-12">
+<div class="bg-white p-4 rounded-lg shadow-sm border border-outline-variant">
+<span class="material-symbols-outlined text-secondary mb-2">edit_calendar</span>
+<h5 class="font-title-md text-body-lg">Gestion planning</h5>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border border-outline-variant">
+<span class="material-symbols-outlined text-secondary mb-2">request_quote</span>
+<h5 class="font-title-md text-body-lg">Approbation cours</h5>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-lg shadow-sm border border-outline-variant">
+<span class="material-symbols-outlined text-secondary mb-2">payments</span>
+<h5 class="font-title-md text-body-lg">Revenus directs</h5>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm border border-outline-variant h-40 flex items-center justify-center">
+<img class="object-cover w-full h-full rounded-md" data-alt="A macro close-up of a teacher's hands using a sleek, modern tablet to design an educational course outline. The lighting is warm and golden, highlighting the creative process. The overall look is professional, warm, and tech-savvy, featuring orange and black accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyoJS6w7eO9g82jvTT1q5aLD9BR_TeZX40MiOISICSGYVFB1x1Pzx8tcIp-W71gVeqFxWyUSr2ILG9TcSTK1F2PWv5iYC_naMYcfdQFfuboDwcMuXrD-DypKHnr2w8RR2mKDqbRK-EiNGrLVTbT0OFlGP1iQMLz9y9lk-SfK8ahu8b6PSuW_Vk1glPfLkq6bPG8GYHbjcPWw_-3Las0n1uX-UHu8t902BDmBKADk2p0lET8kn_Ie6Hvrp6XuJt86lfd6uv17BwTZR6"/>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 space-y-margin-md">
+<div class="flex items-center gap-2 mb-4">
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
+<span class="text-label-caps font-label-caps text-secondary uppercase tracking-widest">Pour les professeurs</span>
+</div>
+<h2 class="text-headline-lg md:text-display-lg font-display-lg leading-tight">Libérez votre expertise.</h2>
+<p class="text-body-lg text-on-surface-variant">Créez votre propre académie numérique en quelques minutes. Nous gérons l'infrastructure, vous gérez le savoir.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<div class="p-6 bg-white/50 rounded-lg border border-outline-variant">
+<h4 class="font-title-md text-title-md mb-2">Contrôle total</h4>
+<p class="text-body-sm">Définissez vos prix, vos horaires et vos propres règles d'admission.</p>
+</div>
+<div class="p-6 bg-white/50 rounded-lg border border-outline-variant">
+<h4 class="font-title-md text-title-md mb-2">Support premium</h4>
+<p class="text-body-sm">Une équipe dédiée pour vous aider à scaler votre activité d'enseignement.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Agency Feature -->
+<section class="max-w-7xl mx-auto text-center space-y-margin-md">
+<h2 class="text-headline-lg md:text-display-lg font-display-lg">Grandissez en collectif.</h2>
+<p class="max-w-2xl mx-auto text-body-lg text-on-surface-variant">L'option Agency permet à des groupes de professeurs de s'unir sous une même bannière pour mutualiser ressources et visibilité.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mt-margin-lg">
+<div class="p-margin-md bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary transition-all">
+<span class="material-symbols-outlined text-4xl mb-4">hub</span>
+<h3 class="font-title-md text-title-md mb-2">Gestion Centralisée</h3>
+<p class="text-body-sm text-on-surface-variant">Un tableau de bord unique pour piloter plusieurs professeurs et dizaines de cours.</p>
+</div>
+<div class="p-margin-md bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary transition-all">
+<span class="material-symbols-outlined text-4xl mb-4">analytics</span>
+<h3 class="font-title-md text-title-md mb-2">Reporting Avancé</h3>
+<p class="text-body-sm text-on-surface-variant">Analysez les performances de chaque membre du collectif en un coup d'œil.</p>
+</div>
+<div class="p-margin-md bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary transition-all">
+<span class="material-symbols-outlined text-4xl mb-4">share</span>
+<h3 class="font-title-md text-title-md mb-2">Marque Blanche</h3>
+<p class="text-body-sm text-on-surface-variant">Personnalisez l'espace membre aux couleurs de votre agence ou école.</p>
+</div>
+</div>
+</section>
+<!-- SECTION 4: Earnings Calculator -->
+<section class="max-w-4xl mx-auto">
+<div class="island-container bg-surface-container-low p-margin-md md:p-margin-lg border border-outline-variant relative overflow-hidden">
+<div class="relative z-10 space-y-margin-md">
+<div class="text-center space-y-2">
+<h2 class="text-headline-lg font-headline-lg">Calculez vos revenus nets</h2>
+<p class="text-on-surface-variant">Découvrez combien vous gagnez réellement avec notre modèle transparent.</p>
+</div>
+<div class="bg-white p-margin-md rounded-lg space-y-8 shadow-sm">
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="font-title-md text-title-md">Revenus mensuels</label>
+<span class="text-headline-lg font-headline-lg text-secondary" id="revenue-display">2500 €</span>
+</div>
+<input class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer custom-slider" id="revenue-slider" max="10000" min="0" step="100" type="range" value="2500"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter pt-8 border-t border-outline-variant">
+<div class="text-center">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-2">COMMISSION DARSO</p>
+<p class="text-title-md font-title-md text-on-surface" id="commission-display">0 €</p>
+</div>
+<div class="text-center">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-2">TAXES ESTIMÉES</p>
+<p class="text-title-md font-title-md text-on-surface" id="taxes-display">500 €</p>
+</div>
+<div class="text-center p-4 bg-secondary-container/10 rounded-lg">
+<p class="text-label-caps font-label-caps text-secondary mb-2">VOTRE GAIN NET</p>
+<p class="text-headline-lg font-headline-lg text-secondary" id="net-display">2000 €</p>
+</div>
+</div>
+</div>
+<p class="text-body-sm text-on-surface-variant text-center italic">Calcul basé sur une micro-entreprise standard. Zéro commission Darso jusqu'à 1000€ de revenus mensuels cumulés.</p>
+</div>
+</div>
+</section>
+<!-- SECTION 5: Pricing Details -->
+<section class="max-w-7xl mx-auto space-y-margin-md">
+<div class="flex flex-col md:flex-row gap-margin-lg items-center">
+<div class="w-full md:w-1/3 space-y-margin-sm">
+<h2 class="text-headline-lg font-headline-lg">Zéro commission au démarrage.</h2>
+<p class="text-body-lg text-on-surface-variant">Nous ne gagnons de l'argent que lorsque vous en gagnez. C'est notre promesse pour une éducation plus juste.</p>
+</div>
+<div class="w-full md:w-2/3 bg-white p-margin-md rounded-xl border border-outline-variant">
+<div class="h-64 flex items-end gap-4 relative">
+<!-- Simplified Bar Chart Concept -->
+<div class="flex-1 bg-surface-container-highest rounded-t-lg h-[20%] relative group">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] px-2 py-1 rounded hidden group-hover:block">0% Com.</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg h-[20%] relative"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg h-[20%] relative"></div>
+<div class="flex-1 bg-secondary-container rounded-t-lg h-[35%] relative">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 text-center w-full">
+<span class="text-label-caps font-label-caps text-secondary">SEUIL ATTEINT</span>
+<div class="w-1 h-4 bg-secondary mx-auto"></div>
+</div>
+</div>
+<div class="flex-1 bg-secondary-container rounded-t-lg h-[45%]"></div>
+<div class="flex-1 bg-secondary-container rounded-t-lg h-[60%]"></div>
+<!-- Axis Labels -->
+<div class="absolute bottom-[-30px] left-0 right-0 flex justify-between text-label-caps font-label-caps text-on-surface-variant">
+<span>0€</span>
+<span>500€</span>
+<span>1000€</span>
+<span>2000€</span>
+<span>5000€</span>
+<span>10k€+</span>
+</div>
+</div>
+<div class="mt-12 flex items-center justify-center gap-8">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-surface-container-highest"></span>
+<span class="text-label-caps font-label-caps">Phase de lancement (0€)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
+<span class="text-label-caps font-label-caps">Commission modérée (5%)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6: CTA Section -->
+<section class="max-w-7xl mx-auto text-center py-margin-lg bg-primary rounded-xl text-on-primary px-margin-md relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10">
+<span class="material-symbols-outlined text-[300px]" style="font-variation-settings: 'wght' 100;">school</span>
+</div>
+<h2 class="text-headline-lg md:text-display-lg font-display-lg mb-margin-sm">Prêt à transformer l'éducation ?</h2>
+<p class="text-body-lg mb-margin-md max-w-xl mx-auto opacity-80">Rejoignez une plateforme qui valorise autant le savoir que ceux qui le transmettent.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-margin-sm items-center">
+<button class="w-full sm:w-auto bg-on-secondary-container text-on-secondary px-margin-lg py-4 rounded-full font-label-caps text-label-caps hover:scale-105 transition-all">Enseigner maintenant</button>
+<button class="w-full sm:w-auto bg-transparent border border-on-primary text-on-primary px-margin-lg py-4 rounded-full font-label-caps text-label-caps hover:bg-on-primary hover:text-primary transition-all">Commencer à apprendre</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-lg py-margin-md gap-gutter max-w-7xl mx-auto">
+<div class="space-y-4 text-center md:text-left">
+<div class="text-title-md font-title-md font-bold text-primary italic">darso</div>
+<p class="text-body-sm text-on-surface-variant">© 2024 darso platform. Tous droits réservés.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-margin-md">
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Impact</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Carrières</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Aide</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Confidentialité</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Conditions</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:text-primary transition-colors focus:underline decoration-2 underline-offset-4" href="#">Contact</a>
+</div>
+<div class="flex gap-margin-sm">
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined text-body-lg">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined text-body-lg">mail</span>
+</a>
+</div>
+</div>
+</footer>
+<script>
+        // Earnings Calculator Logic
+        const slider = document.getElementById('revenue-slider');
+        const revenueDisplay = document.getElementById('revenue-display');
+        const commissionDisplay = document.getElementById('commission-display');
+        const taxesDisplay = document.getElementById('taxes-display');
+        const netDisplay = document.getElementById('net-display');
+
+        function updateCalculator() {
+            const revenue = parseInt(slider.value);
+            revenueDisplay.textContent = revenue + ' €';
+
+            // Logic: 0 commission under 1000, 5% above
+            let commission = 0;
+            if (revenue > 1000) {
+                commission = Math.round((revenue - 1000) * 0.05);
+            }
+            
+            // Estimates: 22% taxes for micro-entreprise auto-entrepreneur standard
+            const taxes = Math.round(revenue * 0.22);
+            const net = revenue - commission - taxes;
+
+            commissionDisplay.textContent = commission + ' €';
+            taxesDisplay.textContent = taxes + ' €';
+            netDisplay.textContent = net + ' €';
+        }
+
+        slider.addEventListener('input', updateCalculator);
+        updateCalculator(); // Initial run
+    </script>
+</body></html>

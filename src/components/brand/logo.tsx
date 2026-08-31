@@ -11,7 +11,9 @@ export function Logo({ className, mark = false }: { className?: string; mark?: b
       dir="ltr"
       className={cn(
         "inline-block select-none font-bold leading-none tracking-[-0.005em] text-foreground",
-        mark ? "text-[26px]" : "text-[30px] md:text-[32px]",
+        mark
+          ? "text-[28px] sm:text-[30px] md:text-[32px]"
+          : "text-[32px] sm:text-[36px] md:text-[40px] lg:text-[44px]",
         className,
       )}
       style={{
